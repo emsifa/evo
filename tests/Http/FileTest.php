@@ -3,7 +3,6 @@
 namespace Emsifa\Evo\Tests\Http;
 
 use Emsifa\Evo\Http\File;
-use Emsifa\Evo\Tests\Samples\Casters\HalfIntCaster;
 use Emsifa\Evo\Tests\Samples\Casters\UploadedFilePathCaster;
 use Emsifa\Evo\Tests\Samples\UploadedFile as SampleUploadedFile;
 use Emsifa\Evo\Tests\TestCase;
@@ -78,7 +77,7 @@ class FileTest extends TestCase
     {
         $this->expectException(ValidationException::class);
 
-                /**
+        /**
          * @var \ReflectionParameter
          */
         $reflection = $this->getMockReflectionParam('image', UploadedFile::class);

@@ -59,7 +59,7 @@ abstract class CommonGetterAndValidator
             ? [$key => $this->rules]
             : ValidatorHelper::getRulesFromReflection($reflection, $key);
 
-        if (!empty($rules)) {
+        if (! empty($rules)) {
             $data = [$key => $this->getValue($request, $key)];
             Validator::make($data, $rules)->validate();
         }
