@@ -43,18 +43,20 @@ class UserController extends Controller
 
 ## But Why?
 
-It forces your brain to defines input and output before writing its logic. So when it comes to write business logic, you know exactly what you have, and what to return. 
+By defining input and output types in head part of a function, it triggers your brain to specifies input and output before writing its logic.
+So when it comes to write logic, you know exactly what you have, where it comes, and what to return.
 
-Also, by defining input and output type like this, not only you and your teammate gain more understanding about the code. Machines too.
+Also, by defining input and output type like this, not only you and your teammate would easily read the specifications. Machines too.
 
-So, when you add this line to `routes/web.php`:
+That is why, when you add this line to `routes/web.php`:
 
 ```php
-EvoFacade::swagger('/docs');
+Emsifa\Evo\EvoFacade::swagger('/docs');
 ```
 
-Evo can understand your code. And it can generate this stuff for you:
+Evo are able to read your specifications, and display this stuff for you:
 
+> swagger screenshots here
 
 
 ## Installation
