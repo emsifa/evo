@@ -2,9 +2,9 @@
 
 namespace Emsifa\Evo;
 
+use Emsifa\Evo\Commands\MakeDtoCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Emsifa\Evo\Commands\MakeDtoCommand;
 
 class EvoServiceProvider extends PackageServiceProvider
 {

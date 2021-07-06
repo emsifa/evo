@@ -5,7 +5,6 @@ namespace Emsifa\Evo\Tests;
 use Emsifa\Evo\Casters\BoolCaster;
 use Emsifa\Evo\Tests\Samples\SampleBool;
 use ReflectionProperty;
-use stdClass;
 
 class BoolCasterTest extends TestCase
 {

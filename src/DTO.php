@@ -45,6 +45,7 @@ abstract class DTO
         foreach ($files as $key => $file) {
             Arr::set($inputs, $key, $file);
         }
+
         return static::fromArray($inputs);
     }
 }

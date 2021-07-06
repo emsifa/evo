@@ -14,7 +14,7 @@ use ReflectionProperty;
 
 class ArrayCaster implements Caster
 {
-    public function cast($value, ReflectionProperty|ReflectionParameter $prop): mixed
+    public function cast($value, ReflectionProperty | ReflectionParameter $prop): mixed
     {
         $nullable = optional($prop->getType())->allowsNull();
         if ($nullable && is_null($value)) {
@@ -39,7 +39,7 @@ class ArrayCaster implements Caster
          */
         $arrayOf = ReflectionHelper::getFirstAttributeInstance($prop, ArrayOf::class, ReflectionAttribute::IS_INSTANCEOF);
 
-        if (!$arrayOf) {
+        if (! $arrayOf) {
             return $value;
         }
 
@@ -56,14 +56,17 @@ class ArrayCaster implements Caster
                         break;
                     case ArrayOf::NULL_ITEM:
                         $results[] = null;
+
                         break;
                     case ArrayOf::KEEP_AS_IS:
                         $results[] = $val;
+
                         break;
                     default: throw $err;
                 }
             }
         }
+
         return $results;
     }
 
@@ -76,12 +79,14 @@ class ArrayCaster implements Caster
              * @var \Emsifa\Evo\Contracts\Caster $caster
              */
             $caster = new $casters[$type];
+
             return $caster->cast($value, $prop);
         }
 
         if (is_array($value) && class_exists($type)) {
             $obj = new $type;
             ObjectFiller::fillObject($obj, $value);
+
             return $obj;
         }
 

@@ -9,7 +9,8 @@ class CastWith
 {
     public function __construct(
         protected string $caster,
-    ){}
+    ) {
+    }
 
     public function getCaster(): string
     {

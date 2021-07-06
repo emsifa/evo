@@ -22,6 +22,7 @@ class ReflectionHelper
             $reflection = new ReflectionClass($class);
             $attributes = [...$attributes, ...$reflection->getAttributes($attrName, $flags)];
         }
+
         return $attributes;
     }
 
@@ -34,6 +35,7 @@ class ReflectionHelper
     public static function getFirstAttributeInstance($reflection, ?string $name = null, int $flags = 0): mixed
     {
         $attributes = $reflection->getAttributes($name, $flags);
+
         return count($attributes) ? $attributes[0]->newInstance() : null;
     }
 
@@ -55,6 +57,7 @@ class ReflectionHelper
             $parents[] = $parent;
             $class = $parent;
         }
+
         return $parents;
     }
 }

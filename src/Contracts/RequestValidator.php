@@ -11,5 +11,5 @@ interface RequestValidator
     /**
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function validateRequest(Request $request, ReflectionProperty|ReflectionParameter $reflection);
+    public function validateRequest(Request $request, ReflectionProperty | ReflectionParameter $reflection);
 }

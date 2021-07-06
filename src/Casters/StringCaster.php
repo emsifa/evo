@@ -4,14 +4,13 @@ namespace Emsifa\Evo\Casters;
 
 use Emsifa\Evo\Contracts\Caster;
 use Emsifa\Evo\Exceptions\CastErrorException;
-use Illuminate\Support\Stringable as SupportStringable;
 use ReflectionParameter;
 use ReflectionProperty;
 use Stringable;
 
 class StringCaster implements Caster
 {
-    public function cast($value, ReflectionProperty|ReflectionParameter $prop): mixed
+    public function cast($value, ReflectionProperty | ReflectionParameter $prop): mixed
     {
         $nullable = optional($prop->getType())->allowsNull();
         if ($nullable && is_null($value)) {
