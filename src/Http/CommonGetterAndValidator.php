@@ -55,11 +55,12 @@ abstract class CommonGetterAndValidator
     public function validateRequest(Request $request, ReflectionProperty | ReflectionParameter $reflection)
     {
         $key = $this->getKey($reflection);
-        $rules = $this->rules ?: ValidatorHelper::getRulesFromReflection($reflection);
+        $rules = $this->rules
+            ? [$key => $this->rules]
+            : ValidatorHelper::getRulesFromReflection($reflection, $key);
 
         if (!empty($rules)) {
             $data = [$key => $this->getValue($request, $key)];
-            $rules = [$key => $rules];
             Validator::make($data, $rules)->validate();
         }
     }

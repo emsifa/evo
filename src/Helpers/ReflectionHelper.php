@@ -32,6 +32,19 @@ class ReflectionHelper
      * @param  int $flags
      * @return mixed
      */
+    public static function getAttributesInstances($reflection, ?string $name = null, int $flags = 0): mixed
+    {
+        $attributes = $reflection->getAttributes($name, $flags);
+
+        return array_map(fn ($attr) => $attr->newInstance(), $attributes);
+    }
+
+    /**
+     * @param  \ReflectionClass|\ReflectionMethod|\ReflectionProperty|\ReflectionParameter $reflection
+     * @param  string|null $name
+     * @param  int $flags
+     * @return mixed
+     */
     public static function getFirstAttributeInstance($reflection, ?string $name = null, int $flags = 0): mixed
     {
         $attributes = $reflection->getAttributes($name, $flags);
