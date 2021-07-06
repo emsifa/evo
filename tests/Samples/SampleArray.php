@@ -7,7 +7,7 @@ use Emsifa\Evo\DTO\UseCaster;
 use Emsifa\Evo\Tests\Samples\ChildObject as SamplesChildObject;
 use Emsifa\Evo\Types\ArrayOf;
 
-class ChildObject {
+class SampleArrayChildObject {
     public function __construct(
         public int $id = 0,
         public string $name = '',
@@ -34,6 +34,6 @@ class SampleArray
     #[ArrayOf('int', ifCastError: ArrayOf::KEEP_AS_IS)]
     public array $arrayOfIntKeepAsIs;
 
-    #[ArrayOf(ChildObject::class)]
+    #[ArrayOf(SampleArrayChildObject::class)]
     public array $childs;
 }

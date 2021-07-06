@@ -4,8 +4,8 @@ namespace Emsifa\Evo\Tests;
 
 use Emsifa\Evo\Casters\ArrayCaster;
 use Emsifa\Evo\Exceptions\CastErrorException;
-use Emsifa\Evo\Tests\Samples\ChildObject;
 use Emsifa\Evo\Tests\Samples\SampleArray;
+use Emsifa\Evo\Tests\Samples\SampleArrayChildObject;
 use ReflectionProperty;
 
 class ArrayCasterTest extends TestCase
@@ -105,9 +105,9 @@ class ArrayCasterTest extends TestCase
         $caster = new ArrayCaster;
         $output = $caster->cast($input, $prop);
         $this->assertEquals([
-            new ChildObject(id: 1, name: 'foo'),
-            new ChildObject(id: 2, name: 'bar'),
-            new ChildObject(id: 3, name: 'baz'),
+            new SampleArrayChildObject(id: 1, name: 'foo'),
+            new SampleArrayChildObject(id: 2, name: 'bar'),
+            new SampleArrayChildObject(id: 3, name: 'baz'),
         ], $output);
     }
 }
