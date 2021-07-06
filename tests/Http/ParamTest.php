@@ -9,14 +9,14 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Validation\ValidationException;
 use ReflectionNamedType;
-use ReflectionProperty;
+use ReflectionParameter;
 
 class ParamTest extends TestCase
 {
     public function testGetValueFromParam()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
         $reflection = $this->getMockReflectionParam('id', 'int');
         $request = $this->makeRequestWithRouteParams(["id" => "10"]);
@@ -29,7 +29,7 @@ class ParamTest extends TestCase
     public function testGetValueFromParamWithDifferentKeyName()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
         $reflection = $this->getMockReflectionParam('foo', 'string');
         $request = $this->makeRequestWithRouteParams(["slug" => "lorem-ipsum"]);
@@ -42,11 +42,11 @@ class ParamTest extends TestCase
     public function testGetValueFromParamWithCaster()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
         $reflection = $this->getMockReflectionParam('id', 'int');
         $request = $this->makeRequestWithRouteParams(["id" => "10"]);
-        $param = new Param('id', caster: new HalfIntCaster);
+        $param = new Param('id', caster: HalfIntCaster::class);
         $result = $param->getRequestValue($request, $reflection);
 
         $this->assertEquals(5, $result);
@@ -56,7 +56,7 @@ class ParamTest extends TestCase
     public function testValidationSucceed()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
         $reflection = $this->getMockReflectionParam('id', 'int');
         $request = $this->makeRequestWithRouteParams(["id" => "120"]);
@@ -68,7 +68,7 @@ class ParamTest extends TestCase
     public function testValidationError()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
         $reflection = $this->getMockReflectionParam('id', 'int');
         $request = $this->makeRequestWithRouteParams(["id" => "im-not-a-number"]);
@@ -90,15 +90,17 @@ class ParamTest extends TestCase
         return $request;
     }
 
-    private function getMockReflectionParam($name, $type, $allowsNull = false)
+    private function getMockReflectionParam($name, string $typeName = '', $allowsNull = false)
     {
-        $type = $this->createStub(ReflectionNamedType::class);
-        $type->method('getName')->willReturn($type);
-        $type->method('allowsNull')->willReturn($allowsNull);
+        if ($typeName) {
+            $type = $this->createStub(ReflectionNamedType::class);
+            $type->method('getName')->willReturn($typeName);
+            $type->method('allowsNull')->willReturn($allowsNull);
+        }
 
-        $reflection = $this->createStub(ReflectionProperty::class);
+        $reflection = $this->createStub(ReflectionParameter::class);
         $reflection->method('getName')->willReturn($name);
-        $reflection->method('getType')->willReturn($type);
+        $reflection->method('getType')->willReturn($typeName ? $type : null);
 
         return $reflection;
     }

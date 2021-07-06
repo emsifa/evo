@@ -18,7 +18,7 @@ abstract class CommonGetterAndValidator
 
     public function __construct(
         protected string $key = '',
-        protected ?Caster $caster = null,
+        protected ?string $caster = null,
         $rules = '',
     )
     {
@@ -43,7 +43,8 @@ abstract class CommonGetterAndValidator
         }
 
         if ($this->caster) {
-            return $this->caster->cast($value, $reflection);
+            $caster = $this->caster;
+            return (new $caster)->cast($value, $reflection);
         }
 
         return $value;

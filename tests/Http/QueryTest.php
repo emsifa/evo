@@ -8,16 +8,16 @@ use Emsifa\Evo\Tests\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use ReflectionNamedType;
-use ReflectionProperty;
+use ReflectionParameter;
 
 class QueryTest extends TestCase
 {
     public function testGetValueFromQuery()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
-        $reflection = $this->getMockReflectionQuery('id', 'int');
+        $reflection = $this->getMockReflectionParam('id', 'int');
         $request = $this->makeRequestWithRouteQueries(["id" => "10"]);
         $param = new Query();
         $result = $param->getRequestValue($request, $reflection);
@@ -28,9 +28,9 @@ class QueryTest extends TestCase
     public function testGetValueFromQueryWithDifferentKeyName()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
-        $reflection = $this->getMockReflectionQuery('foo', 'string');
+        $reflection = $this->getMockReflectionParam('foo', 'string');
         $request = $this->makeRequestWithRouteQueries(["slug" => "lorem-ipsum"]);
         $param = new Query('slug');
         $result = $param->getRequestValue($request, $reflection);
@@ -41,11 +41,11 @@ class QueryTest extends TestCase
     public function testGetValueFromQueryWithCaster()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
-        $reflection = $this->getMockReflectionQuery('id', 'int');
+        $reflection = $this->getMockReflectionParam('id', 'int');
         $request = $this->makeRequestWithRouteQueries(["id" => "10"]);
-        $param = new Query('id', caster: new HalfIntCaster);
+        $param = new Query('id', caster: HalfIntCaster::class);
         $result = $param->getRequestValue($request, $reflection);
 
         $this->assertEquals(5, $result);
@@ -55,9 +55,9 @@ class QueryTest extends TestCase
     public function testValidationSucceed()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
-        $reflection = $this->getMockReflectionQuery('id', 'int');
+        $reflection = $this->getMockReflectionParam('id', 'int');
         $request = $this->makeRequestWithRouteQueries(["id" => "120"]);
         $param = new Query('id', rules: 'numeric');
 
@@ -67,9 +67,9 @@ class QueryTest extends TestCase
     public function testValidationError()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
-        $reflection = $this->getMockReflectionQuery('id', 'int');
+        $reflection = $this->getMockReflectionParam('id', 'int');
         $request = $this->makeRequestWithRouteQueries(["id" => "im-not-a-number"]);
         $param = new Query('id', rules: 'numeric');
 
@@ -82,15 +82,17 @@ class QueryTest extends TestCase
         return new Request($queries);
     }
 
-    private function getMockReflectionQuery($name, $type, $allowsNull = false)
+    private function getMockReflectionParam($name, string $typeName = '', $allowsNull = false)
     {
-        $type = $this->createStub(ReflectionNamedType::class);
-        $type->method('getName')->willReturn($type);
-        $type->method('allowsNull')->willReturn($allowsNull);
+        if ($typeName) {
+            $type = $this->createStub(ReflectionNamedType::class);
+            $type->method('getName')->willReturn($typeName);
+            $type->method('allowsNull')->willReturn($allowsNull);
+        }
 
-        $reflection = $this->createStub(ReflectionProperty::class);
+        $reflection = $this->createStub(ReflectionParameter::class);
         $reflection->method('getName')->willReturn($name);
-        $reflection->method('getType')->willReturn($type);
+        $reflection->method('getType')->willReturn($typeName ? $type : null);
 
         return $reflection;
     }

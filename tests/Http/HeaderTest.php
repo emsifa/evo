@@ -8,16 +8,16 @@ use Emsifa\Evo\Tests\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use ReflectionNamedType;
-use ReflectionProperty;
+use ReflectionParameter;
 
 class HeaderTest extends TestCase
 {
     public function testGetValueFromHeader()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
-        $reflection = $this->getMockReflectionHeader('xToken', 'string');
+        $reflection = $this->getMockReflectionParam('xToken', 'string');
         $request = $this->makeRequestWithRouteHeaders(["x-token" => "abcde"]);
         $param = new Header();
         $result = $param->getRequestValue($request, $reflection);
@@ -28,9 +28,9 @@ class HeaderTest extends TestCase
     public function testGetValueFromHeaderWithDifferentKeyName()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
-        $reflection = $this->getMockReflectionHeader('token', 'string');
+        $reflection = $this->getMockReflectionParam('token', 'string');
         $request = $this->makeRequestWithRouteHeaders(["x-token" => "lorem-ipsum"]);
         $param = new Header('x-token');
         $result = $param->getRequestValue($request, $reflection);
@@ -41,11 +41,11 @@ class HeaderTest extends TestCase
     public function testGetValueFromHeaderWithCaster()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
-        $reflection = $this->getMockReflectionHeader('id', 'int');
+        $reflection = $this->getMockReflectionParam('id', 'int');
         $request = $this->makeRequestWithRouteHeaders(["id" => "10"]);
-        $param = new Header('id', caster: new HalfIntCaster);
+        $param = new Header('id', caster: HalfIntCaster::class);
         $result = $param->getRequestValue($request, $reflection);
 
         $this->assertEquals(5, $result);
@@ -55,9 +55,9 @@ class HeaderTest extends TestCase
     public function testValidationSucceed()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
-        $reflection = $this->getMockReflectionHeader('id', 'int');
+        $reflection = $this->getMockReflectionParam('id', 'int');
         $request = $this->makeRequestWithRouteHeaders(["id" => "120"]);
         $param = new Header('id', rules: 'numeric');
 
@@ -67,9 +67,9 @@ class HeaderTest extends TestCase
     public function testValidationError()
     {
         /**
-         * @var \ReflectionProperty
+         * @var \ReflectionParameter
          */
-        $reflection = $this->getMockReflectionHeader('id', 'int');
+        $reflection = $this->getMockReflectionParam('id', 'int');
         $request = $this->makeRequestWithRouteHeaders(["id" => "im-not-a-number"]);
         $param = new Header('id', rules: 'numeric');
 
@@ -86,15 +86,17 @@ class HeaderTest extends TestCase
         return $request;
     }
 
-    private function getMockReflectionHeader($name, $type, $allowsNull = false)
+    private function getMockReflectionParam($name, string $typeName = '', $allowsNull = false)
     {
-        $type = $this->createStub(ReflectionNamedType::class);
-        $type->method('getName')->willReturn($type);
-        $type->method('allowsNull')->willReturn($allowsNull);
+        if ($typeName) {
+            $type = $this->createStub(ReflectionNamedType::class);
+            $type->method('getName')->willReturn($typeName);
+            $type->method('allowsNull')->willReturn($allowsNull);
+        }
 
-        $reflection = $this->createStub(ReflectionProperty::class);
+        $reflection = $this->createStub(ReflectionParameter::class);
         $reflection->method('getName')->willReturn($name);
-        $reflection->method('getType')->willReturn($type);
+        $reflection->method('getType')->willReturn($typeName ? $type : null);
 
         return $reflection;
     }
