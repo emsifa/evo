@@ -1,4 +1,4 @@
-# Evolutionize the way you write Laravel code
+# Laravel Evo
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/emsifa/evo.svg?style=flat-square)](https://packagist.org/packages/emsifa/evo)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/emsifa/evo/run-tests?label=tests)](https://github.com/emsifa/evo/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -6,24 +6,56 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/emsifa/evo.svg?style=flat-square)](https://packagist.org/packages/emsifa/evo)
 
 ---
-This repo can be used as to scaffold a Laravel package. Follow these steps to get started:
+Laravel Evo is package to evolve your Laravel code into something like this:
 
-1. Press the "Use template" button at the top of this repo to create a new repo with the contents of this evo
-2. Run "./configure-evo.sh" to run a script that will replace all placeholders throughout all the files
-3. Remove this block of text.
-4. Have fun creating your package.
-5. If you need help creating a package, consider picking up our <a href="https://laravelpackage.training">Laravel Package Training</a> video course.
----
+```php
+#[UsePrefix('users')]
+class UserController extends Controller
+{
+    #[Get]
+    public function index(
+        #[Query] int $limit,
+        #[Query] int $offset,
+        #[Query('q')] string $keyword,
+    ): UserPaginationResponse
+    {
+        // your logic goes here
+    }
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+    #[Post]
+    public function store(
+        #[Body] CreateUserDTO $data
+    ): StoreUserResponse
+    {
+        // your logic goes here
+    }
+    
+    #[Put('{id}')]
+    public function update(
+        #[Param] int $id,
+        #[Body] UpdateUserDTO $data,
+    ): UpdateUserResponse
+    {
+        // your logic goes here
+    }
+}
+```
 
-## Support us
+## But Why?
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/evo.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/evo)
+It forces your brain to defines input and output before writing its logic. So when it comes to write business logic, you know exactly what you have, and what to return. 
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
+Also, by defining input and output type like this, not only you and your teammate gain more understanding about the code. Machines too.
 
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+So, when you add this line to `routes/web.php`:
+
+```php
+EvoFacade::swagger('/docs');
+```
+
+Evo can understand your code. And it can generate this stuff for you:
+
+
 
 ## Installation
 
@@ -33,31 +65,19 @@ You can install the package via composer:
 composer require emsifa/evo
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --provider="Emsifa\Evo\EvoServiceProvider" --tag="evo-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-```bash
-php artisan vendor:publish --provider="Emsifa\Evo\EvoServiceProvider" --tag="evo-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
 ## Usage
 
+To be able to use Laravel Controller in Evo way, you have to register route with `EvoFacade::routes` method like below:
+
 ```php
-$evo = new Emsifa\Evo();
-echo $evo->echoPhrase('Hello, Spatie!');
+// routes/web.php or routes/api.php
+
+use Emsifa\Evo\EvoFacade as Evo;
+
+Evo::routes(App\Http\Controllers\UserController::class);
 ```
+
+
 
 ## Testing
 
