@@ -8,7 +8,6 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Collection;
 use ReflectionAttribute;
 use ReflectionClass;
-use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty;
 
@@ -19,6 +18,7 @@ class ValidatorHelper
         if ($reflection instanceof ReflectionClass) {
             return static::getRulesFromClass($reflection);
         }
+
         return static::getRulesFromParameterOrProperty($reflection, $keyAlias);
     }
 
@@ -52,6 +52,7 @@ class ValidatorHelper
             $propRules = static::getRulesFromReflection($prop);
             $rules = array_merge($rules, $propRules);
         }
+
         return $rules;
     }
 
@@ -68,30 +69,32 @@ class ValidatorHelper
 
         if (class_exists($typeName)) {
             $classReflection = new ReflectionClass($typeName);
+
             return static::getRulesFromReflection($classReflection);
         }
 
         return [];
     }
 
-    public static function getArrayItemRules(ReflectionProperty|ReflectionParameter $reflection): array
+    public static function getArrayItemRules(ReflectionProperty | ReflectionParameter $reflection): array
     {
         /**
          * @var ArrayOf $arrayOf
          */
         $arrayOf = ReflectionHelper::getFirstAttributeInstance($reflection, ArrayOf::class, ReflectionAttribute::IS_INSTANCEOF);
-        if (!$arrayOf) {
+        if (! $arrayOf) {
             return [];
         }
 
         $itemTypeName = $arrayOf->getType();
+
         return static::resolveRules(static::getRulesFromTypeName($itemTypeName), "*");
     }
 
     protected static function resolveRules(array $otherRules, string $keyName): array
     {
-        $keyRules = collect($otherRules)->filter(fn($_, $key) => is_numeric($key));
-        $childRules = collect($otherRules)->filter(fn($_, $key) => !is_numeric($key));
+        $keyRules = collect($otherRules)->filter(fn ($_, $key) => is_numeric($key));
+        $childRules = collect($otherRules)->filter(fn ($_, $key) => ! is_numeric($key));
 
         $rules = [];
         if (count($keyRules)) {
