@@ -12,7 +12,7 @@ use ReflectionProperty;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class UploadedFilePathCaster implements Caster
 {
-    public function cast($value, ReflectionProperty|ReflectionParameter $prop): mixed
+    public function cast($value, ReflectionProperty | ReflectionParameter $prop): mixed
     {
         if ($value instanceof UploadedFile) {
             return $value->getPathname();
