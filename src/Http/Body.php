@@ -27,11 +27,6 @@ class Body implements RequestGetter, RequestValidator
         $this->rules = $rules;
     }
 
-    public function getKey(ReflectionParameter | ReflectionProperty $reflection): string
-    {
-        return $this->key ?: $reflection->getName();
-    }
-
     public function getRequestValue(Request $request, ReflectionParameter | ReflectionProperty $reflection): mixed
     {
         $typeName = optional($reflection->getType())->getName();
