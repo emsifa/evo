@@ -23,7 +23,8 @@ class Body implements RequestGetter, RequestValidator
      */
     protected $rules;
 
-    public function __construct(protected ?string $caster = null, $rules = '') {
+    public function __construct(protected ?string $caster = null, $rules = '')
+    {
         $this->rules = $rules;
     }
 
@@ -36,7 +37,7 @@ class Body implements RequestGetter, RequestValidator
     {
         $typeName = optional($reflection->getType())->getName();
 
-        if (!$typeName) {
+        if (! $typeName) {
             return $this->getMergedInputsAndFiles($request);
         }
 
@@ -69,13 +70,13 @@ class Body implements RequestGetter, RequestValidator
     {
         $typeName = optional($reflection->getType())->getName();
 
-        if (!$typeName) {
+        if (! $typeName) {
             return;
         }
 
         $rules = ValidatorHelper::getRulesFromClass(new ReflectionClass($typeName));
 
-        if (!empty($rules)) {
+        if (! empty($rules)) {
             $data = $this->getMergedInputsAndFiles($request);
             Validator::make($data, $rules)->validate();
         }

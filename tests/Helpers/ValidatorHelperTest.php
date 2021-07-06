@@ -36,7 +36,7 @@ class ValidatorHelperTest extends TestCase
         $this->assertEquals(['myMixedArray' => ['array']], ValidatorHelper::getRulesFromParameterOrProperty($myMixedArray));
         $this->assertEquals([
             'myArrayOfInt' => ['array'],
-            'myArrayOfInt.*' => ['numeric']
+            'myArrayOfInt.*' => ['numeric'],
         ], ValidatorHelper::getRulesFromParameterOrProperty($myArrayOfInt));
         $this->assertEquals([
             'childs' => ['array'],
