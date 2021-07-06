@@ -49,6 +49,9 @@ abstract class CommonGetterAndValidator
         return $value;
     }
 
+    /**
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function validateRequest(Request $request, ReflectionProperty | ReflectionParameter $reflection)
     {
         $key = $this->getKey($reflection);
