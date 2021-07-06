@@ -6,12 +6,13 @@ use Attribute;
 use Emsifa\Evo\Contracts\RequestGetter;
 use Emsifa\Evo\Contracts\RequestValidator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 #[Attribute(Attribute::TARGET_PROPERTY + Attribute::TARGET_PARAMETER)]
-class Param extends CommonGetterAndValidator implements RequestGetter, RequestValidator
+class Header extends CommonGetterAndValidator implements RequestGetter, RequestValidator
 {
     public function getValue(Request $request, string $key): mixed
     {
-        return $request->route($key);
+        return $request->header(Str::snake($key, '-'));
     }
 }

@@ -8,10 +8,10 @@ use Emsifa\Evo\Contracts\RequestValidator;
 use Illuminate\Http\Request;
 
 #[Attribute(Attribute::TARGET_PROPERTY + Attribute::TARGET_PARAMETER)]
-class Param extends CommonGetterAndValidator implements RequestGetter, RequestValidator
+class Query extends CommonGetterAndValidator implements RequestGetter, RequestValidator
 {
     public function getValue(Request $request, string $key): mixed
     {
-        return $request->route($key);
+        return $request->query($key);
     }
 }
