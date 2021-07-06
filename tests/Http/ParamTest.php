@@ -81,9 +81,10 @@ class ParamTest extends TestCase
     private function makeRequestWithRouteParams(array $params): Request
     {
         $request = new Request();
-        $request->setRouteResolver(function() use ($params) {
+        $request->setRouteResolver(function () use ($params) {
             $route = new Route('POST', '/', []);
             $route->parameters = $params;
+
             return $route;
         });
 

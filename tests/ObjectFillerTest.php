@@ -119,7 +119,7 @@ class ObjectFillerTest extends TestCase
         ObjectFiller::fillObject($object, [
             'child' => [
                 'number' => 10,
-                'text' => 'Hello'
+                'text' => 'Hello',
             ],
         ]);
 
@@ -135,7 +135,7 @@ class ObjectFillerTest extends TestCase
         $object = new ObjectWithOverridedCaster;
 
         ObjectFiller::fillObject($object, [
-            'number' => "120"
+            'number' => "120",
         ]);
 
         $this->assertEquals($object->number, 60);

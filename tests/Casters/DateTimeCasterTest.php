@@ -7,7 +7,6 @@ use Emsifa\Evo\Casters\DateTimeCaster;
 use Emsifa\Evo\Exceptions\CastErrorException;
 use Emsifa\Evo\Tests\Samples\SampleDateTime;
 use ReflectionProperty;
-use stdClass;
 
 class DateTimeCasterTest extends TestCase
 {

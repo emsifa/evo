@@ -15,7 +15,8 @@ class ArrayOf
     public function __construct(
         protected string $type,
         protected int $ifCastError = 0,
-    ) {}
+    ) {
+    }
 
     public function getType(): string
     {

@@ -9,7 +9,7 @@ use ReflectionProperty;
 
 class FloatCaster implements Caster
 {
-    public function cast($value, ReflectionProperty|ReflectionParameter $prop): mixed
+    public function cast($value, ReflectionProperty | ReflectionParameter $prop): mixed
     {
         $nullable = optional($prop->getType())->allowsNull();
         if ($nullable && is_null($value)) {

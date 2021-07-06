@@ -11,7 +11,7 @@ use ReflectionProperty;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class HalfIntCaster implements Caster
 {
-    public function cast($value, ReflectionProperty|ReflectionParameter $prop): mixed
+    public function cast($value, ReflectionProperty | ReflectionParameter $prop): mixed
     {
         if (is_numeric($value)) {
             return $value / 2;

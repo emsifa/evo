@@ -44,7 +44,7 @@ class ObjectFiller
         $castWith = ReflectionHelper::getFirstAttributeInstance($prop, CastWith::class, ReflectionAttribute::IS_INSTANCEOF);
         $propCaster = $castWith ? $castWith->getCaster() : null;
 
-        if (!$propCaster && $typeName) {
+        if (! $propCaster && $typeName) {
             $propCaster = Arr::get($casters, $typeName);
         }
 
@@ -53,16 +53,18 @@ class ObjectFiller
              * @var Caster $caster
              */
             $caster = is_string($propCaster) ? new $propCaster : $propCaster;
+
             return $caster->cast($value, $prop);
         }
 
-        if (!$typeName) {
+        if (! $typeName) {
             return $value;
         }
 
         if (is_array($value) && class_exists($typeName)) {
             $object = new $typeName;
             static::fillObject($object, $value);
+
             return $object;
         }
 
@@ -94,7 +96,7 @@ class ObjectFiller
              */
             $useCaster = $attr->newInstance();
             $type = $useCaster->getType();
-            if (!array_key_exists($type, $casters)) {
+            if (! array_key_exists($type, $casters)) {
                 $casterClass = $useCaster->getCaster();
                 $casters[$type] = new $casterClass;
             }

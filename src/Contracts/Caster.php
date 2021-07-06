@@ -7,5 +7,5 @@ use ReflectionProperty;
 
 interface Caster
 {
-    public function cast($value, ReflectionProperty|ReflectionParameter $prop): mixed;
+    public function cast($value, ReflectionProperty | ReflectionParameter $prop): mixed;
 }

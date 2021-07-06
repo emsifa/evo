@@ -83,6 +83,7 @@ class HeaderTest extends TestCase
         foreach ($headers as $key => $value) {
             $request->headers->set($key, $value);
         }
+
         return $request;
     }
 

@@ -8,5 +8,5 @@ use ReflectionProperty;
 
 interface RequestGetter
 {
-    public function getRequestValue(Request $request, ReflectionParameter|ReflectionProperty $reflection): mixed;
+    public function getRequestValue(Request $request, ReflectionParameter | ReflectionProperty $reflection): mixed;
 }

@@ -10,7 +10,7 @@ use ReflectionProperty;
 
 class ValidatorHelper
 {
-    public static function getRulesFromReflection(ReflectionProperty|ReflectionParameter $reflection): array
+    public static function getRulesFromReflection(ReflectionProperty | ReflectionParameter $reflection): array
     {
         return [];
     }
@@ -18,6 +18,7 @@ class ValidatorHelper
     public static function throwValidationException(Request $request, Validator $validator)
     {
         $response = static::makeInvalidResponse($request, $validator);
+
         throw new ValidationException($validator, $response);
     }
 

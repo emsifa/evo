@@ -2,9 +2,9 @@
 
 namespace Emsifa\Evo\Tests;
 
+use Emsifa\Evo\EvoServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Emsifa\Evo\EvoServiceProvider;
 
 class TestCase extends Orchestra
 {

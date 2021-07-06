@@ -10,7 +10,8 @@ class UseCaster
     public function __construct(
         protected string $type,
         protected string $caster,
-    ){}
+    ) {
+    }
 
     public function getType(): string
     {
