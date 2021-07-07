@@ -21,8 +21,7 @@ class Put extends Route
         $middleware = '',
         string $domain = '',
         array $where = [],
-    )
-    {
+    ) {
         parent::__construct(['PUT'], $uri, $middleware, $domain, $where);
     }
 }

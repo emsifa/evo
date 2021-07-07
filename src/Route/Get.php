@@ -21,8 +21,7 @@ class Get extends Route
         $middleware = '',
         string $domain = '',
         array $where = [],
-    )
-    {
+    ) {
         parent::__construct(['GET'], $uri, $middleware, $domain, $where);
     }
 }

@@ -21,8 +21,7 @@ class Post extends Route
         $middleware = '',
         string $domain = '',
         array $where = [],
-    )
-    {
+    ) {
         parent::__construct(['POST'], $uri, $middleware, $domain, $where);
     }
 }

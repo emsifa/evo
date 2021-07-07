@@ -25,8 +25,7 @@ class Route extends BaseRoute
         $middleware = null,
         ?string $domain = null,
         array $where = [],
-    )
-    {
+    ) {
         $this->uri = $uri;
         $this->methods = (array) $methods;
 
@@ -38,7 +37,7 @@ class Route extends BaseRoute
             $this->action['domain'] = $domain;
         }
 
-        if (in_array('GET', $this->methods) && !in_array('HEAD', $this->methods)) {
+        if (in_array('GET', $this->methods) && ! in_array('HEAD', $this->methods)) {
             $this->methods[] = 'HEAD';
         }
 

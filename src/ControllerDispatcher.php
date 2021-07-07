@@ -26,6 +26,7 @@ class ControllerDispatcher extends BaseControllerDispatcher
         $request = $this->getRequest();
 
         $parameters = $this->resolveParameters($request, $route, $controller, $method);
+
         return call_user_func_array([$controller, $method], $parameters);
     }
 

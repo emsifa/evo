@@ -4,7 +4,6 @@ namespace Emsifa\Evo\Route;
 
 use Attribute;
 use Emsifa\Evo\Contracts\RouteModifier;
-use Emsifa\Evo\Route\Route;
 
 #[Attribute(Attribute::TARGET_CLASS + Attribute::TARGET_METHOD)]
 class RouteMiddleware implements RouteModifier
