@@ -17,7 +17,7 @@ class Delete extends Route
      * @return void
      */
     public function __construct(
-        string $uri,
+        string $uri = '',
         $middleware = '',
         string $domain = '',
         array $where = [],
