@@ -20,7 +20,8 @@ class Evo
     public function __construct(
         protected Router $router,
         protected Container $container,
-    ) {}
+    ) {
+    }
 
     /**
      * @return Router
@@ -74,8 +75,12 @@ class Evo
             $methodRoutes = ReflectionHelper::getAttributesInstances($method, Route::class, ReflectionAttribute::IS_INSTANCEOF);
             $routeModifiers = array_merge(
                 $routeModifiers,
-                ReflectionHelper::getAttributesInstances($method, RouteModifier::class, ReflectionAttribute::IS_INSTANCEOF,
-            ));
+                ReflectionHelper::getAttributesInstances(
+                    $method,
+                    RouteModifier::class,
+                    ReflectionAttribute::IS_INSTANCEOF,
+                )
+            );
             /**
              * @var \Emsifa\Evo\Route\Route $route
              */
@@ -99,6 +104,7 @@ class Evo
         foreach ($modifiers as $modifier) {
             $modifier->modifyRoute($route);
         }
+
         return $route;
     }
 }

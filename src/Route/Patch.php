@@ -21,8 +21,7 @@ class Patch extends Route
         $middleware = '',
         string $domain = '',
         array $where = [],
-    )
-    {
+    ) {
         parent::__construct(['PATCH'], $uri, $middleware, $domain, $where);
     }
 }
