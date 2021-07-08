@@ -4,7 +4,7 @@ namespace Emsifa\Evo\DTO;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_CLASS)]
 class UseCaster
 {
     public function __construct(

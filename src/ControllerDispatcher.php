@@ -2,6 +2,7 @@
 
 namespace Emsifa\Evo;
 
+use Emsifa\Evo\Contracts\RequestGetter;
 use Emsifa\Evo\Contracts\RequestValidator;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Illuminate\Http\Request;
@@ -25,12 +26,12 @@ class ControllerDispatcher extends BaseControllerDispatcher
     {
         $request = $this->getRequest();
 
-        $parameters = $this->resolveParameters($request, $route, $controller, $method);
+        $parameters = $this->resolveParameters($request, $controller, $method);
 
         return call_user_func_array([$controller, $method], $parameters);
     }
 
-    public function resolveParameters(Request $request, Route $route, $controller, $method): array
+    public function resolveParameters(Request $request, $controller, $method): array
     {
         $parameters = [];
 
