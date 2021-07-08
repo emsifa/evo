@@ -30,8 +30,7 @@ class SampleController extends Controller
     public function postStuff(
         #[Query('x')] string $stuff,
         #[Body()] PostStuffDTO $data,
-    )
-    {
+    ) {
     }
 
     #[Put('stuff')]

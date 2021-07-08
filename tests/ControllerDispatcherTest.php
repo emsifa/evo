@@ -69,6 +69,7 @@ class ControllerDispatcherTest extends TestCase
             $errors = $e->validator->errors()->toArray();
             $this->assertEquals(1, count($errors));
             $this->assertArrayHasKey('age', $errors);
+
             throw $e;
         }
     }
