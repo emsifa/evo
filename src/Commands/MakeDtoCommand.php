@@ -96,13 +96,14 @@ class MakeDtoCommand extends Command
         $uses = [];
         $arrayOfClass = ArrayOf::class;
         foreach ($properties as $prop) {
-            if ($prop["className"] && !$this->isSameNamespace($fullClassName, $prop["className"])) {
-                $uses[] =  $prop["className"];
+            if ($prop["className"] && ! $this->isSameNamespace($fullClassName, $prop["className"])) {
+                $uses[] = $prop["className"];
             }
-            if ($prop["isTypedArray"] && !in_array($arrayOfClass, $uses)) {
+            if ($prop["isTypedArray"] && ! in_array($arrayOfClass, $uses)) {
                 $uses[] = $arrayOfClass;
             }
         }
+
         return $uses;
     }
 
@@ -127,9 +128,10 @@ class MakeDtoCommand extends Command
                 $bodyLines[] = "public {$nullableSign}{$prop['type']} \${$prop['name']};";
             }
         }
-        if (count($bodyLines) && $bodyLines[count($bodyLines)-1] === "") {
+        if (count($bodyLines) && $bodyLines[count($bodyLines) - 1] === "") {
             array_pop($bodyLines);
         }
+
         return $bodyLines;
     }
 
@@ -147,12 +149,14 @@ class MakeDtoCommand extends Command
     {
         $split = explode("\\", $fullClassName);
         array_pop($split);
+
         return count($split) ? implode("\\", $split) : "";
     }
 
     protected function getClassName(string $fullClassName): string
     {
         $split = explode("\\", $fullClassName);
+
         return array_pop($split);
     }
 
@@ -160,6 +164,7 @@ class MakeDtoCommand extends Command
     {
         $path = "DTO/{$file}.php";
         $path = str_replace("/", DIRECTORY_SEPARATOR, $path);
+
         return app_path($path);
     }
 
@@ -176,10 +181,11 @@ class MakeDtoCommand extends Command
                 "type" => $isBuiltInType ? $type : pathinfo($type, PATHINFO_FILENAME),
                 "isNullable" => $isNullable,
                 "isTypedArray" => $isTypedArray,
-                "className" => !$isBuiltInType ? $this->getTypeClassName($type) : null,
-                "filePath" => !$isBuiltInType && !class_exists($type) ? $this->getOutputPath($type) : null,
+                "className" => ! $isBuiltInType ? $this->getTypeClassName($type) : null,
+                "filePath" => ! $isBuiltInType && ! class_exists($type) ? $this->getOutputPath($type) : null,
             ];
         }
+
         return $results;
     }
 
