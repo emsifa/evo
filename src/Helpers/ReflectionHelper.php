@@ -2,6 +2,7 @@
 
 namespace Emsifa\Evo\Helpers;
 
+use ReflectionAttribute;
 use ReflectionClass;
 
 class ReflectionHelper
@@ -24,6 +25,12 @@ class ReflectionHelper
         }
 
         return $attributes;
+    }
+
+    public static function getFirstClassAttribute($object, ?string $attrName = null, int $flags = 0): ?ReflectionAttribute
+    {
+        $attributes = static::getClassAttributes($object, $attrName, $flags);
+        return count($attributes) ? $attributes[0] : null;
     }
 
     /**

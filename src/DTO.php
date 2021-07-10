@@ -11,6 +11,8 @@ use Emsifa\Evo\Casters\FloatCaster;
 use Emsifa\Evo\Casters\IntCaster;
 use Emsifa\Evo\Casters\StringCaster;
 use Emsifa\Evo\DTO\UseCaster;
+use Emsifa\Evo\Helpers\ObjectHelper;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -22,14 +24,14 @@ use Illuminate\Support\Collection;
 #[UseCaster('array', ArrayCaster::class)]
 #[UseCaster(DateTime::class, DateTimeCaster::class)]
 #[UseCaster(Collection::class, CollectionCaster::class)]
-abstract class DTO
+abstract class DTO implements Arrayable
 {
     public function toArray(): array
     {
-        return [];
+        return ObjectHelper::toArray($this);
     }
 
-    public static function fromArray(array &$data): static
+    public static function fromArray(array $data): static
     {
         $object = new static;
 

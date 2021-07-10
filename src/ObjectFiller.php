@@ -25,7 +25,7 @@ class ObjectFiller
     public static function fillObject(object &$obj, array $data): void
     {
         $casters = static::getCasters(get_class($obj));
-        $props = (new ReflectionClass($obj))->getProperties();
+        $props = (new ReflectionClass($obj))->getProperties(ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
             $value = static::getValue($prop, $data, $casters);
             $prop->setValue($obj, $value);
