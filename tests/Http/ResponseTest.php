@@ -29,7 +29,7 @@ class ResponseTest extends TestCase
                 'name' => "John Doe",
                 'email' => "johndoe@mail.com",
                 'createdAt' => "2015-12-15",
-            ]
+            ],
         ]);
 
         $this->assertEquals($expected, $response->getContent());

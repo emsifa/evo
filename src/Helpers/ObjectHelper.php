@@ -21,6 +21,7 @@ class ObjectHelper
                 $result[$name] = $value;
             }
         }
+
         return $result;
     }
 }

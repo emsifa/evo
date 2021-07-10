@@ -18,6 +18,7 @@ class SampleJsonTemplate implements JsonTemplate
     {
         $this->status = $response->getStatus();
         $this->data = $response->getData();
+
         return $this;
     }
 }

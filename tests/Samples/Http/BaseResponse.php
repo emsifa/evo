@@ -16,6 +16,7 @@ abstract class BaseResponse extends JsonResponse
     public function withStatus(int $status): static
     {
         $this->status = $status;
+
         return $this;
     }
 
