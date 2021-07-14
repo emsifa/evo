@@ -18,8 +18,9 @@ class EvoServiceProvider extends PackageServiceProvider
         $package
             ->name('evo')
             // ->hasConfigFile()
-            // ->hasViews()
             // ->hasMigration('create_evo_table')
+            ->hasViews()
+            ->hasAssets()
             ->hasCommand(MakeDtoCommand::class);
     }
 }

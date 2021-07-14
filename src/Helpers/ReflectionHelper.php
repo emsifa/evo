@@ -4,6 +4,7 @@ namespace Emsifa\Evo\Helpers;
 
 use ReflectionAttribute;
 use ReflectionClass;
+use ReflectionUnionType;
 
 class ReflectionHelper
 {
@@ -69,6 +70,17 @@ class ReflectionHelper
     public static function hasAttribute($reflection, ?string $name, int $flags = 0): bool
     {
         return count($reflection->getAttributes($name, $flags)) > 0;
+    }
+
+    public static function unionHasType(ReflectionUnionType $type, string $typeName): bool
+    {
+        foreach ($type->getTypes() as $type) {
+            $name = $type->getName();
+            if (is_a($name, $typeName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static function getParents($class): array

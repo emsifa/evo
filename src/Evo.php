@@ -5,6 +5,7 @@ namespace Emsifa\Evo;
 use Emsifa\Evo\Contracts\RouteModifier;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Emsifa\Evo\Route\Route;
+use Emsifa\Evo\Swagger\SwaggerController;
 use Illuminate\Container\Container;
 use Illuminate\Routing\Router;
 use ReflectionAttribute;
@@ -57,6 +58,22 @@ class Evo
         $routes = $this->getRoutesFromController($controller);
         foreach ($routes as $route) {
             $this->router->getRoutes()->add($route);
+        }
+    }
+
+    /**
+     * @param  string $path
+     * @param  string|array|null $middleware
+     * @return void
+     */
+    public function swagger(string $path = 'swagger', $middleware = null)
+    {
+        $showUi = $this->router->get($path, [SwaggerController::class, 'showUi']);
+        $openApi = $this->router->get("{$path}/openapi", [SwaggerController::class, 'openApi'])->name('evo:openapi');
+
+        if ($middleware) {
+            $showUi->middleware($middleware);
+            $openApi->middleware($middleware);
         }
     }
 

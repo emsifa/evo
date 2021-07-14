@@ -23,9 +23,18 @@ class Body implements RequestGetter, RequestValidator
      */
     protected $rules;
 
-    public function __construct(protected ?string $caster = null, $rules = '')
+    public function __construct(
+        protected ?string $caster = null,
+        protected string $description = '',
+        $rules = '',
+    )
     {
         $this->rules = $rules;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 
     public function getRequestValue(Request $request, ReflectionParameter | ReflectionProperty $reflection): mixed
