@@ -4,13 +4,7 @@ namespace Emsifa\Evo\Tests;
 
 use Emsifa\Evo\Evo;
 use Emsifa\Evo\EvoServiceProvider;
-use Emsifa\Evo\Tests\Samples\Controllers\SampleController;
-use Illuminate\Container\Container;
-use Illuminate\Events\Dispatcher;
 use Illuminate\Foundation\Application;
-use Illuminate\Routing\Route;
-use Illuminate\Routing\Router;
-use ReflectionMethod;
 
 class EvoServiceProviderTest extends TestCase
 {
