@@ -27,7 +27,7 @@ class EvoServiceProvider extends PackageServiceProvider
 
     public function registeringPackage()
     {
-        $this->app->singleton(Evo::class, function() {
+        $this->app->singleton(Evo::class, function () {
             return new Evo(app(Router::class), app(Container::class));
         });
 
