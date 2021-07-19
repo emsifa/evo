@@ -3,6 +3,8 @@
 namespace Emsifa\Evo;
 
 use Emsifa\Evo\Commands\MakeDtoCommand;
+use Illuminate\Container\Container;
+use Illuminate\Routing\Router;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -25,6 +27,10 @@ class EvoServiceProvider extends PackageServiceProvider
 
     public function registeringPackage()
     {
+        $this->app->singleton(Evo::class, function() {
+            return new Evo(app(Router::class), app(Container::class));
+        });
+
         $this->app->bind('evo', fn () => $this->app->make(Evo::class));
     }
 }
