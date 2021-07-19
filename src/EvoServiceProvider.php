@@ -22,4 +22,9 @@ class EvoServiceProvider extends PackageServiceProvider
             // ->hasMigration('create_evo_table')
             ->hasCommand(MakeDtoCommand::class);
     }
+
+    public function registeringPackage()
+    {
+        $this->app->bind('evo', fn () => $this->app->make(Evo::class));
+    }
 }
