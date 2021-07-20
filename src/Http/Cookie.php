@@ -6,7 +6,6 @@ use Attribute;
 use Emsifa\Evo\Contracts\RequestGetter;
 use Emsifa\Evo\Contracts\RequestValidator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 #[Attribute(Attribute::TARGET_PROPERTY + Attribute::TARGET_PARAMETER)]
 class Cookie extends CommonGetterAndValidator implements RequestGetter, RequestValidator
