@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Max implements Rule
+class Between implements Rule
 {
     use ValidatesAttributes;
     use GetSizeType;
