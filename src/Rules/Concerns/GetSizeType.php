@@ -20,6 +20,7 @@ trait GetSizeType
         if ($value instanceof File) {
             return "file";
         }
+
         return null;
     }
 }

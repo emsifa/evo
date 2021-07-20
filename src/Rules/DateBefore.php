@@ -14,7 +14,8 @@ class DateBefore implements Rule
     public function __construct(
         protected string $date,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {

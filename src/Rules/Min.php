@@ -18,11 +18,13 @@ class Min implements Rule
     public function __construct(
         protected int $min,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {
         $this->type = $this->getSizeType($value);
+
         return $this->validateMin($attribute, $value, [$this->min]);
     }
 

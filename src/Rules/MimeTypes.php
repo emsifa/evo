@@ -3,7 +3,6 @@
 namespace Emsifa\Evo\Rules;
 
 use Attribute;
-use Emsifa\Evo\Rules\Concerns\GetSizeType;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
@@ -16,9 +15,10 @@ class MimeTypes implements Rule
         /**
          * @var string|string[]
          */
-        protected string|array $mimeTypes,
+        protected string | array $mimeTypes,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {
@@ -30,6 +30,7 @@ class MimeTypes implements Rule
         if (is_string($this->mimeTypes)) {
             return explode($this->mimeTypes, ",");
         }
+
         return $this->mimeTypes;
     }
 

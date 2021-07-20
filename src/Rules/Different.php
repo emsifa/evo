@@ -14,7 +14,8 @@ class Different implements Rule
     public function __construct(
         protected string $field,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {

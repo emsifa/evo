@@ -14,7 +14,8 @@ class CurrentPassword implements Rule
     public function __construct(
         protected string $guard,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {

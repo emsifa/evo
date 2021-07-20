@@ -14,7 +14,8 @@ class MultipleOf implements Rule
     public function __construct(
         protected mixed $value,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {

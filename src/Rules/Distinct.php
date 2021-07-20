@@ -15,7 +15,8 @@ class Distinct implements Rule
         protected bool $strict = false,
         protected bool $ignoreCase = false,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {

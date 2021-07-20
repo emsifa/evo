@@ -18,11 +18,13 @@ class Max implements Rule
     public function __construct(
         protected int $max,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {
         $this->type = $this->getSizeType($value);
+
         return $this->validateMax($attribute, $value, [$this->max]);
     }
 

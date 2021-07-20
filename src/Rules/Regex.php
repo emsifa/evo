@@ -14,7 +14,8 @@ class Regex implements Rule
     public function __construct(
         protected string $pattern,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {

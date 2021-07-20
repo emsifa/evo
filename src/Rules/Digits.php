@@ -14,7 +14,8 @@ class Digits implements Rule
     public function __construct(
         protected int $count,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {

@@ -15,7 +15,8 @@ class DigitsBetween implements Rule
         protected int $min,
         protected int $max,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {

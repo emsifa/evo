@@ -16,13 +16,15 @@ class Size implements Rule
     protected string $type;
 
     public function __construct(
-        protected int|float $size,
+        protected int | float $size,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {
         $this->type = $this->getSizeType($value);
+
         return $this->validateSize($attribute, $value, [$this->size]);
     }
 

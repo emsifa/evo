@@ -19,11 +19,13 @@ class Max implements Rule
         protected int $min,
         protected int $max,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {
         $this->type = $this->getSizeType($value);
+
         return $this->validateBetween($attribute, $value, [$this->min, $this->max]);
     }
 

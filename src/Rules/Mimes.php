@@ -17,7 +17,8 @@ class Mimes implements Rule
          */
         protected array $mimes,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     /**
      * @param  string $attribute

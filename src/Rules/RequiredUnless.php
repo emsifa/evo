@@ -15,7 +15,8 @@ class RequiredUnless implements Rule
         protected string $field,
         protected mixed $values,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {
@@ -25,6 +26,7 @@ class RequiredUnless implements Rule
     protected function getParameters()
     {
         $values = is_array($this->values) ? $this->values : explode(",", $this->values);
+
         return [$this->field, ...$values];
     }
 

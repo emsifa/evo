@@ -20,7 +20,8 @@ class Dimensions implements Rule
         protected ?int $height = null,
         protected ?float $ratio = null,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {
@@ -40,8 +41,8 @@ class Dimensions implements Rule
         ];
 
         return collect($params)
-            ->filter(fn($value) => !is_null($value))
-            ->map(fn($value, $key) => "{$key}={$value}")
+            ->filter(fn ($value) => ! is_null($value))
+            ->map(fn ($value, $key) => "{$key}={$value}")
             ->values()
             ->toArray();
     }

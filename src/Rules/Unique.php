@@ -17,7 +17,8 @@ class Unique implements Rule
         protected mixed $except = null,
         protected string $idColumn = 'id',
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {

@@ -14,7 +14,8 @@ class ArrayWith implements Rule
     public function __construct(
         protected array $keys,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {

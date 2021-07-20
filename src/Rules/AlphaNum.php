@@ -13,7 +13,8 @@ class AlphaNum implements Rule
 
     public function __construct(
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {

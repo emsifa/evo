@@ -17,7 +17,8 @@ class EndsWith implements Rule
          */
         protected $values,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {

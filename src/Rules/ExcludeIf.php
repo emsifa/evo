@@ -14,7 +14,8 @@ class ExcludeIf implements Rule
     public function __construct(
         protected string $field,
         protected mixed $value,
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {

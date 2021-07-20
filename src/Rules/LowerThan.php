@@ -18,11 +18,13 @@ class LowerThan implements Rule
     public function __construct(
         protected string $field,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {
         $this->type = $this->getSizeType($value);
+
         return $this->validateLt($attribute, $value, [$this->field]);
     }
 

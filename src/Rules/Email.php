@@ -18,7 +18,8 @@ class Email implements Rule
         protected bool $spoof = false,
         protected bool $filter = false,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {
@@ -35,7 +36,7 @@ class Email implements Rule
             $this->filter ? 'filter' : null,
         ];
 
-        return collect($params)->filter(fn($value) => !is_null($value))->toArray();
+        return collect($params)->filter(fn ($value) => ! is_null($value))->toArray();
     }
 
     public function message()

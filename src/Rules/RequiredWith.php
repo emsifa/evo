@@ -12,9 +12,10 @@ class RequiredWith implements Rule
     use ValidatesAttributes;
 
     public function __construct(
-        protected string|array $field,
+        protected string | array $field,
         protected string $message = '',
-    ) {}
+    ) {
+    }
 
     public function passes($attribute, $value)
     {
