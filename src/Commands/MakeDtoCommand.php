@@ -9,7 +9,7 @@ use Illuminate\Filesystem\Filesystem;
 
 class MakeDtoCommand extends Command
 {
-    public $signature = 'evo:make-dto {file} {properties*}';
+    public $signature = 'evo:make-dto {file} {properties?*}';
 
     public $description = 'Generate DTO file';
 
