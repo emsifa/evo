@@ -31,7 +31,7 @@ abstract class DTO implements Arrayable
         return ObjectHelper::toArray($this);
     }
 
-    public static function fromArray(array|Arrayable $data): static
+    public static function fromArray(array | Arrayable $data): static
     {
         $object = new static;
 
