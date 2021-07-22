@@ -48,14 +48,13 @@ class ResponseTest extends TestCase
         ])
         ->toResponse($request);
 
-        $expected = implode("\n", [
+        $expected = implode(", ", [
             "ID: 1",
             "Name: John Doe",
             "Email: johndoe@mail.com",
             "Created At: 2015-12-15",
-            "",
         ]);
 
-        $this->assertEquals($expected, $response->getContent());
+        $this->assertStringContainsString($expected, $response->getContent());
     }
 }

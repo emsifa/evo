@@ -31,11 +31,11 @@ abstract class DTO implements Arrayable
         return ObjectHelper::toArray($this);
     }
 
-    public static function fromArray(array $data): static
+    public static function fromArray(array | Arrayable $data): static
     {
         $object = new static;
 
-        ObjectFiller::fillObject($object, $data);
+        ObjectFiller::fillObject($object, is_array($data) ? $data : $data->toArray());
 
         return $object;
     }

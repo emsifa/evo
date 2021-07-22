@@ -1,4 +1,4 @@
-# Laravel Evo
+![Logo](https://raw.githubusercontent.com/emsifa/evo/main/logo.svg)
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/emsifa/evo.svg?style=flat-square)](https://packagist.org/packages/emsifa/evo)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/emsifa/evo/run-tests?label=tests)](https://github.com/emsifa/evo/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -41,22 +41,26 @@ class UserController extends Controller
 }
 ```
 
-## But Why?
+## Why?
 
-By defining input and output types in head part of a function, it triggers your brain to specifies input and output before writing its logic.
+Defining input and output types in head part of a function will trigger your brain to specifies input and output before writing its logic.
 So when it comes to write logic, you know exactly what you have, where it comes, and what to return.
 
 Also, by defining input and output type like this, not only you and your teammate would easily read the specifications. Machines too.
 
-That is why, when you add this line to `routes/web.php`:
+## Features
 
-```php
-Emsifa\Evo\EvoFacade::swagger('/docs');
-```
-
-Evo are able to read your specifications, and display this stuff for you:
-
-> swagger screenshots here
+* [x] Inject request data (Header, Param, Cookie, Body, Query) into arguments using attribute.
+* [x] Applying middleware using attribute. 
+* [x] Route prefixing using attribute. 
+* [x] Automatic type casting. Evo can automatically cast date string input into `DateTime` object, file into Laravel `UploadedFile` object, etc.
+* [x] Automatic type validation. When you define `#[Query] int $limit`, Evo will reject request if limit query is not numeric.
+* [x] Define validation rules directly in DTO using attribute.
+* [x] Custom value casters.
+* [x] Generate DTO file.
+* [ ] Generate Response file.
+* [ ] Generate OpenAPI file.
+* [ ] Display Swagger page.
 
 
 ## Installation
