@@ -88,7 +88,7 @@ class MakeResponseCommandTest extends TestCase
             'title:string',
             'body:string',
             'categories:Post/CategoryData[]',
-            '--json-template=MyTemplate'
+            '--json-template=MyTemplate',
         ]);
         $output = new BufferedOutput();
 

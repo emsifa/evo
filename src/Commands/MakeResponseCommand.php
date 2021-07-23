@@ -2,7 +2,6 @@
 
 namespace Emsifa\Evo\Commands;
 
-use Emsifa\Evo\DTO;
 use Emsifa\Evo\Http\Response\JsonResponse;
 use Emsifa\Evo\Http\Response\ResponseDTO;
 use Emsifa\Evo\Http\Response\UseJsonTemplate;
@@ -76,8 +75,7 @@ class MakeResponseCommand extends Command
         array $properties,
         bool $isView,
         ?string $jsonTemplate,
-    ): string
-    {
+    ): string {
         [$namespace, $className] = $this->splitNamespace($fullClassName);
         $parentClassName = $isView ? ViewResponse::class : JsonResponse::class;
         $extends = $this->getClassName($parentClassName);
@@ -85,7 +83,7 @@ class MakeResponseCommand extends Command
         $uses = [
             $parentClassName,
             ...($jsonTemplate ? [UseJsonTemplate::class] : []),
-            ...$this->getUses($properties, $fullClassName)
+            ...$this->getUses($properties, $fullClassName),
         ];
 
         $bodyLines = $this->getBodyLines($properties);
