@@ -58,7 +58,7 @@ Also, by defining input and output type like this, not only you and your teammat
 * [x] Define validation rules directly in DTO using attribute.
 * [x] Custom value casters.
 * [x] Generate DTO file.
-* [ ] Generate Response file.
+* [x] Generate Response file.
 * [ ] Generate OpenAPI file.
 * [ ] Display Swagger page.
 
