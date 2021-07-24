@@ -20,6 +20,10 @@ class DateTimeCaster implements Caster
             return $result;
         }
 
-        throw new CastErrorException("Cannot cast 'int' from type: ".gettype($value).'.');
+        if (is_string($value)) {
+            throw new CastErrorException("Cannot cast 'DateTime' from string: {$value}.");
+        }
+
+        throw new CastErrorException("Cannot cast 'DateTime' from type: ".gettype($value).'.');
     }
 }
