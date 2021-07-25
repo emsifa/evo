@@ -3,17 +3,21 @@
 namespace Emsifa\Evo\Swagger;
 
 use Emsifa\Evo\Contracts\OpenApiParameter;
-use Emsifa\Evo\Contracts\OpenApiPathModifier;
 use Emsifa\Evo\DTO;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Emsifa\Evo\Http\Body;
 use Emsifa\Evo\Http\Response\JsonResponse;
 use Emsifa\Evo\Route\Route;
-use Emsifa\Evo\Swagger\Schemas\PathSchema;
-use Emsifa\Evo\Swagger\Schemas\RequestBodySchema;
-use Emsifa\Evo\Swagger\Schemas\ResponseSchema;
+use Emsifa\Evo\Swagger\OpenAPI\Schemas\OpenAPI;
+use Emsifa\Evo\Swagger\OpenAPI\Schemas\Operation;
+use Emsifa\Evo\Swagger\OpenAPI\Schemas\Path;
+use Emsifa\Evo\Swagger\OpenAPI\Schemas\RequestBody;
+use Emsifa\Evo\Swagger\OpenAPI\Schemas\Response;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use ReflectionAttribute;
 use ReflectionClass;
@@ -22,44 +26,57 @@ use ReflectionNamedType;
 use ReflectionProperty;
 use ReflectionUnionType;
 
-class OpenApiGenerator
+class Generator
 {
-    public function __construct(protected Router $router)
+    protected Router $router;
+
+    public function __construct(protected Application $app)
     {
+        $this->router = $app->make(Router::class);
     }
 
-    public function generate()
+    public function generate(): string
     {
-        $routes = $this->getJsonRoutes();
-        $paths = [];
-        $schemas = [];
-        foreach ($routes as $route) {
-            [$path, $pathSchemas] = $this->getPathAndSchemas($route);
-            if (!array_key_exists($path['uri'], $paths)) {
-                $paths[$path['uri']] = [];
-            }
-            $paths[$path['uri']][strtolower($path['method'])] = $path['schema'];
+        $openApi = $this->makeOpenApi();
+        return json_encode($openApi->toArray());
+    }
 
-            foreach ($pathSchemas as $name => $schema) {
-                if (!in_array($name, $schemas)) {
-                    $schemas[$name] = $schema;
-                }
+    public function makeOpenApi(): OpenAPI
+    {
+        /**
+         * @var OpenAPI $openApi
+         */
+        $openApi = $this->app->make(OpenAPI::class);
+
+        $routes = $this->getRoutesWithJsonResponse();
+        foreach ($routes as $route) {
+            [$uri, $methods, $operation] = $this->getPathFromRoute($route);
+            $path = Arr::get($openApi->paths, $uri, new Path);
+            if (!Arr::has($openApi->paths, $uri)) {
+                $openApi->paths[$uri] = $path;
+            }
+
+            foreach ($methods as $method) {
+                $method = strtolower($method);
+                $path->{$method} = $operation;
             }
         }
+
+        return $openApi;
     }
 
-    protected function getJsonRoutes()
+    protected function getRoutesWithJsonResponse(): Collection
     {
         $routes = $this->router->getRoutes()->getRoutes();
         return collect($routes)->filter(fn ($route) => $this->isJsonRoute($route));
     }
 
-    protected function isJsonRoute($route)
+    protected function isJsonRoute($route): bool
     {
         return $route instanceof Route && $this->hasJsonResponse($route);
     }
 
-    protected function hasJsonResponse(Route $route)
+    protected function hasJsonResponse(Route $route): bool
     {
         $controller = $route->getAction('controller');
         if (!$controller) {
@@ -81,33 +98,26 @@ class OpenApiGenerator
         return is_subclass_of($returnType->getName(), JsonResponse::class);
     }
 
-    protected function getPathAndSchemas(Route $route): array
+    protected function getPathFromRoute(Route $route): array
     {
         $uri = $route->uri();
         $methods = $route->methods();
-        $pathSchema = $this->getPathSchema($route);
-        $schemas = [];
+        $operation = $this->getOperation($route);
 
+        return [$uri, $methods, $operation];
     }
 
-    protected function getPathSchema(Route $route): PathSchema
+    protected function getOperation(Route $route): Operation
     {
         $controller = $route->getAction('controller');
         [$className, $methodName] = explode("@", $controller);
         $method = new ReflectionMethod($className, $methodName);
 
-        $path = new PathSchema;
+        $path = new Operation;
         $path->operationId = $route->getAction('controller');
         $path->parameters = $this->getPathParameters($method, $route);
         $path->requestBody = $this->getRequestBody($method);
         $path->responses = $this->getResponses($method);
-        /**
-         * @var OpenApiPathModifier[] $modifiers
-         */
-        $modifiers = ReflectionHelper::getAttributesInstances($method, OpenApiPathModifier::class, ReflectionAttribute::IS_INSTANCEOF);
-        foreach ($modifiers as $modifier) {
-            $modifier->modifyOpenApiPath($path);
-        }
 
         return $path;
     }
@@ -128,10 +138,9 @@ class OpenApiGenerator
         return $openApiParams;
     }
 
-    public function getRequestBody(ReflectionMethod $method): ?RequestBodySchema
+    public function getRequestBody(ReflectionMethod $method): ?RequestBody
     {
         $params = $method->getParameters();
-        $openApiParams = [];
         foreach ($params as $param) {
             /**
              * @var Body $body
@@ -140,11 +149,9 @@ class OpenApiGenerator
             if ($body) {
                 $typeName = optional($param->getType())->getName();
                 if ($typeName && class_exists($typeName) && is_subclass_of($typeName, DTO::class)) {
-                    $requestBody = new RequestBodySchema;
+                    $requestBody = new RequestBody;
                     $requestBody->description = $body->getDescription();
                     $requestBody->required = !$param->allowsNull() && !$param->isDefaultValueAvailable();
-                    $requestBody->contentSchema = "#/components/schemas/".$this->getSchemaName($typeName);
-                    $requestBody->contentType = $this->guessContentType($typeName);
                     return $requestBody;
                 }
             }
@@ -164,9 +171,9 @@ class OpenApiGenerator
         return $this->getResponseFromType($returnType);
     }
 
-    public function getResponseFromType(ReflectionNamedType $type): ResponseSchema
+    public function getResponseFromType(ReflectionNamedType $type): Response
     {
-        $response = new ResponseSchema;
+        $response = new Response;
 
         return $response;
     }

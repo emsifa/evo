@@ -3,10 +3,11 @@
 namespace Emsifa\Evo\Contracts;
 
 use Emsifa\Evo\Swagger\OpenAPI\Schemas\Parameter;
+use Emsifa\Evo\Swagger\OpenAPI\Schemas\Schema;
 use ReflectionParameter;
 use ReflectionProperty;
 
-interface OpenApiParameter
+interface SchemaModifier
 {
-    public function getOpenApiParameter(ReflectionParameter|ReflectionProperty $reflection): Parameter;
+    public function modifySchema(Schema $schema);
 }

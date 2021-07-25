@@ -1,10 +1,10 @@
 <?php
 
-namespace Emsifa\Evo\Swagger\Schemas;
+namespace Emsifa\Evo\Swagger\OpenAPI\Schemas;
 
 use Illuminate\Contracts\Support\Arrayable;
 
-class RequestBodySchema implements Arrayable
+class RequestBody implements Arrayable
 {
     public ?string $description = null;
     public bool $required = true;
