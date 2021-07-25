@@ -80,6 +80,7 @@ class ReflectionHelper
                 return true;
             }
         }
+
         return false;
     }
 

@@ -14,7 +14,7 @@ class Operation extends BaseSchema
     public ?ExternalDocs $externalDocs = null;
     public ?string $operationId = null;
     public ?Parameter $parameters = null;
-    public RequestBody|Reference|null $requestBody = null;
+    public RequestBody | Reference | null $requestBody = null;
 
     /**
      * @var array[string]Response

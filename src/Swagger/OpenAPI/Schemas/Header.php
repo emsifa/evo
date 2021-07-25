@@ -8,5 +8,5 @@ class Header extends BaseSchema
     public ?bool $required = null;
     public ?bool $deprecated = null;
     public ?bool $allowEmptyValue = null;
-    public Schema|Reference $schema;
+    public Schema | Reference $schema;
 }

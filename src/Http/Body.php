@@ -27,8 +27,7 @@ class Body implements RequestGetter, RequestValidator
         protected ?string $caster = null,
         protected string $description = '',
         $rules = '',
-    )
-    {
+    ) {
         $this->rules = $rules;
     }
 

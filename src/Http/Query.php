@@ -20,7 +20,7 @@ class Query extends CommonGetterAndValidator implements RequestGetter, RequestVa
         return $request->query($key);
     }
 
-    public function getOpenApiParameter(ReflectionParameter|ReflectionProperty $reflection): Parameter
+    public function getOpenApiParameter(ReflectionParameter | ReflectionProperty $reflection): Parameter
     {
         $name = $this->getKey($reflection);
         $in = Parameter::IN_QUERY;
