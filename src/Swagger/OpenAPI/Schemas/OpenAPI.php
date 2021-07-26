@@ -37,6 +37,7 @@ class OpenApi extends BaseSchema
         foreach ($array['paths'] as $key => $path) {
             $array['paths'][$key] = $path->toArray();
         }
+
         return $array;
     }
 }

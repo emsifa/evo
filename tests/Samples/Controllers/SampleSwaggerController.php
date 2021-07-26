@@ -20,8 +20,7 @@ class SampleSwaggerController extends Controller
         #[Query('query_param')] int $query,
         #[Header('header_param')] string $header = "foo",
         #[Cookie('cookie_param')] bool $cookie = false,
-    ): PostStuffResponse
-    {
+    ): PostStuffResponse {
         return PostStuffResponse::fromArray([
             'id' => "1",
             'name' => "John Doe",

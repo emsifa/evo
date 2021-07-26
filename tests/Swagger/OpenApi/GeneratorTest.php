@@ -33,9 +33,9 @@ class GeneratorTest extends TestCase
                             ['name' => 'header_param', 'in' => 'header'],
                             ['name' => 'cookie_param', 'in' => 'cookie'],
                         ],
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ], $result);
     }
 }

@@ -18,7 +18,7 @@ class Operation extends BaseSchema
      * @var null|Parameter[]
      */
     public ?array $parameters = null;
-    public RequestBody|Reference|null $requestBody = null;
+    public RequestBody | Reference | null $requestBody = null;
 
     /**
      * @var array[string]Response
@@ -43,6 +43,7 @@ class Operation extends BaseSchema
                 $array['parameters'][$i] = $param->toArray();
             }
         }
+
         return $array;
     }
 }
