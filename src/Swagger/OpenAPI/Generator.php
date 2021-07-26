@@ -3,6 +3,8 @@
 namespace Emsifa\Evo\Swagger\OpenApi;
 
 use Emsifa\Evo\Contracts\OpenApiParameter;
+use Emsifa\Evo\Contracts\OpenApiRequestBody;
+use Emsifa\Evo\Contracts\OpenApiRequestBodyModifier;
 use Emsifa\Evo\DTO;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Emsifa\Evo\Http\Body;
@@ -152,24 +154,27 @@ class Generator
     public function getRequestBody(ReflectionMethod $method): ?RequestBody
     {
         $params = $method->getParameters();
+        $body = null;
         foreach ($params as $param) {
             /**
-             * @var Body $body
+             * @var OpenApiRequestBody $body
              */
-            $body = ReflectionHelper::getFirstAttributeInstance($param, Body::class, ReflectionAttribute::IS_INSTANCEOF);
+            $body = ReflectionHelper::getFirstAttributeInstance($param, OpenApiRequestBody::class, ReflectionAttribute::IS_INSTANCEOF);
             if ($body) {
-                $typeName = optional($param->getType())->getName();
-                if ($typeName && class_exists($typeName) && is_subclass_of($typeName, DTO::class)) {
-                    $requestBody = new RequestBody;
-                    $requestBody->description = $body->getDescription();
-                    $requestBody->required = ! $param->allowsNull() && ! $param->isDefaultValueAvailable();
-
-                    return $requestBody;
-                }
+                return $body->getOpenApiRequestBody($param);
+            }
+            /**
+             * @var OpenApiRequestBodyModifier[] $modifiers
+             */
+            $modifiers = ReflectionHelper::getAttributesInstances($param, OpenApiRequestBodyModifier::class, ReflectionAttribute::IS_INSTANCEOF);
+            if ($modifiers && !$body) {
+                $body = new RequestBody;
+            }
+            foreach ($modifiers as $modifier) {
+                $modifier->modifyOpenApiRequestBody($body);
             }
         }
-
-        return null;
+        return $body;
     }
 
     public function getResponses(ReflectionMethod $method): array
