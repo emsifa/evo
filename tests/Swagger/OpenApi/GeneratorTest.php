@@ -56,11 +56,11 @@ class GeneratorTest extends TestCase
                                             'id' => ['type' => 'integer'],
                                             'name' => ['type' => 'string'],
                                             'stuff' => ['type' => 'string'],
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],

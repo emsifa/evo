@@ -28,7 +28,6 @@ use Illuminate\Support\Str;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
-use ReflectionNamedType;
 use ReflectionProperty;
 use ReflectionUnionType;
 
@@ -191,7 +190,7 @@ class Generator
         $responses = [];
         foreach ($types as $type) {
             $className = $type->getName();
-            if (!is_subclass_of($className, JsonResponse::class)) {
+            if (! is_subclass_of($className, JsonResponse::class)) {
                 continue;
             }
             $reflectionClass = new ReflectionClass($className);
@@ -199,6 +198,7 @@ class Generator
             $response = $this->getResponseFromClass($reflectionClass);
             $responses[$status] = $response;
         }
+
         return $responses;
     }
 

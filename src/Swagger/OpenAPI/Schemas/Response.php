@@ -24,6 +24,7 @@ class Response extends BaseSchema
                 $array["content"][$type] = $schema->toArray();
             }
         }
+
         return $array;
     }
 }
