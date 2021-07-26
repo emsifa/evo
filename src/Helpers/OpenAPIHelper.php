@@ -4,8 +4,11 @@ namespace Emsifa\Evo\Helpers;
 
 use Emsifa\Evo\Contracts\OpenApiSchemaModifier;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Parameter;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\PropertySchema;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
+use Illuminate\Http\UploadedFile;
 use ReflectionAttribute;
+use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty;
@@ -68,6 +71,30 @@ class OpenApiHelper
         $schema->nullable = $nullable ?: null;
 
         $modifiers = ReflectionHelper::getAttributesInstances($property, OpenApiSchemaModifier::class, ReflectionAttribute::IS_INSTANCEOF);
+        foreach ($modifiers as $modifier) {
+            $modifier->modifySchema($schema);
+        }
+
+        return $schema;
+    }
+
+    public static function makeSchemaFromClass(ReflectionClass $class): Schema
+    {
+        $schema = new Schema(Schema::TYPE_OBJECT, classNameReference: $class->getName());
+        $props = $class->getProperties(ReflectionProperty::IS_PUBLIC);
+        $requiredKeys = [];
+
+        foreach ($props as $prop) {
+            $name = $prop->getName();
+            $propSchema = static::makeSchemaFromProperty($prop);
+            $schema->properties[$name] = $propSchema;
+            if (!$prop->hasDefaultValue()) {
+                $requiredKeys[] = $name;
+            }
+        }
+        $schema->required = $requiredKeys;
+
+        $modifiers = ReflectionHelper::getAttributesInstances($class, OpenApiSchemaModifier::class, ReflectionAttribute::IS_INSTANCEOF);
         foreach ($modifiers as $modifier) {
             $modifier->modifySchema($schema);
         }
