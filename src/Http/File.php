@@ -23,7 +23,7 @@ class File extends CommonGetterAndValidator implements RequestGetter, RequestVal
     {
         $schema = new Schema("string", format:"binary");
         $key = $this->key;
-        if (!$body->content) {
+        if (! $body->content) {
             $contentSchema = new Schema("object", properties: [$key => $schema]);
             $body->content = ["multipart/form-data" => $contentSchema];
         } else {

@@ -36,7 +36,8 @@ trait OpenApiRequestBodyMaker
                 OpenApiRequestBodyModifier::class,
                 ReflectionAttribute::IS_INSTANCEOF,
             ),
-            ...($reflectionClass
+            ...(
+                $reflectionClass
                 ? ReflectionHelper::getAttributesInstances(
                     $reflectionClass,
                     OpenApiRequestBodyModifier::class,
@@ -55,14 +56,15 @@ trait OpenApiRequestBodyMaker
     protected function getRequestBodyTypeClassName(ReflectionParameter | ReflectionProperty $reflection): ?string
     {
         $type = $reflection->getType();
-        return $type && !$type->isBuiltin() ? $type->getName() : null;
+
+        return $type && ! $type->isBuiltin() ? $type->getName() : null;
     }
 
     protected function isRequestBodyRequired(ReflectionProperty | ReflectionParameter $reflection): ?bool
     {
         $required = $reflection instanceof ReflectionProperty
-            ? !$reflection->hasDefaultValue()
-            : !$reflection->isDefaultValueAvailable();
+            ? ! $reflection->hasDefaultValue()
+            : ! $reflection->isDefaultValueAvailable();
 
         return $required ?: null;
     }
@@ -70,19 +72,18 @@ trait OpenApiRequestBodyMaker
     protected function getRequestBodyDescription(
         ReflectionProperty | ReflectionParameter $paramOrProp,
         ?ReflectionClass $class = null
-    ): ?string
-    {
+    ): ?string {
         return null;
     }
 
     protected function getRequestBodyContent(
         ReflectionParameter | ReflectionProperty $paramOrProp,
         ReflectionClass $class,
-    ): array
-    {
+    ): array {
         $hasFile = $this->isRequestBodyHasFile($class);
         $schema = OpenApiHelper::makeSchemaFromClass($class);
         $contentType = $hasFile ? "multipart/form-data" : "application/json";
+
         return [$contentType => $schema];
     }
 
@@ -100,6 +101,7 @@ trait OpenApiRequestBodyMaker
                 return true;
             }
         }
+
         return false;
     }
 }

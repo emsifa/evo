@@ -43,10 +43,10 @@ class GeneratorTest extends TestCase
                                         'age' => ['type' => 'integer'],
                                         'name' => ['type' => 'string'],
                                         'email' => ['type' => 'string'],
-                                    ]
-                                ]
-                            ]
-                        ]
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],

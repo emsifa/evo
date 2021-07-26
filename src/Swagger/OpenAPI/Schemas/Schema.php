@@ -59,6 +59,7 @@ class Schema extends BaseSchema
                 $array["properties"][$key] = $prop->toArray();
             }
         }
+
         return $array;
     }
 }

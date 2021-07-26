@@ -7,7 +7,6 @@ use Emsifa\Evo\Contracts\OpenApiRequestBody;
 use Emsifa\Evo\Contracts\OpenApiRequestBodyModifier;
 use Emsifa\Evo\DTO;
 use Emsifa\Evo\Helpers\ReflectionHelper;
-use Emsifa\Evo\Http\Body;
 use Emsifa\Evo\Http\Response\JsonResponse;
 use Emsifa\Evo\Route\Route;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Info;
@@ -167,13 +166,14 @@ class Generator
              * @var OpenApiRequestBodyModifier[] $modifiers
              */
             $modifiers = ReflectionHelper::getAttributesInstances($param, OpenApiRequestBodyModifier::class, ReflectionAttribute::IS_INSTANCEOF);
-            if ($modifiers && !$body) {
+            if ($modifiers && ! $body) {
                 $body = new RequestBody;
             }
             foreach ($modifiers as $modifier) {
                 $modifier->modifyOpenApiRequestBody($body);
             }
         }
+
         return $body;
     }
 

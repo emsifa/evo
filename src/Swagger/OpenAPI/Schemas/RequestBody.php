@@ -17,6 +17,7 @@ class RequestBody extends BaseSchema
         foreach ($this->content as $type => $content) {
             $array["content"][$type] = $content->toArray();
         }
+
         return $array;
     }
 }

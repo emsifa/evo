@@ -4,9 +4,7 @@ namespace Emsifa\Evo\Helpers;
 
 use Emsifa\Evo\Contracts\OpenApiSchemaModifier;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Parameter;
-use Emsifa\Evo\Swagger\OpenApi\Schemas\PropertySchema;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
-use Illuminate\Http\UploadedFile;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionNamedType;
@@ -88,7 +86,7 @@ class OpenApiHelper
             $name = $prop->getName();
             $propSchema = static::makeSchemaFromProperty($prop);
             $schema->properties[$name] = $propSchema;
-            if (!$prop->hasDefaultValue()) {
+            if (! $prop->hasDefaultValue()) {
                 $requiredKeys[] = $name;
             }
         }
