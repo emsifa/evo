@@ -10,4 +10,13 @@ class RequestBody extends BaseSchema
      * @var MediaType[]
      */
     public array $content = [];
+
+    public function toArray()
+    {
+        $array = parent::toArray();
+        foreach ($this->content as $type => $content) {
+            $array["content"][$type] = $content->toArray();
+        }
+        return $array;
+    }
 }
