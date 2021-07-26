@@ -2,7 +2,7 @@
 
 namespace Emsifa\Evo\Helpers;
 
-use Emsifa\Evo\Contracts\SchemaModifier;
+use Emsifa\Evo\Contracts\OpenApiSchemaModifier;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Parameter;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
 use ReflectionAttribute;
@@ -43,7 +43,12 @@ class OpenApiHelper
         $schema->default = $hasDefault ? $default : null;
         $schema->nullable = $nullable ?: null;
 
-        $modifiers = ReflectionHelper::getAttributesInstances($parameter, SchemaModifier::class, ReflectionAttribute::IS_INSTANCEOF);
+        $modifiers = ReflectionHelper::getAttributesInstances(
+            $parameter,
+            OpenApiSchemaModifier::class,
+            ReflectionAttribute::IS_INSTANCEOF,
+        );
+
         foreach ($modifiers as $modifier) {
             $modifier->modifySchema($schema);
         }
@@ -62,7 +67,7 @@ class OpenApiHelper
         $schema->default = $hasDefault ? $default : null;
         $schema->nullable = $nullable ?: null;
 
-        $modifiers = ReflectionHelper::getAttributesInstances($property, SchemaModifier::class, ReflectionAttribute::IS_INSTANCEOF);
+        $modifiers = ReflectionHelper::getAttributesInstances($property, OpenApiSchemaModifier::class, ReflectionAttribute::IS_INSTANCEOF);
         foreach ($modifiers as $modifier) {
             $modifier->modifySchema($schema);
         }

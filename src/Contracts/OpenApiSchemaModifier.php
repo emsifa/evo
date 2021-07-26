@@ -4,7 +4,7 @@ namespace Emsifa\Evo\Contracts;
 
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
 
-interface SchemaModifier
+interface OpenApiSchemaModifier
 {
     public function modifySchema(Schema $schema);
 }
