@@ -1,6 +1,6 @@
 <?php
 
-namespace Emsifa\Evo\Swagger\OpenAPI\Schemas;
+namespace Emsifa\Evo\Swagger\OpenApi\Schemas;
 
 class SecurityRequirement extends BaseSchema
 {

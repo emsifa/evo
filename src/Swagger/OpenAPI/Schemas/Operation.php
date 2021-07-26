@@ -1,6 +1,6 @@
 <?php
 
-namespace Emsifa\Evo\Swagger\OpenAPI\Schemas;
+namespace Emsifa\Evo\Swagger\OpenApi\Schemas;
 
 class Operation extends BaseSchema
 {
@@ -13,7 +13,11 @@ class Operation extends BaseSchema
     public ?string $description = null;
     public ?ExternalDocs $externalDocs = null;
     public ?string $operationId = null;
-    public ?Parameter $parameters = null;
+
+    /**
+     * @var null|Parameter[]
+     */
+    public ?array $parameters = null;
     public RequestBody|Reference|null $requestBody = null;
 
     /**
@@ -30,4 +34,15 @@ class Operation extends BaseSchema
 
     // public ?array $callbacks = null; // array[string]Callback|Reference
     // public ?array $servers = null; // Server
+
+    public function toArray()
+    {
+        $array = parent::toArray();
+        if (is_array($array['parameters'])) {
+            foreach ($array['parameters'] as $i => $param) {
+                $array['parameters'][$i] = $param->toArray();
+            }
+        }
+        return $array;
+    }
 }

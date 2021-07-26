@@ -3,14 +3,14 @@
 namespace Emsifa\Evo\Helpers;
 
 use Emsifa\Evo\Contracts\SchemaModifier;
-use Emsifa\Evo\Swagger\OpenAPI\Schemas\Parameter;
-use Emsifa\Evo\Swagger\OpenAPI\Schemas\Schema;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Parameter;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
 use ReflectionAttribute;
 use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty;
 
-class OpenAPIHelper
+class OpenApiHelper
 {
     public static function makeParameterFromProperty(ReflectionProperty $property, string $name, string $in): Parameter
     {
@@ -18,6 +18,7 @@ class OpenAPIHelper
             name: $name,
             in: $in,
             schema: static::makeSchemaFromProperty($property),
+            required: $property->hasDefaultValue() ? null : true,
         );
     }
 
@@ -27,17 +28,19 @@ class OpenAPIHelper
             name: $name,
             in: $in,
             schema: static::makeSchemaFromParameter($parameter),
+            required: $parameter->isDefaultValueAvailable() ? null : true,
         );
     }
 
     public static function makeSchemaFromParameter(ReflectionParameter $parameter): Schema
     {
         $type = $parameter->getType();
-        $default = $parameter->getDefaultValue();
+        $hasDefault = $parameter->isDefaultValueAvailable();
+        $default = $hasDefault ? $parameter->getDefaultValue() : null;
         $nullable = $parameter->allowsNull();
 
         $schema = new Schema(type: $type ? static::getType($type) : Schema::TYPE_STRING);
-        $schema->default = json_encode($default);
+        $schema->default = $hasDefault ? $default : null;
         $schema->nullable = $nullable ?: null;
 
         $modifiers = ReflectionHelper::getAttributesInstances($parameter, SchemaModifier::class, ReflectionAttribute::IS_INSTANCEOF);
@@ -51,11 +54,12 @@ class OpenAPIHelper
     public static function makeSchemaFromProperty(ReflectionProperty $property): Schema
     {
         $type = $property->getType();
-        $default = $property->getDefaultValue();
-        $nullable = $property->getType()->allowsNull();
+        $hasDefault = $property->hasDefaultValue();
+        $default = $hasDefault ? $property->getDefaultValue() : null;
+        $nullable = $type ? $property->getType()->allowsNull() : true;
 
         $schema = new Schema(type: $type ? static::getType($type) : Schema::TYPE_STRING);
-        $schema->default = json_encode($default);
+        $schema->default = $hasDefault ? $default : null;
         $schema->nullable = $nullable ?: null;
 
         $modifiers = ReflectionHelper::getAttributesInstances($property, SchemaModifier::class, ReflectionAttribute::IS_INSTANCEOF);

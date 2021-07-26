@@ -1,6 +1,6 @@
 <?php
 
-namespace Emsifa\Evo\Swagger;
+namespace Emsifa\Evo\Swagger\OpenApi;
 
 use Emsifa\Evo\Contracts\OpenApiParameter;
 use Emsifa\Evo\DTO;
@@ -8,11 +8,12 @@ use Emsifa\Evo\Helpers\ReflectionHelper;
 use Emsifa\Evo\Http\Body;
 use Emsifa\Evo\Http\Response\JsonResponse;
 use Emsifa\Evo\Route\Route;
-use Emsifa\Evo\Swagger\OpenAPI\Schemas\OpenAPI;
-use Emsifa\Evo\Swagger\OpenAPI\Schemas\Operation;
-use Emsifa\Evo\Swagger\OpenAPI\Schemas\Path;
-use Emsifa\Evo\Swagger\OpenAPI\Schemas\RequestBody;
-use Emsifa\Evo\Swagger\OpenAPI\Schemas\Response;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Info;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\OpenApi;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Operation;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Path;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\RequestBody;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Response;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Router;
@@ -35,18 +36,26 @@ class Generator
         $this->router = $app->make(Router::class);
     }
 
-    public function generate(): string
+    public function generateToJson(): string
     {
-        $openApi = $this->makeOpenApi();
-        return json_encode($openApi->toArray());
+        return json_encode($this->getResultArray());
     }
 
-    public function makeOpenApi(): OpenAPI
+    public function getResultArray(): array
+    {
+        return $this->makeOpenApi()->toArray();
+    }
+
+    public function makeOpenApi(): OpenApi
     {
         /**
-         * @var OpenAPI $openApi
+         * @var OpenApi $openApi
          */
-        $openApi = $this->app->make(OpenAPI::class);
+        $openApi = $this->app->has(OpenApi::class) ? $this->app->make(OpenApi::class) : new OpenApi;
+        $openApi->openapi = "v3.0.1";
+        $openApi->info = new Info;
+        $openApi->info->title = "API Documentation";
+        $openApi->info->version = "0.1.0";
 
         $routes = $this->getRoutesWithJsonResponse();
         foreach ($routes as $route) {
@@ -117,7 +126,7 @@ class Generator
         $path->operationId = $route->getAction('controller');
         $path->parameters = $this->getPathParameters($method, $route);
         $path->requestBody = $this->getRequestBody($method);
-        $path->responses = $this->getResponses($method);
+        $path->responses = []; // $this->getResponses($method);
 
         return $path;
     }
@@ -132,7 +141,7 @@ class Generator
              */
             $openApiParam = ReflectionHelper::getFirstAttributeInstance($param, OpenApiParameter::class, ReflectionAttribute::IS_INSTANCEOF);
             if ($openApiParam) {
-                $openApiParam[] = $openApiParam->getOpenApiParameter($param);
+                $openApiParams[] = $openApiParam->getOpenApiParameter($param);
             }
         }
         return $openApiParams;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Emsifa\Evo\Swagger\OpenAPI\Schemas;
+namespace Emsifa\Evo\Swagger\OpenApi\Schemas;
 
-class OpenAPI extends BaseSchema
+class OpenApi extends BaseSchema
 {
     public string $openapi;
     public Info $info;
@@ -29,5 +29,14 @@ class OpenAPI extends BaseSchema
      */
     public ?array $tags = null;
 
-    public ?ExternalDocs $externalDocs;
+    public ?ExternalDocs $externalDocs = null;
+
+    public function toArray()
+    {
+        $array = parent::toArray();
+        foreach ($array['paths'] as $key => $path) {
+            $array['paths'][$key] = $path->toArray();
+        }
+        return $array;
+    }
 }

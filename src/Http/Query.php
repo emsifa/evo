@@ -6,8 +6,8 @@ use Attribute;
 use Emsifa\Evo\Contracts\OpenApiParameter;
 use Emsifa\Evo\Contracts\RequestGetter;
 use Emsifa\Evo\Contracts\RequestValidator;
-use Emsifa\Evo\Helpers\OpenAPIHelper;
-use Emsifa\Evo\Swagger\OpenAPI\Schemas\Parameter;
+use Emsifa\Evo\Helpers\OpenApiHelper;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Parameter;
 use Illuminate\Http\Request;
 use ReflectionParameter;
 use ReflectionProperty;
@@ -26,7 +26,7 @@ class Query extends CommonGetterAndValidator implements RequestGetter, RequestVa
         $in = Parameter::IN_QUERY;
 
         return $reflection instanceof ReflectionParameter
-            ? OpenAPIHelper::makeParameterFromParameter($reflection, $name, $in)
-            : OpenAPIHelper::makeParameterFromProperty($reflection, $name, $in);
+            ? OpenApiHelper::makeParameterFromParameter($reflection, $name, $in)
+            : OpenApiHelper::makeParameterFromProperty($reflection, $name, $in);
     }
 }

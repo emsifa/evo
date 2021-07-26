@@ -2,7 +2,7 @@
 
 namespace Emsifa\Evo\Contracts;
 
-use Emsifa\Evo\Swagger\OpenAPI\Schemas\Parameter;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Parameter;
 use ReflectionParameter;
 use ReflectionProperty;
 
