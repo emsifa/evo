@@ -5,9 +5,13 @@ namespace Emsifa\Evo\Swagger\OpenApi;
 use Emsifa\Evo\Contracts\OpenApiParameter;
 use Emsifa\Evo\Contracts\OpenApiRequestBody;
 use Emsifa\Evo\Contracts\OpenApiRequestBodyModifier;
+use Emsifa\Evo\Contracts\OpenApiResponseModifier;
 use Emsifa\Evo\DTO;
+use Emsifa\Evo\Helpers\OpenApiHelper;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Emsifa\Evo\Http\Response\JsonResponse;
+use Emsifa\Evo\Http\Response\ResponseStatus;
+use Emsifa\Evo\Http\Response\ResponseType;
 use Emsifa\Evo\Route\Route;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Info;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\OpenApi;
@@ -128,7 +132,7 @@ class Generator
         $path->operationId = $route->getAction('controller');
         $path->parameters = $this->getPathParameters($method, $route);
         $path->requestBody = $this->getRequestBody($method);
-        $path->responses = []; // $this->getResponses($method);
+        $path->responses = $this->getResponses($method);
 
         return $path;
     }
@@ -183,16 +187,48 @@ class Generator
         if (! $returnType) {
             return [];
         }
-        if ($returnType instanceof ReflectionUnionType) {
-            return array_map(fn ($type) => $this->getResponseFromType($type), $returnType->getTypes());
+        $types = $returnType instanceof ReflectionUnionType ? $returnType->getTypes() : [$returnType];
+        $responses = [];
+        foreach ($types as $type) {
+            $className = $type->getName();
+            if (!is_subclass_of($className, JsonResponse::class)) {
+                continue;
+            }
+            $reflectionClass = new ReflectionClass($className);
+            $status = $this->getResponseStatusFromClass($reflectionClass);
+            $response = $this->getResponseFromClass($reflectionClass);
+            $responses[$status] = $response;
         }
-
-        return $this->getResponseFromType($returnType);
+        return $responses;
     }
 
-    public function getResponseFromType(ReflectionNamedType $type): Response
+    public function getResponseStatusFromClass(ReflectionClass $class): int
     {
+        $statuses = ReflectionHelper::getClassAttributes($class->getName(), ResponseStatus::class, ReflectionAttribute::IS_INSTANCEOF);
+
+        if (empty($statuses)) {
+            return 200;
+        }
+
+        return ($statuses[0]->newInstance())->getStatus();
+    }
+
+    public function getResponseFromClass(ReflectionClass $class): Response
+    {
+        $types = ReflectionHelper::getClassAttributes($class->getName(), ResponseType::class, ReflectionAttribute::IS_INSTANCEOF);
+        $type = $types ? $types[0]->newInstance()->getType() : "application/json";
+        $schema = OpenApiHelper::makeSchemaFromClass($class, false);
+
         $response = new Response;
+        $response->content = [$type => $schema];
+
+        /**
+         * @var OpenApiResponseModifier[] $modifiers
+         */
+        $modifiers = ReflectionHelper::getAttributesInstances($class, OpenApiResponseModifier::class, ReflectionAttribute::IS_INSTANCEOF);
+        foreach ($modifiers as $modifier) {
+            $modifier->modifyOpenApiResponse($response);
+        }
 
         return $response;
     }

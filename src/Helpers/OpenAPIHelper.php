@@ -76,7 +76,7 @@ class OpenApiHelper
         return $schema;
     }
 
-    public static function makeSchemaFromClass(ReflectionClass $class): Schema
+    public static function makeSchemaFromClass(ReflectionClass $class, bool $includeRequired = true): Schema
     {
         $schema = new Schema(Schema::TYPE_OBJECT, classNameReference: $class->getName());
         $props = $class->getProperties(ReflectionProperty::IS_PUBLIC);
@@ -90,7 +90,9 @@ class OpenApiHelper
                 $requiredKeys[] = $name;
             }
         }
-        $schema->required = $requiredKeys;
+        if ($includeRequired) {
+            $schema->required = $requiredKeys;
+        }
 
         $modifiers = ReflectionHelper::getAttributesInstances($class, OpenApiSchemaModifier::class, ReflectionAttribute::IS_INSTANCEOF);
         foreach ($modifiers as $modifier) {

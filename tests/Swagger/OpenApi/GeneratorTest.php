@@ -47,6 +47,20 @@ class GeneratorTest extends TestCase
                                 ],
                             ],
                         ],
+                        'responses' => [
+                            '200' => [
+                                'content' => [
+                                    'application/json' => [
+                                        'type' => 'object',
+                                        'properties' => [
+                                            'id' => ['type' => 'integer'],
+                                            'name' => ['type' => 'string'],
+                                            'stuff' => ['type' => 'string'],
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
                     ],
                 ],
             ],

@@ -2,9 +2,9 @@
 
 namespace Emsifa\Evo\Contracts;
 
-use Emsifa\Evo\Swagger\Schemas\PathSchema;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
 
 interface OpenApiPathModifier
 {
-    public function modifyOpenApiPath(PathSchema $path);
+    public function modifyOpenApiPath(Schema $path);
 }

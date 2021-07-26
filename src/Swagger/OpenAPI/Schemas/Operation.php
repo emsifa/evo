@@ -43,6 +43,11 @@ class Operation extends BaseSchema
                 $array['parameters'][$i] = $param->toArray();
             }
         }
+        if (is_array($array['responses'])) {
+            foreach ($array['responses'] as $type => $response) {
+                $array['responses'][$type] = $response->toArray();
+            }
+        }
 
         return $array;
     }
