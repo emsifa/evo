@@ -2,8 +2,6 @@
 
 namespace Emsifa\Evo\Swagger\OpenApi\Schemas;
 
-use ReflectionParameter;
-
 class Schema extends BaseSchema
 {
     const TYPE_INTEGER = "integer";
@@ -41,12 +39,9 @@ class Schema extends BaseSchema
          * @var PropertySchema[]|null
          */
         public ?array $properties = null,
-
-        public Schema|Reference|null $items = null,
-
+        public Schema | Reference | null $items = null,
         public ?float $minimum = null,
         public ?float $maximum = null,
-    )
-    {
+    ) {
     }
 }

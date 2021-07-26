@@ -20,7 +20,7 @@ class Cookie extends CommonGetterAndValidator implements RequestGetter, RequestV
         return $request->cookie($key);
     }
 
-    public function getOpenApiParameter(ReflectionParameter|ReflectionProperty $reflection): Parameter
+    public function getOpenApiParameter(ReflectionParameter | ReflectionProperty $reflection): Parameter
     {
         $name = $this->getKey($reflection);
         $in = Parameter::IN_COOKIE;

@@ -12,7 +12,7 @@ abstract class BaseSchema implements Arrayable
         $schema = ObjectHelper::toArray($this, true);
 
         return collect($schema)
-            ->filter(fn ($value) => !is_null($value))
+            ->filter(fn ($value) => ! is_null($value))
             ->toArray();
     }
 }

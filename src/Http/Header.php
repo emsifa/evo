@@ -21,7 +21,7 @@ class Header extends CommonGetterAndValidator implements RequestGetter, RequestV
         return $request->header(Str::snake($key, '-'));
     }
 
-    public function getOpenApiParameter(ReflectionParameter|ReflectionProperty $reflection): Parameter
+    public function getOpenApiParameter(ReflectionParameter | ReflectionProperty $reflection): Parameter
     {
         $name = $this->getKey($reflection);
         $in = Parameter::IN_HEADER;

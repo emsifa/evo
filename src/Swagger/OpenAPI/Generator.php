@@ -61,7 +61,7 @@ class Generator
         foreach ($routes as $route) {
             [$uri, $methods, $operation] = $this->getPathFromRoute($route);
             $path = Arr::get($openApi->paths, $uri, new Path);
-            if (!Arr::has($openApi->paths, $uri)) {
+            if (! Arr::has($openApi->paths, $uri)) {
                 $openApi->paths[$uri] = $path;
             }
 
@@ -77,6 +77,7 @@ class Generator
     protected function getRoutesWithJsonResponse(): Collection
     {
         $routes = $this->router->getRoutes()->getRoutes();
+
         return collect($routes)->filter(fn ($route) => $this->isJsonRoute($route));
     }
 
@@ -88,7 +89,7 @@ class Generator
     protected function hasJsonResponse(Route $route): bool
     {
         $controller = $route->getAction('controller');
-        if (!$controller) {
+        if (! $controller) {
             return false;
         }
 
@@ -96,7 +97,7 @@ class Generator
         $method = new ReflectionMethod($className, $methodName);
         $returnType = $method->getReturnType();
 
-        if (!$returnType) {
+        if (! $returnType) {
             return false;
         }
 
@@ -144,6 +145,7 @@ class Generator
                 $openApiParams[] = $openApiParam->getOpenApiParameter($param);
             }
         }
+
         return $openApiParams;
     }
 
@@ -160,23 +162,26 @@ class Generator
                 if ($typeName && class_exists($typeName) && is_subclass_of($typeName, DTO::class)) {
                     $requestBody = new RequestBody;
                     $requestBody->description = $body->getDescription();
-                    $requestBody->required = !$param->allowsNull() && !$param->isDefaultValueAvailable();
+                    $requestBody->required = ! $param->allowsNull() && ! $param->isDefaultValueAvailable();
+
                     return $requestBody;
                 }
             }
         }
+
         return null;
     }
 
     public function getResponses(ReflectionMethod $method): array
     {
         $returnType = $method->getReturnType();
-        if (!$returnType) {
+        if (! $returnType) {
             return [];
         }
         if ($returnType instanceof ReflectionUnionType) {
             return array_map(fn ($type) => $this->getResponseFromType($type), $returnType->getTypes());
         }
+
         return $this->getResponseFromType($returnType);
     }
 
@@ -191,6 +196,7 @@ class Generator
     {
         $className = Str::after("App\\Http\\Responses\\", $className);
         $className = Str::after("App\\DTO\\", $className);
+
         return str_replace("\\", "", $className);
     }
 
@@ -216,6 +222,7 @@ class Generator
                 }
             }
         }
+
         return false;
     }
 }

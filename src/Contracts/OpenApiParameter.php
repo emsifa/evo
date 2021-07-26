@@ -8,5 +8,5 @@ use ReflectionProperty;
 
 interface OpenApiParameter
 {
-    public function getOpenApiParameter(ReflectionParameter|ReflectionProperty $reflection): Parameter;
+    public function getOpenApiParameter(ReflectionParameter | ReflectionProperty $reflection): Parameter;
 }
