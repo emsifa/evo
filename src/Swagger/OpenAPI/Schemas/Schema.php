@@ -36,12 +36,29 @@ class Schema extends BaseSchema
         public ?array $required = null,
 
         /**
-         * @var PropertySchema[]|null
+         * @var array[string]Schema|null
          */
         public ?array $properties = null,
         public Schema | Reference | null $items = null,
         public ?float $minimum = null,
         public ?float $maximum = null,
+        protected ?string $classNameReference = null,
     ) {
+    }
+
+    public function getClassNameReference()
+    {
+        return $this->classNameReference;
+    }
+
+    public function toArray()
+    {
+        $array = parent::toArray();
+        if (is_array($this->properties)) {
+            foreach ($this->properties as $key => $prop) {
+                $array["properties"][$key] = $prop->toArray();
+            }
+        }
+        return $array;
     }
 }
