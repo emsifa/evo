@@ -6,5 +6,5 @@ use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
 
 interface OpenApiSchemaModifier
 {
-    public function modifySchema(Schema $schema);
+    public function modifyOpenApiSchema(Schema $schema);
 }

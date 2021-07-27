@@ -7,7 +7,6 @@ use Emsifa\Evo\Swagger\OpenApi\Schemas\Parameter;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
 use ReflectionAttribute;
 use ReflectionClass;
-use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty;
 
@@ -44,7 +43,7 @@ class OpenApiHelper
             $class = new ReflectionClass($type->getName());
             $schema = static::makeSchemaFromClass($class, $includeRequired);
         } else {
-            $schema = new Schema(type: $type ? static::getType($type) : Schema::TYPE_STRING);
+            $schema = new Schema(type: $type ? static::getType($type->getName()) : Schema::TYPE_STRING);
             $schema->default = $hasDefault ? $default : null;
             $schema->nullable = $nullable ?: null;
         }
@@ -56,7 +55,7 @@ class OpenApiHelper
         );
 
         foreach ($modifiers as $modifier) {
-            $modifier->modifySchema($schema);
+            $modifier->modifyOpenApiSchema($schema);
         }
 
         return $schema;
@@ -73,14 +72,14 @@ class OpenApiHelper
             $class = new ReflectionClass($type->getName());
             $schema = static::makeSchemaFromClass($class, $includeRequired);
         } else {
-            $schema = new Schema(type: $type ? static::getType($type) : Schema::TYPE_STRING);
+            $schema = new Schema(type: $type ? static::getType($type->getName()) : Schema::TYPE_STRING);
             $schema->default = $hasDefault ? $default : null;
             $schema->nullable = $nullable ?: null;
         }
 
         $modifiers = ReflectionHelper::getAttributesInstances($property, OpenApiSchemaModifier::class, ReflectionAttribute::IS_INSTANCEOF);
         foreach ($modifiers as $modifier) {
-            $modifier->modifySchema($schema);
+            $modifier->modifyOpenApiSchema($schema);
         }
 
         return $schema;
@@ -106,15 +105,15 @@ class OpenApiHelper
 
         $modifiers = ReflectionHelper::getAttributesInstances($class, OpenApiSchemaModifier::class, ReflectionAttribute::IS_INSTANCEOF);
         foreach ($modifiers as $modifier) {
-            $modifier->modifySchema($schema);
+            $modifier->modifyOpenApiSchema($schema);
         }
 
         return $schema;
     }
 
-    protected static function getType(ReflectionNamedType $type): string
+    public static function getType(string $typeName): string
     {
-        return match ($type->getName()) {
+        return match ($typeName) {
             "int" => Schema::TYPE_INTEGER,
             "float" => Schema::TYPE_NUMBER,
             "bool" => Schema::TYPE_BOOLEAN,
