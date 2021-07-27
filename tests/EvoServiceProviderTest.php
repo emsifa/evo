@@ -3,9 +3,6 @@
 namespace Emsifa\Evo\Tests;
 
 use Emsifa\Evo\Evo;
-use Emsifa\Evo\EvoServiceProvider;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Config;
 
 class EvoServiceProviderTest extends TestCase
 {
