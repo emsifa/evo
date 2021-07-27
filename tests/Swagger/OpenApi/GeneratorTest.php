@@ -52,7 +52,7 @@ class GeneratorTest extends TestCase
                                                     'items' => [
                                                         'type' => 'integer',
                                                     ],
-                                                ]
+                                                ],
                                             ],
                                         ],
                                     ],

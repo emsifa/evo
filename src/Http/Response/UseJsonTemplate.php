@@ -33,7 +33,7 @@ class UseJsonTemplate implements OpenApiSchemaModifier
         foreach ($props as $prop) {
             $name = $prop->getName();
             $typeName = $prop->getType() ? $prop->getType()->getName() : null;
-            if ($typeName && !TypeHelper::isBuiltInType($typeName) && is_a($typeName, JsonData::class, true)) {
+            if ($typeName && ! TypeHelper::isBuiltInType($typeName) && is_a($typeName, JsonData::class, true)) {
                 $schema->properties[$name] = $originalSchema;
             } else {
                 $propSchema = OpenApiHelper::makeSchemaFromProperty($prop, false);

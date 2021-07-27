@@ -9,7 +9,6 @@ use Emsifa\Evo\Http\Param;
 use Emsifa\Evo\Http\Query;
 use Emsifa\Evo\Route\Post;
 use Emsifa\Evo\Route\RoutePrefix;
-use Emsifa\Evo\Tests\Samples\DTO\PostStuffDTO;
 use Emsifa\Evo\Tests\Samples\DTO\SwaggerPostStuffDTO;
 use Emsifa\Evo\Tests\Samples\Responses\PostStuffResponse;
 use Illuminate\Routing\Controller;
