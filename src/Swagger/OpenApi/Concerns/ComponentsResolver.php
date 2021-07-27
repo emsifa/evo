@@ -91,6 +91,6 @@ trait ComponentsResolver
 
     public function resolveSchemaReferenceName(string $className): string
     {
-        return str_replace("\\", "", $className);
+        return str_replace("\\", ".", $className);
     }
 }
