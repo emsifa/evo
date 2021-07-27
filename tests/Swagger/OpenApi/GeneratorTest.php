@@ -52,7 +52,7 @@ class GeneratorTest extends TestCase
                                                     'items' => [
                                                         'type' => 'integer',
                                                     ],
-                                                ],
+                                                ]
                                             ],
                                         ],
                                     ],
@@ -65,13 +65,19 @@ class GeneratorTest extends TestCase
                                     'application/json' => [
                                         'type' => 'object',
                                         'properties' => [
-                                            'id' => ['type' => 'integer'],
-                                            'name' => ['type' => 'string'],
-                                            'stuff' => ['type' => 'string'],
-                                            'relation' => [
+                                            'status' => ['type' => 'integer'],
+                                            'data' => [
                                                 'type' => 'object',
                                                 'properties' => [
-                                                    'thing' => ['type' => 'string'],
+                                                    'id' => ['type' => 'integer'],
+                                                    'name' => ['type' => 'string'],
+                                                    'stuff' => ['type' => 'string'],
+                                                    'relation' => [
+                                                        'type' => 'object',
+                                                        'properties' => [
+                                                            'thing' => ['type' => 'string'],
+                                                        ],
+                                                    ],
                                                 ],
                                             ],
                                         ],
