@@ -28,7 +28,7 @@ class File extends CommonGetterAndValidator implements RequestGetter, RequestVal
             ? $this->key
             : ($reflection && $reflection instanceof ReflectionParameter ? $reflection->getName() : "");
 
-        $required = $reflection && $reflection instanceof ReflectionParameter ? !$reflection->isDefaultValueAvailable() : true;
+        $required = $reflection && $reflection instanceof ReflectionParameter ? ! $reflection->isDefaultValueAvailable() : true;
 
         if (! $body->content) {
             $contentSchema = new Schema(type: "object", properties: [$key => $schema]);

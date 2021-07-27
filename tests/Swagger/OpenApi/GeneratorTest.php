@@ -82,7 +82,7 @@ class GeneratorTest extends TestCase
                             'file' => [
                                 'type' => 'string',
                                 'format' => 'binary',
-                            ]
+                            ],
                         ],
                     ],
                     'Emsifa.Evo.Tests.Samples.Responses.PostStuffResponse' => [
