@@ -37,12 +37,12 @@ class ArrayOf implements OpenApiSchemaModifier
 
     public function modifyOpenApiSchema(Schema $schema)
     {
-        $isResponse = !TypeHelper::isBuiltInType($this->type)
+        $isResponse = ! TypeHelper::isBuiltInType($this->type)
             && (is_subclass_of($this->type, JsonResponse::class) || is_subclass_of($this->class, ResponseDTO::class));
 
         $schema->type = Schema::TYPE_ARRAY;
         $schema->items = TypeHelper::isBuiltInType($this->type)
             ? new Schema(type: OpenApiHelper::getType($this->type))
-            : OpenApiHelper::makeSchemaFromClass(new ReflectionClass($this->type), !$isResponse);
+            : OpenApiHelper::makeSchemaFromClass(new ReflectionClass($this->type), ! $isResponse);
     }
 }
