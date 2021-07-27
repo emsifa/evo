@@ -3,6 +3,7 @@
 namespace Emsifa\Evo;
 
 use Emsifa\Evo\Commands\MakeDtoCommand;
+use Emsifa\Evo\Commands\MakeResponseCommand;
 use Illuminate\Container\Container;
 use Illuminate\Routing\Router;
 use Spatie\LaravelPackageTools\Package;
@@ -23,7 +24,8 @@ class EvoServiceProvider extends PackageServiceProvider
             // ->hasMigration('create_evo_table')
             ->hasViews()
             ->hasAssets()
-            ->hasCommand(MakeDtoCommand::class);
+            ->hasCommand(MakeDtoCommand::class)
+            ->hasCommand(MakeResponseCommand::class);
     }
 
     public function registeringPackage()
