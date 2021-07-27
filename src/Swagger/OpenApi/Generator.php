@@ -106,8 +106,11 @@ class Generator
                 $openApi->paths[$uri] = $path;
             }
 
-            foreach (Arr::except($methods, 'HEAD') as $method) {
+            foreach ($methods as $method) {
                 $method = strtolower($method);
+                if ($method === 'head') {
+                    continue;
+                }
                 $path->{$method} = $operation;
             }
         }
