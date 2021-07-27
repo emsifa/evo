@@ -62,7 +62,7 @@ class GeneratorTest extends TestCase
                 'schemas' => [
                     'Emsifa.Evo.Tests.Samples.Controllers.SampleSwaggerController.postStuff' => [
                         'type' => 'object',
-                        'required' => ['age', 'name', 'email'],
+                        'required' => ['age', 'name', 'email', 'child', 'file'],
                         'properties' => [
                             'age' => ['type' => 'integer'],
                             'name' => ['type' => 'string'],
@@ -79,6 +79,10 @@ class GeneratorTest extends TestCase
                                     ],
                                 ],
                             ],
+                            'file' => [
+                                'type' => 'string',
+                                'format' => 'binary',
+                            ]
                         ],
                     ],
                     'Emsifa.Evo.Tests.Samples.Responses.PostStuffResponse' => [

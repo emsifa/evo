@@ -26,7 +26,9 @@ class File extends CommonGetterAndValidator implements RequestGetter, RequestVal
         $schema = new Schema("string", format:"binary");
         $key = $this->key
             ? $this->key
-            : ($reflection instanceof ReflectionParameter ? $reflection->getName() : "");
+            : ($reflection && $reflection instanceof ReflectionParameter ? $reflection->getName() : "");
+
+        $required = $reflection && $reflection instanceof ReflectionParameter ? !$reflection->isDefaultValueAvailable() : true;
 
         if (! $body->content) {
             $contentSchema = new Schema(type: "object", properties: [$key => $schema]);
@@ -36,6 +38,9 @@ class File extends CommonGetterAndValidator implements RequestGetter, RequestVal
                     $reflection->getDeclaringClass()->getName(),
                     $reflection->getDeclaringFunction()->getName(),
                 ]);
+                if ($required) {
+                    $contentSchema->required = [$key];
+                }
                 $contentSchema->setClassNameReference($refName);
             }
 
@@ -46,6 +51,12 @@ class File extends CommonGetterAndValidator implements RequestGetter, RequestVal
              */
             $mediaType = Arr::first($body->content);
             $mediaType->schema->properties[$key] = $schema;
+
+            if ($required) {
+                $mediaType->schema->required = $mediaType->schema->required
+                    ? [...$mediaType->schema->required, $key]
+                    : [$key];
+            }
 
             if ($reflection && $reflection instanceof ReflectionParameter) {
                 $refName = implode(".", [
