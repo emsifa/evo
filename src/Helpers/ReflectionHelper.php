@@ -76,7 +76,7 @@ class ReflectionHelper
     {
         foreach ($type->getTypes() as $type) {
             $name = $type->getName();
-            if (is_a($name, $typeName)) {
+            if (is_a($name, $typeName, true)) {
                 return true;
             }
         }

@@ -253,7 +253,7 @@ class Generator
         $props = $reflection->getProperties(ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
             $typeName = optional($prop->getType())->getName();
-            if (is_string($typeName) && is_a($typeName, UploadedFile::class)) {
+            if (is_string($typeName) && is_a($typeName, UploadedFile::class, true)) {
                 return true;
             }
             if (is_string($typeName) && is_subclass_of($typeName, DTO::class)) {

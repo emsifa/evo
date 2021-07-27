@@ -97,7 +97,7 @@ trait OpenApiRequestBodyMaker
         $props = $class->getProperties(ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
             $typeName = $prop->getType() ? $prop->getType()->getName() : null;
-            if ($typeName && is_a($typeName, UploadedFile::class)) {
+            if ($typeName && is_a($typeName, UploadedFile::class, true)) {
                 return true;
             }
         }

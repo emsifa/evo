@@ -119,7 +119,7 @@ class ObjectFiller
             case "string": return $typeName === "string";
             case "boolean": return $typeName === "bool";
             case "array": return $typeName === "array";
-            case "object": return is_a($value, $typeName);
+            case "object": return is_a($value, $typeName, true);
         }
 
         return false;
