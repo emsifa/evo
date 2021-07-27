@@ -124,7 +124,7 @@ class Generator
         $methods = $route->methods();
         $operation = $this->getOperation($route);
 
-        return [$uri, $methods, $operation];
+        return ["/".ltrim($uri, "/"), $methods, $operation];
     }
 
     protected function getOperation(Route $route): Operation
