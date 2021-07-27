@@ -13,7 +13,9 @@ use Emsifa\Evo\Http\Response\JsonResponse;
 use Emsifa\Evo\Http\Response\ResponseStatus;
 use Emsifa\Evo\Http\Response\ResponseType;
 use Emsifa\Evo\Route\Route;
+use Emsifa\Evo\Swagger\OpenApi\Concerns\ComponentsResolver;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Info;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\MediaType;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\OpenApi;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Operation;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Path;
@@ -33,6 +35,8 @@ use ReflectionUnionType;
 
 class Generator
 {
+    use ComponentsResolver;
+
     protected Router $router;
 
     public function __construct(protected Application $app)
@@ -74,6 +78,8 @@ class Generator
                 $path->{$method} = $operation;
             }
         }
+
+        $this->resolveComponents($openApi);
 
         return $openApi;
     }
@@ -161,9 +167,9 @@ class Generator
             /**
              * @var OpenApiRequestBody $body
              */
-            $body = ReflectionHelper::getFirstAttributeInstance($param, OpenApiRequestBody::class, ReflectionAttribute::IS_INSTANCEOF);
-            if ($body) {
-                return $body->getOpenApiRequestBody($param);
+            $bodyAttr = ReflectionHelper::getFirstAttributeInstance($param, OpenApiRequestBody::class, ReflectionAttribute::IS_INSTANCEOF);
+            if ($bodyAttr) {
+                $body = $bodyAttr->getOpenApiRequestBody($param);
             }
             /**
              * @var OpenApiRequestBodyModifier[] $modifiers
@@ -220,7 +226,7 @@ class Generator
         $schema = OpenApiHelper::makeSchemaFromClass($class, false);
 
         $response = new Response;
-        $response->content = [$type => $schema];
+        $response->content = [$type => new MediaType(schema: $schema)];
 
         /**
          * @var OpenApiResponseModifier[] $modifiers

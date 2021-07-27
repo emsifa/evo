@@ -17,7 +17,7 @@ class OpenApi extends BaseSchema
      */
     public array $paths = [];
 
-    public ?array $components = null;
+    public ?Components $components = null;
 
     /**
      * @var SecurityRequirement[]
@@ -36,6 +36,9 @@ class OpenApi extends BaseSchema
         $array = parent::toArray();
         foreach ($array['paths'] as $key => $path) {
             $array['paths'][$key] = $path->toArray();
+        }
+        if ($this->components) {
+            $array["components"] = $this->components->toArray();
         }
 
         return $array;

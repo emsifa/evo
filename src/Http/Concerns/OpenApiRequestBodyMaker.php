@@ -5,6 +5,7 @@ namespace Emsifa\Evo\Http\Concerns;
 use Emsifa\Evo\Contracts\OpenApiRequestBodyModifier;
 use Emsifa\Evo\Helpers\OpenApiHelper;
 use Emsifa\Evo\Helpers\ReflectionHelper;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\MediaType;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\RequestBody;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
 use Illuminate\Http\UploadedFile;
@@ -84,7 +85,7 @@ trait OpenApiRequestBodyMaker
         $schema = OpenApiHelper::makeSchemaFromClass($class);
         $contentType = $hasFile ? "multipart/form-data" : "application/json";
 
-        return [$contentType => $schema];
+        return [$contentType => new MediaType(schema: $schema)];
     }
 
     protected function getDefaultRequestBodyContent(): array

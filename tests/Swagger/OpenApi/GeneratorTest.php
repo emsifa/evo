@@ -37,25 +37,9 @@ class GeneratorTest extends TestCase
                             'required' => true,
                             'content' => [
                                 'application/json' => [
-                                    'type' => 'object',
-                                    'required' => ['age', 'name', 'email'],
-                                    'properties' => [
-                                        'age' => ['type' => 'integer'],
-                                        'name' => ['type' => 'string'],
-                                        'email' => ['type' => 'string'],
-                                        'child' => [
-                                            'type' => 'object',
-                                            'properties' => [
-                                                'thing' => ['type' => 'string'],
-                                                'numbers' => [
-                                                    'type' => 'array',
-                                                    'items' => [
-                                                        'type' => 'integer',
-                                                    ],
-                                                ],
-                                            ],
-                                        ],
-                                    ],
+                                    'schema' => [
+                                        '$ref' => '#/components/schemas/EmsifaEvoTestsSamplesDTOSwaggerPostStuffDTO',
+                                    ]
                                 ],
                             ],
                         ],
@@ -63,23 +47,53 @@ class GeneratorTest extends TestCase
                             '200' => [
                                 'content' => [
                                     'application/json' => [
+                                        'schema' => [
+                                            '$ref' => '#/components/schemas/EmsifaEvoTestsSamplesResponsesPostStuffResponse'
+                                        ]
+                                    ]
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'components' => [
+                'schemas' => [
+                    'EmsifaEvoTestsSamplesDTOSwaggerPostStuffDTO' => [
+                        'type' => 'object',
+                        'required' => ['age', 'name', 'email'],
+                        'properties' => [
+                            'age' => ['type' => 'integer'],
+                            'name' => ['type' => 'string'],
+                            'email' => ['type' => 'string'],
+                            'child' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'thing' => ['type' => 'string'],
+                                    'numbers' => [
+                                        'type' => 'array',
+                                        'items' => [
+                                            'type' => 'integer',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'EmsifaEvoTestsSamplesResponsesPostStuffResponse' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'status' => ['type' => 'integer'],
+                            'data' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'id' => ['type' => 'integer'],
+                                    'name' => ['type' => 'string'],
+                                    'stuff' => ['type' => 'string'],
+                                    'relation' => [
                                         'type' => 'object',
                                         'properties' => [
-                                            'status' => ['type' => 'integer'],
-                                            'data' => [
-                                                'type' => 'object',
-                                                'properties' => [
-                                                    'id' => ['type' => 'integer'],
-                                                    'name' => ['type' => 'string'],
-                                                    'stuff' => ['type' => 'string'],
-                                                    'relation' => [
-                                                        'type' => 'object',
-                                                        'properties' => [
-                                                            'thing' => ['type' => 'string'],
-                                                        ],
-                                                    ],
-                                                ],
-                                            ],
+                                            'thing' => ['type' => 'string'],
                                         ],
                                     ],
                                 ],
@@ -87,7 +101,7 @@ class GeneratorTest extends TestCase
                         ],
                     ],
                 ],
-            ],
+            ]
         ], $result);
     }
 }
