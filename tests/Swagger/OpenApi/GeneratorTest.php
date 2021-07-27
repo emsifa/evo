@@ -36,9 +36,9 @@ class GeneratorTest extends TestCase
                         'requestBody' => [
                             'required' => true,
                             'content' => [
-                                'application/json' => [
+                                'multipart/form-data' => [
                                     'schema' => [
-                                        '$ref' => '#/components/schemas/Emsifa.Evo.Tests.Samples.DTO.SwaggerPostStuffDTO',
+                                        '$ref' => '#/components/schemas/Emsifa.Evo.Tests.Samples.Controllers.SampleSwaggerController.postStuff',
                                     ],
                                 ],
                             ],
@@ -60,7 +60,7 @@ class GeneratorTest extends TestCase
             ],
             'components' => [
                 'schemas' => [
-                    'Emsifa.Evo.Tests.Samples.DTO.SwaggerPostStuffDTO' => [
+                    'Emsifa.Evo.Tests.Samples.Controllers.SampleSwaggerController.postStuff' => [
                         'type' => 'object',
                         'required' => ['age', 'name', 'email'],
                         'properties' => [

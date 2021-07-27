@@ -46,6 +46,11 @@ class Schema extends BaseSchema
     ) {
     }
 
+    public function setClassNameReference(string $name)
+    {
+        $this->classNameReference = $name;
+    }
+
     public function getClassNameReference()
     {
         return $this->classNameReference;

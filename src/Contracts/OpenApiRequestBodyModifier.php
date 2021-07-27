@@ -6,5 +6,5 @@ use Emsifa\Evo\Swagger\OpenApi\Schemas\RequestBody;
 
 interface OpenApiRequestBodyModifier
 {
-    public function modifyOpenApiRequestBody(RequestBody $body);
+    public function modifyOpenApiRequestBody(RequestBody $body, mixed $reflection = null);
 }

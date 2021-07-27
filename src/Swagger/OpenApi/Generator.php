@@ -179,7 +179,7 @@ class Generator
                 $body = new RequestBody;
             }
             foreach ($modifiers as $modifier) {
-                $modifier->modifyOpenApiRequestBody($body);
+                $modifier->modifyOpenApiRequestBody($body, $param);
             }
         }
 
