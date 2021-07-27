@@ -40,7 +40,7 @@ class OpenApiHelper
         $default = $hasDefault ? $parameter->getDefaultValue() : null;
         $nullable = $parameter->allowsNull();
 
-        if ($type && !$type->isBuiltin()) {
+        if ($type && ! $type->isBuiltin()) {
             $class = new ReflectionClass($type->getName());
             $schema = static::makeSchemaFromClass($class, $includeRequired);
         } else {
@@ -69,7 +69,7 @@ class OpenApiHelper
         $default = $hasDefault ? $property->getDefaultValue() : null;
         $nullable = $type ? $property->getType()->allowsNull() : true;
 
-        if ($type && !$type->isBuiltin()) {
+        if ($type && ! $type->isBuiltin()) {
             $class = new ReflectionClass($type->getName());
             $schema = static::makeSchemaFromClass($class, $includeRequired);
         } else {
