@@ -25,7 +25,7 @@ class GeneratorTest extends TestCase
 
         $this->assertArraySubset([
             'paths' => [
-                'sample/stuff' => [
+                '/sample/stuff' => [
                     'post' => [
                         'parameters' => [
                             ['name' => 'path_param', 'in' => 'path'],
@@ -38,17 +38,18 @@ class GeneratorTest extends TestCase
                             'content' => [
                                 'application/json' => [
                                     'schema' => [
-                                        '$ref' => '#/components/schemas/EmsifaEvoTestsSamplesDTOSwaggerPostStuffDTO',
+                                        '$ref' => '#/components/schemas/Emsifa.Evo.Tests.Samples.DTO.SwaggerPostStuffDTO',
                                     ],
                                 ],
                             ],
                         ],
                         'responses' => [
                             '200' => [
+                                'description' => 'OK',
                                 'content' => [
                                     'application/json' => [
                                         'schema' => [
-                                            '$ref' => '#/components/schemas/EmsifaEvoTestsSamplesResponsesPostStuffResponse',
+                                            '$ref' => '#/components/schemas/Emsifa.Evo.Tests.Samples.Responses.PostStuffResponse',
                                         ],
                                     ],
                                 ],
@@ -59,7 +60,7 @@ class GeneratorTest extends TestCase
             ],
             'components' => [
                 'schemas' => [
-                    'EmsifaEvoTestsSamplesDTOSwaggerPostStuffDTO' => [
+                    'Emsifa.Evo.Tests.Samples.DTO.SwaggerPostStuffDTO' => [
                         'type' => 'object',
                         'required' => ['age', 'name', 'email'],
                         'properties' => [
@@ -80,7 +81,7 @@ class GeneratorTest extends TestCase
                             ],
                         ],
                     ],
-                    'EmsifaEvoTestsSamplesResponsesPostStuffResponse' => [
+                    'Emsifa.Evo.Tests.Samples.Responses.PostStuffResponse' => [
                         'type' => 'object',
                         'properties' => [
                             'status' => ['type' => 'integer'],
