@@ -24,6 +24,7 @@ class Components extends BaseSchema
                 }
             }
         }
+
         return $array;
     }
 }

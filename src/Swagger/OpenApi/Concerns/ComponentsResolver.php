@@ -29,7 +29,7 @@ trait ComponentsResolver
                 $path->put,
                 $path->patch,
                 $path->delete,
-            ])->filter(fn ($path) => !is_null($path));
+            ])->filter(fn ($path) => ! is_null($path));
 
             foreach ($operations as $operation) {
                 $this->collectComponentsFromOperation($operation, $openApi);
@@ -44,7 +44,7 @@ trait ComponentsResolver
          * @var MediaType|null $requestBodyContent
          */
         $requestBodyContent = $requestBody ? Arr::first($requestBody->content) : null;
-        if ($requestBody && !$this->componentHasCollected($requestBodyContent->schema, $openApi)) {
+        if ($requestBody && ! $this->componentHasCollected($requestBodyContent->schema, $openApi)) {
             $ref = $this->collectComponent($requestBodyContent->schema, $openApi);
             $requestBodyContent->schema = $ref;
         }
@@ -56,7 +56,7 @@ trait ComponentsResolver
              * @var MediaType $content
              */
             $content = Arr::first($response->content);
-            if (!$this->componentHasCollected($content->schema, $openApi)) {
+            if (! $this->componentHasCollected($content->schema, $openApi)) {
                 $ref = $this->collectComponent($content->schema, $openApi);
                 $content->schema = $ref;
             }
@@ -78,7 +78,7 @@ trait ComponentsResolver
         $refClassName = $schema->getClassNameReference();
         $refName = $this->resolveSchemaReferenceName($refClassName);
 
-        if (!$openApi->components) {
+        if (! $openApi->components) {
             $openApi->components = new Components;
         }
         $openApi->components->schemas[$refName] = clone $schema;

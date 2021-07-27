@@ -39,7 +39,7 @@ class GeneratorTest extends TestCase
                                 'application/json' => [
                                     'schema' => [
                                         '$ref' => '#/components/schemas/EmsifaEvoTestsSamplesDTOSwaggerPostStuffDTO',
-                                    ]
+                                    ],
                                 ],
                             ],
                         ],
@@ -48,9 +48,9 @@ class GeneratorTest extends TestCase
                                 'content' => [
                                     'application/json' => [
                                         'schema' => [
-                                            '$ref' => '#/components/schemas/EmsifaEvoTestsSamplesResponsesPostStuffResponse'
-                                        ]
-                                    ]
+                                            '$ref' => '#/components/schemas/EmsifaEvoTestsSamplesResponsesPostStuffResponse',
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
@@ -101,7 +101,7 @@ class GeneratorTest extends TestCase
                         ],
                     ],
                 ],
-            ]
+            ],
         ], $result);
     }
 }
