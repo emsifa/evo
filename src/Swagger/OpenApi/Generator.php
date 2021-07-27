@@ -56,7 +56,7 @@ class Generator
          * @var OpenApi $openApi
          */
         $openApi = $this->app->has(OpenApi::class) ? $this->app->make(OpenApi::class) : new OpenApi;
-        $openApi->openapi = "v3.0.1";
+        $openApi->openapi = "3.0.1";
         $openApi->info = new Info;
         $openApi->info->title = "API Documentation";
         $openApi->info->version = "0.1.0";
