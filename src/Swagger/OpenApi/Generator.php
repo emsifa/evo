@@ -14,13 +14,16 @@ use Emsifa\Evo\Http\Response\ResponseStatus;
 use Emsifa\Evo\Http\Response\ResponseType;
 use Emsifa\Evo\Route\Route;
 use Emsifa\Evo\Swagger\OpenApi\Concerns\ComponentsResolver;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Contact;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Info;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\License;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\MediaType;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\OpenApi;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Operation;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Path;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\RequestBody;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Response;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Server;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Router;
@@ -60,10 +63,40 @@ class Generator
          * @var OpenApi $openApi
          */
         $openApi = $this->app->has(OpenApi::class) ? $this->app->make(OpenApi::class) : new OpenApi;
-        $openApi->openapi = "3.0.1";
+        $openApi->openapi = config('evo.openapi.version', '3.0.3');
         $openApi->info = new Info;
-        $openApi->info->title = "API Documentation";
-        $openApi->info->version = "0.1.0";
+        $openApi->info->title = config('evo.openapi.info.title', "API Documentation");
+        $openApi->info->version = config('evo.openapi.info.version', "0.1.0");
+        $openApi->info->description = config('evo.openapi.info.description');
+        $openApi->info->termsOfService = config('evo.openapi.info.termsOfService');
+
+        $contactConfig = config('evo.openapi.info.contact');
+        if ($contactConfig) {
+            $contact = new Contact;
+            $contact->name = Arr::get($contactConfig, 'name');
+            $contact->url = Arr::get($contactConfig, 'url');
+            $contact->email = Arr::get($contactConfig, 'email');
+            $openApi->info->contact = $contact;
+        }
+
+        $licenseConfig = config('evo.openapi.info.license');
+        if ($licenseConfig) {
+            $license = new License;
+            $license->name = Arr::get($licenseConfig, 'name');
+            $license->url = Arr::get($licenseConfig, 'url');
+            $openApi->info->license = $license;
+        }
+
+        $baseUrl = config('app.url', '/');
+        $servers = config('evo.openapi.servers', []);
+
+        foreach ($servers as $serverConfig) {
+            $server = new Server;
+            $server->url = Arr::get($serverConfig, 'url') ?: $baseUrl;
+            $server->description = Arr::get($serverConfig, 'description');
+            $server->variables = Arr::get($serverConfig, 'variables');
+            $openApi->servers[] = $server;
+        }
 
         $routes = $this->getRoutesWithJsonResponse();
         foreach ($routes as $route) {

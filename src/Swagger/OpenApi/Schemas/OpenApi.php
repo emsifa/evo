@@ -41,6 +41,12 @@ class OpenApi extends BaseSchema
             $array["components"] = $this->components->toArray();
         }
 
+        if ($this->servers) {
+            foreach ($this->servers as $i => $server) {
+                $array['servers'][$i] = $server->toArray();
+            }
+        }
+
         return $array;
     }
 }

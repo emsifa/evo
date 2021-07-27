@@ -16,6 +16,33 @@ class GeneratorTest extends TestCase
      */
     public function testResolveParameters()
     {
+        config([
+            'evo' => [
+                'openapi' => [
+                    'info' => [
+                        'title' => 'Test API',
+                        'version' => '1.2.3',
+                        'description' => 'Lorem ipsum dolor sit amet',
+                        'termsOfService' => 'https://terms.url',
+                        'contact' => [
+                            'name' => 'John Doe',
+                            'email' => 'johndoe@mail.com',
+                        ],
+                        'license' => [
+                            'name' => 'MIT',
+                            'url' => 'https://opensource.org/licenses/MIT',
+                        ],
+                    ],
+                    'servers' => [
+                        [
+                            'url' => 'http://api.test.url',
+                            'description' => 'Mock server',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
         $app = $this->app;
         $evo = $app->make('evo');
         $evo->routes(SampleSwaggerController::class);
@@ -24,6 +51,26 @@ class GeneratorTest extends TestCase
         $result = $generator->getResultArray();
 
         $this->assertArraySubset([
+            'info' => [
+                'title' => 'Test API',
+                'version' => '1.2.3',
+                'description' => 'Lorem ipsum dolor sit amet',
+                'termsOfService' => 'https://terms.url',
+                'contact' => [
+                    'name' => 'John Doe',
+                    'email' => 'johndoe@mail.com',
+                ],
+                'license' => [
+                    'name' => 'MIT',
+                    'url' => 'https://opensource.org/licenses/MIT',
+                ],
+            ],
+            'servers' => [
+                [
+                    'url' => 'http://api.test.url',
+                    'description' => 'Mock server',
+                ],
+            ],
             'paths' => [
                 '/sample/stuff' => [
                     'post' => [

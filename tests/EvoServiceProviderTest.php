@@ -5,6 +5,7 @@ namespace Emsifa\Evo\Tests;
 use Emsifa\Evo\Evo;
 use Emsifa\Evo\EvoServiceProvider;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Config;
 
 class EvoServiceProviderTest extends TestCase
 {
@@ -13,12 +14,7 @@ class EvoServiceProviderTest extends TestCase
      */
     public function testToEnsureEvoBindingIsRegistered()
     {
-        $app = new Application();
-        $provider = new EvoServiceProvider($app);
-
-        $provider->register();
-
-        $evo = $app->make('evo');
+        $evo = $this->app->make('evo');
         $this->assertInstanceOf(Evo::class, $evo);
     }
 
@@ -27,13 +23,8 @@ class EvoServiceProviderTest extends TestCase
      */
     public function testToEnsureEvoIsSingleton()
     {
-        $app = new Application();
-        $provider = new EvoServiceProvider($app);
-
-        $provider->register();
-
-        $evo2 = $app->make(Evo::class);
-        $evo1 = $app->make('evo');
+        $evo2 = $this->app->make(Evo::class);
+        $evo1 = $this->app->make('evo');
         $this->assertTrue($evo1 === $evo2);
     }
 }
