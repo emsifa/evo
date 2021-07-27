@@ -9,4 +9,5 @@ class PostStuffDTO extends DTO
     public int $age;
     public string $name;
     public string $email;
+    public ChildStuffDTO $child;
 }

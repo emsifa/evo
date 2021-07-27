@@ -23,6 +23,8 @@ class GeneratorTest extends TestCase
         $generator = new Generator($app);
         $result = $generator->getResultArray();
 
+        // dump($result);
+
         $this->assertArraySubset([
             'paths' => [
                 'sample/stuff' => [
@@ -43,6 +45,12 @@ class GeneratorTest extends TestCase
                                         'age' => ['type' => 'integer'],
                                         'name' => ['type' => 'string'],
                                         'email' => ['type' => 'string'],
+                                        'child' => [
+                                            'type' => 'object',
+                                            'properties' => [
+                                                'thing' => ['type' => 'string'],
+                                            ],
+                                        ],
                                     ],
                                 ],
                             ],
@@ -56,6 +64,12 @@ class GeneratorTest extends TestCase
                                             'id' => ['type' => 'integer'],
                                             'name' => ['type' => 'string'],
                                             'stuff' => ['type' => 'string'],
+                                            'relation' => [
+                                                'type' => 'object',
+                                                'properties' => [
+                                                    'thing' => ['type' => 'string'],
+                                                ],
+                                            ],
                                         ],
                                     ],
                                 ],

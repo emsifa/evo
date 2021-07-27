@@ -9,4 +9,5 @@ class PostStuffResponse extends JsonResponse
     public int $id;
     public string $name;
     public string $stuff;
+    public StuffRelation $relation;
 }

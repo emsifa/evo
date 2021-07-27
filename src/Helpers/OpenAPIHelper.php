@@ -33,16 +33,21 @@ class OpenApiHelper
         );
     }
 
-    public static function makeSchemaFromParameter(ReflectionParameter $parameter): Schema
+    public static function makeSchemaFromParameter(ReflectionParameter $parameter, bool $includeRequired = true): Schema
     {
         $type = $parameter->getType();
         $hasDefault = $parameter->isDefaultValueAvailable();
         $default = $hasDefault ? $parameter->getDefaultValue() : null;
         $nullable = $parameter->allowsNull();
 
-        $schema = new Schema(type: $type ? static::getType($type) : Schema::TYPE_STRING);
-        $schema->default = $hasDefault ? $default : null;
-        $schema->nullable = $nullable ?: null;
+        if ($type && !$type->isBuiltin()) {
+            $class = new ReflectionClass($type->getName());
+            $schema = static::makeSchemaFromClass($class, $includeRequired);
+        } else {
+            $schema = new Schema(type: $type ? static::getType($type) : Schema::TYPE_STRING);
+            $schema->default = $hasDefault ? $default : null;
+            $schema->nullable = $nullable ?: null;
+        }
 
         $modifiers = ReflectionHelper::getAttributesInstances(
             $parameter,
@@ -57,16 +62,21 @@ class OpenApiHelper
         return $schema;
     }
 
-    public static function makeSchemaFromProperty(ReflectionProperty $property): Schema
+    public static function makeSchemaFromProperty(ReflectionProperty $property, bool $includeRequired = true): Schema
     {
         $type = $property->getType();
         $hasDefault = $property->hasDefaultValue();
         $default = $hasDefault ? $property->getDefaultValue() : null;
         $nullable = $type ? $property->getType()->allowsNull() : true;
 
-        $schema = new Schema(type: $type ? static::getType($type) : Schema::TYPE_STRING);
-        $schema->default = $hasDefault ? $default : null;
-        $schema->nullable = $nullable ?: null;
+        if ($type && !$type->isBuiltin()) {
+            $class = new ReflectionClass($type->getName());
+            $schema = static::makeSchemaFromClass($class, $includeRequired);
+        } else {
+            $schema = new Schema(type: $type ? static::getType($type) : Schema::TYPE_STRING);
+            $schema->default = $hasDefault ? $default : null;
+            $schema->nullable = $nullable ?: null;
+        }
 
         $modifiers = ReflectionHelper::getAttributesInstances($property, OpenApiSchemaModifier::class, ReflectionAttribute::IS_INSTANCEOF);
         foreach ($modifiers as $modifier) {
@@ -84,7 +94,7 @@ class OpenApiHelper
 
         foreach ($props as $prop) {
             $name = $prop->getName();
-            $propSchema = static::makeSchemaFromProperty($prop);
+            $propSchema = static::makeSchemaFromProperty($prop, $includeRequired);
             $schema->properties[$name] = $propSchema;
             if (! $prop->hasDefaultValue()) {
                 $requiredKeys[] = $name;
