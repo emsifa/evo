@@ -3,10 +3,12 @@
 namespace Emsifa\Evo\Http;
 
 use Attribute;
+use Emsifa\Evo\Contracts\OpenApiRequestBody;
 use Emsifa\Evo\Contracts\RequestGetter;
 use Emsifa\Evo\Contracts\RequestValidator;
 use Emsifa\Evo\DTO;
 use Emsifa\Evo\Helpers\ValidatorHelper;
+use Emsifa\Evo\Http\Concerns\OpenApiRequestBodyMaker;
 use Emsifa\Evo\ObjectFiller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -16,16 +18,26 @@ use ReflectionParameter;
 use ReflectionProperty;
 
 #[Attribute(Attribute::TARGET_PROPERTY + Attribute::TARGET_PARAMETER)]
-class Body implements RequestGetter, RequestValidator
+class Body implements RequestGetter, RequestValidator, OpenApiRequestBody
 {
+    use OpenApiRequestBodyMaker;
+
     /**
      * @var string|array
      */
     protected $rules;
 
-    public function __construct(protected ?string $caster = null, $rules = '')
-    {
+    public function __construct(
+        protected ?string $caster = null,
+        protected string $description = '',
+        $rules = '',
+    ) {
         $this->rules = $rules;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 
     public function getRequestValue(Request $request, ReflectionParameter | ReflectionProperty $reflection): mixed

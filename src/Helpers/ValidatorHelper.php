@@ -30,7 +30,7 @@ class ValidatorHelper
         $type = $reflection->getType();
         if ($type) {
             $rules = array_merge($rules, static::getRulesFromTypeName($type->getName()));
-            if ($type->getName() === "array" || is_a($type->getName(), Collection::class)) {
+            if ($type->getName() === "array" || is_a($type->getName(), Collection::class, true)) {
                 $rules = array_merge($rules, static::getArrayItemRules($reflection));
             }
         }
