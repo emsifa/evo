@@ -16,7 +16,7 @@ class MockTest extends TestCase
 {
     public function testIsSuccessResponse()
     {
-        $mock = new Mock("");
+        $mock = new Mock();
         $isSuccessResponse = new ReflectionMethod($mock, "isSuccessResponse");
         $isSuccessResponse->setAccessible(true);
 
@@ -33,7 +33,7 @@ class MockTest extends TestCase
     {
         $controller = new SampleMockController();
         $method = new ReflectionMethod($controller, "onlyOneResponse");
-        $mock = new Mock("");
+        $mock = new Mock();
 
         $this->assertEquals(SampleUnknownResponse::class, $mock->getBestCandidateClassName($method));
     }
@@ -42,7 +42,7 @@ class MockTest extends TestCase
     {
         $controller = new SampleMockController();
         $method = new ReflectionMethod($controller, "unionResponse");
-        $mock = new Mock("");
+        $mock = new Mock();
 
         $this->assertEquals(SampleSuccessResponse::class, $mock->getBestCandidateClassName($method));
     }
@@ -51,14 +51,14 @@ class MockTest extends TestCase
     {
         $controller = new SampleMockController();
         $method = new ReflectionMethod($controller, "unionResponseWithNoSuccess");
-        $mock = new Mock("");
+        $mock = new Mock();
 
         $this->assertEquals(SampleUnknownResponse::class, $mock->getBestCandidateClassName($method));
     }
 
     public function testGetMockedResponse()
     {
-        $mock = new Mock("");
+        $mock = new Mock();
         $controller = new SampleMockController();
         $method = new ReflectionMethod($controller, "getMockSuccessResponse");
 

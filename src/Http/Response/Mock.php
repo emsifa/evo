@@ -17,7 +17,7 @@ use UnexpectedValueException;
 #[Attribute(Attribute::TARGET_METHOD)]
 class Mock
 {
-    public function __construct(protected ?string $className = null)
+    public function __construct()
     {
     }
 
@@ -26,7 +26,7 @@ class Mock
         ReflectionMethod $method,
         Request $request
     ): Responsable {
-        $className = $this->className ?: $this->getBestCandidateClassName($method);
+        $className = $this->getBestCandidateClassName($method);
         if (! $className || ! is_a($className, Responsable::class, true)) {
             throw new UnexpectedValueException("Cannot create mock response from class: '{$className}'");
         }
