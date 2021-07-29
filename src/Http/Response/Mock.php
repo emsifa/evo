@@ -55,7 +55,7 @@ class Mock
         return $returnType->getTypes()[0]->getName();
     }
 
-    public function isSuccessResponse(string $name): bool
+    protected function isSuccessResponse(string $name): bool
     {
         if (TypeHelper::isBuiltInType($name)) {
             return false;
