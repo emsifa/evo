@@ -49,7 +49,7 @@ class Mock
 
         foreach ($returnType->getTypes() as $type) {
             if ($this->isSuccessResponse($type->getName())) {
-                return $type;
+                return $type->getName();
             }
         }
 
