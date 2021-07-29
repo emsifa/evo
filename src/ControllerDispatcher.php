@@ -5,6 +5,7 @@ namespace Emsifa\Evo;
 use Emsifa\Evo\Contracts\RequestGetter;
 use Emsifa\Evo\Contracts\RequestValidator;
 use Emsifa\Evo\Helpers\ReflectionHelper;
+use Emsifa\Evo\Http\Response\Mock;
 use Illuminate\Http\Request;
 use Illuminate\Routing\ControllerDispatcher as BaseControllerDispatcher;
 use Illuminate\Routing\Route;
@@ -28,7 +29,21 @@ class ControllerDispatcher extends BaseControllerDispatcher
 
         $parameters = $this->resolveParameters($request, $controller, $method);
 
+        $methodReflection = new ReflectionMethod($controller, $method);
+        /**
+         * @var Mock $mock
+         */
+        $mock = ReflectionHelper::getFirstAttributeInstance($methodReflection, Mock::class, ReflectionAttribute::IS_INSTANCEOF);
+        if ($mock && $this->shouldReturnMock($mock, $request)) {
+            return $mock->getMockedResponse($this->container, $methodReflection, $request);
+        }
+
         return call_user_func_array([$controller, $method], $parameters);
+    }
+
+    public function shouldReturnMock(Mock $mock, Request $request): bool
+    {
+        return !$mock->isOptional() || $request->query('_mock') == 1;
     }
 
     public function resolveParameters(Request $request, $controller, $method): array

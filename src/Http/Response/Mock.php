@@ -25,6 +25,11 @@ class Mock implements OpenApiOperationModifier
     {
     }
 
+    public function isOptional()
+    {
+        return $this->optional;
+    }
+
     public function modifyOpenApiOperation(Operation $operation)
     {
         if ($this->optional) {
