@@ -38,4 +38,9 @@ class SampleMockController extends Controller
     {
         return new SampleUnknownResponse();
     }
+
+    public function getMockSuccessResponse(): SampleNotFoundResponse | SampleSuccessResponse
+    {
+        return new SampleNotFoundResponse();
+    }
 }

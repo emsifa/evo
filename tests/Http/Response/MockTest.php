@@ -58,4 +58,17 @@ class MockTest extends TestCase
 
         $this->assertEquals(SampleUnknownResponse::class, $mock->getBestCandidateClassName($method));
     }
+
+    public function testGetMockedResponse()
+    {
+        $mock = new Mock("");
+        $controller = new SampleMockController();
+        $method = new ReflectionMethod($controller, "getMockSuccessResponse");
+
+        $response = $mock->getMockedResponse($this->app, $method, new Request());
+
+        $this->assertInstanceOf(SampleSuccessResponse::class, $response);
+        $this->assertTrue(in_array($response->id, [1, 2, 3]));
+        $this->assertTrue(in_array($response->name, ["John Doe", "Jane Doe"]));
+    }
 }
