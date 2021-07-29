@@ -14,13 +14,24 @@ use ReflectionProperty;
 #[Attribute(Attribute::TARGET_CLASS)]
 class UseJsonTemplate implements OpenApiSchemaModifier
 {
-    public function __construct(protected string $templateClassName)
+    protected array $properties;
+
+    public function __construct(
+        protected string $templateClassName,
+        mixed ...$properties,
+    )
     {
+        $this->properties = $properties;
     }
 
     public function getTemplateClassName(): string
     {
         return $this->templateClassName;
+    }
+
+    public function getProperties(): array
+    {
+        return $this->properties;
     }
 
     public function modifyOpenApiSchema(Schema $schema)
