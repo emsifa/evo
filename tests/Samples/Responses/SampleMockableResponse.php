@@ -17,8 +17,8 @@ class SampleMockableResponse extends JsonResponse implements Mockable
     public function getMockedData(Generator $faker, Request $request): array
     {
         return [
-            'int' => $faker->numberBetween(1000, 1005),
-            'float' => $faker->randomFloat(2000, 2005),
+            'int' => 123,
+            'float' => 1.23,
             'string' => $faker->randomElement(["foo", "bar", "baz"]),
             'bool' => true,
         ];

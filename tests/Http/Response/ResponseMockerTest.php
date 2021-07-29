@@ -56,8 +56,8 @@ class ResponseMockerTest extends TestCase
         $mocker = new ResponseMocker($this->app);
         $response = $mocker->mock($reflectionMockableResponse, new Request());
 
-        $this->assertTrue($response->int >= 1000 && $response->int <= 1005);
-        $this->assertTrue($response->float >= 2000 && $response->float <= 2005);
+        $this->assertTrue($response->int === 123);
+        $this->assertTrue($response->float === 1.23);
         $this->assertTrue(in_array($response->string, ["foo", "bar", "baz"]));
         $this->assertTrue($response->bool);
     }
