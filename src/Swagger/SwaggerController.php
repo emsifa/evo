@@ -11,6 +11,7 @@ class SwaggerController extends Controller
     {
         $fallbackTitle = config('app.name') . ' API Documentation';
         $title = config('evo.openapi.info.title', $fallbackTitle);
+
         return view('evo::swagger-ui', [
             'title' => $title,
         ]);
