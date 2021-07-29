@@ -88,4 +88,31 @@ class ControllerDispatcherTest extends TestCase
         $this->assertTrue(in_array($result->id, [1, 2, 3]));
         $this->assertTrue(in_array($result->name, ["John Doe", "Jane Doe"]));
     }
+
+    public function testOptionalMockShouldNotReturnMockIfDoesntHasMockQuery()
+    {
+        $controller = new SampleDispatchedController;
+        $dispatcher = new ControllerDispatcher($this->app);
+        $route = new Route('POST', '/', SampleDispatchedController::class.'@methodWithOptionalMock');
+        $result = $dispatcher->dispatch($route, $controller, 'methodWithOptionalMock');
+
+        $this->assertInstanceOf(SampleSuccessResponse::class, $result);
+        $this->assertEquals($result->id, 456);
+        $this->assertEquals($result->name, "Nikola Tesla");
+    }
+
+    public function testOptionalMockShouldReturnMockedResponseIfHasMockQuery()
+    {
+        $this->app->bind(Request::class, function() {
+            return new Request(query: ['_mock' => '1']);
+        });
+        $controller = new SampleDispatchedController;
+        $dispatcher = new ControllerDispatcher($this->app);
+        $route = new Route('POST', '/', SampleDispatchedController::class.'@methodWithOptionalMock');
+        $result = $dispatcher->dispatch($route, $controller, 'methodWithOptionalMock');
+
+        $this->assertInstanceOf(SampleSuccessResponse::class, $result);
+        $this->assertTrue(in_array($result->id, [1, 2, 3]));
+        $this->assertTrue(in_array($result->name, ["John Doe", "Jane Doe"]));
+    }
 }
