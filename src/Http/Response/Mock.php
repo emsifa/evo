@@ -25,10 +25,9 @@ class Mock
         Container $container,
         ReflectionMethod $method,
         Request $request
-    ): Responsable
-    {
+    ): Responsable {
         $className = $this->className ?: $this->getBestCandidateClassName($method);
-        if (!$className || !is_a($className, Responsable::class, true)) {
+        if (! $className || ! is_a($className, Responsable::class, true)) {
             throw new UnexpectedValueException("Cannot create mock response from class: '{$className}'");
         }
 
@@ -43,7 +42,7 @@ class Mock
         $returnType = $method->getReturnType();
         $isUnion = $returnType instanceof ReflectionUnionType;
 
-        if (!$isUnion) {
+        if (! $isUnion) {
             return $returnType->getName();
         }
 
@@ -63,7 +62,7 @@ class Mock
         }
 
         $statusAttrs = ReflectionHelper::getClassAttributes($name, ResponseStatus::class, ReflectionAttribute::IS_INSTANCEOF);
-        if (!count($statusAttrs)) {
+        if (! count($statusAttrs)) {
             return false;
         }
 

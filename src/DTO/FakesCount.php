@@ -10,8 +10,7 @@ class FakesCount
     public function __construct(
         protected int $minOrCount,
         protected ?int $max = null,
-    )
-    {
+    ) {
     }
 
     public function getCount(): int
@@ -19,6 +18,7 @@ class FakesCount
         if ($this->max) {
             return rand($this->minOrCount, $this->max);
         }
+
         return $this->minOrCount;
     }
 }

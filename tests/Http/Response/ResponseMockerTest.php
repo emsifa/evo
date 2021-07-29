@@ -2,7 +2,6 @@
 
 namespace Emsifa\Evo\Tests\Http\Response;
 
-use Emsifa\Evo\Helpers\ObjectHelper;
 use Emsifa\Evo\Http\Response\ResponseMocker;
 use Emsifa\Evo\Tests\Samples\Responses\SampleMockResponse;
 use Emsifa\Evo\Tests\TestCase;
@@ -26,7 +25,7 @@ class ResponseMockerTest extends TestCase
          */
         $response = $mocker->mock($reflectionClass, $request);
 
-        $wordsCount = fn(string $str) => count(explode(" ", $str));
+        $wordsCount = fn (string $str) => count(explode(" ", $str));
 
         $this->assertInstanceOf(SampleMockResponse::class, $response);
         $this->assertTrue($response->int >= 1 && $response->int <= 1000);
@@ -45,7 +44,7 @@ class ResponseMockerTest extends TestCase
         $this->assertTrue(in_array($response->fakeString, ["foo", "bar", "baz"]));
 
         $this->assertTrue($response->child->id >= 1 && $response->child->id <= 1000);
-        $this->assertTrue(!preg_match("/[a-z]/i", $response->child->phoneNumber));
+        $this->assertTrue(! preg_match("/[a-z]/i", $response->child->phoneNumber));
 
         $this->assertCount(7, $response->childs);
     }

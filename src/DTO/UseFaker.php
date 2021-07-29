@@ -12,8 +12,7 @@ class UseFaker
     public function __construct(
         protected string $fakerMethodName,
         mixed ...$args,
-    )
-    {
+    ) {
         $this->args = $args;
     }
 
