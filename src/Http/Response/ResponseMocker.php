@@ -46,8 +46,7 @@ class ResponseMocker
         ReflectionClass $reflectionClass,
         Generator $faker,
         Request $request,
-    ): array
-    {
+    ): array {
         $data = [];
         $props = $reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
@@ -66,7 +65,7 @@ class ResponseMocker
         $isArray = $type && $type->getName() === "array";
         $isBuiltIn = $type && $type->isBuiltin();
         $typeName = $type ? $type->getName() : null;
-        $isObject = $typeName && !$isBuiltIn && class_exists($typeName);
+        $isObject = $typeName && ! $isBuiltIn && class_exists($typeName);
 
         // Resolve array values
         if ($isArray) {
@@ -98,6 +97,7 @@ class ResponseMocker
         if ($useFaker) {
             $method = $useFaker->getFakerMethodName();
             $args = $useFaker->getArgs();
+
             return call_user_func_array([$faker, $method], $args);
         }
 
@@ -119,7 +119,7 @@ class ResponseMocker
 
         // When property type is null
         // It could have any value
-        if (!$type) {
+        if (! $type) {
             return true;
         }
 
@@ -146,9 +146,9 @@ class ResponseMocker
         $arrayOfAttr = ReflectionHelper::getFirstAttributeInstance($prop, ArrayOf::class, ReflectionAttribute::IS_INSTANCEOF);
         $typeName = $arrayOfAttr ? $arrayOfAttr->getType() : "int";
         $isBuiltIn = TypeHelper::isBuiltInType($typeName);
-        $isObject = $typeName && !$isBuiltIn && class_exists($typeName);
+        $isObject = $typeName && ! $isBuiltIn && class_exists($typeName);
 
-        return collect(range(1, $count))->map(function() use ($typeName, $isObject, $faker) {
+        return collect(range(1, $count))->map(function () use ($typeName, $isObject, $faker) {
             return $isObject
                 ? $this->generateObjectValue($typeName, $faker)
                 : $this->generateScalarValue($typeName, $faker);
@@ -160,8 +160,7 @@ class ResponseMocker
         Generator $faker,
         ?Request $request = null,
         mixed $key = null
-    ): array
-    {
+    ): array {
         $reflectionClass = new ReflectionClass($typeName);
         $requestValue = $request ? $request->get($key) : [];
         $childRequest = new Request(request: (array) ($requestValue ?: []));
@@ -171,7 +170,7 @@ class ResponseMocker
 
     protected function generateScalarValue(string $typeName, Generator $faker): mixed
     {
-        return match($typeName) {
+        return match ($typeName) {
             "int" => $faker->numberBetween(1, 1000),
             "float" => $faker->randomFloat(3, 0, 1000),
             "string" => $faker->words(rand(5, 10), true),
@@ -184,8 +183,9 @@ class ResponseMocker
     {
         try {
             $generator->getFormatter($formatter);
+
             return true;
-        } catch(InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return false;
         }
     }
