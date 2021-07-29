@@ -17,6 +17,7 @@ class Parameter extends BaseSchema
         public ?bool $deprecated = null,
         public ?bool $allowEmptyValue = null,
         public Schema | Reference $schema,
+        public mixed $example = null,
     ) {
     }
 }

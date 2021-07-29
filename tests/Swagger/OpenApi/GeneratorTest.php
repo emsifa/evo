@@ -77,9 +77,9 @@ class GeneratorTest extends TestCase
                         'description' => 'Post stuff endpoint',
                         'parameters' => [
                             ['name' => 'path_param', 'in' => 'path', 'description' => 'Parameter from path'],
-                            ['name' => 'query_param', 'in' => 'query'],
-                            ['name' => 'header_param', 'in' => 'header'],
-                            ['name' => 'cookie_param', 'in' => 'cookie'],
+                            ['name' => 'query_param', 'in' => 'query', 'example' => 'query value'],
+                            ['name' => 'header_param', 'in' => 'header', 'example' => 'header value'],
+                            ['name' => 'cookie_param', 'in' => 'cookie', 'example' => 'klepon'],
                         ],
                         'requestBody' => [
                             'required' => true,
