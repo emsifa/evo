@@ -82,6 +82,7 @@ class GeneratorTest extends TestCase
                         ],
                         'requestBody' => [
                             'required' => true,
+                            'description' => 'Post stuff data',
                             'content' => [
                                 'multipart/form-data' => [
                                     'schema' => [
