@@ -10,6 +10,7 @@ use Emsifa\Evo\Http\Param;
 use Emsifa\Evo\Http\Query;
 use Emsifa\Evo\Route\Post;
 use Emsifa\Evo\Route\RoutePrefix;
+use Emsifa\Evo\Swagger\OpenApi\Description;
 use Emsifa\Evo\Tests\Samples\DTO\SwaggerPostStuffDTO;
 use Emsifa\Evo\Tests\Samples\Responses\PostStuffResponse;
 use Illuminate\Http\UploadedFile;
@@ -20,7 +21,7 @@ class SampleSwaggerController extends Controller
 {
     #[Post('stuff')]
     public function postStuff(
-        #[Param('path_param')] float $param,
+        #[Param('path_param'), Description('Parameter from path')] float $param,
         #[Query('query_param')] int $query,
         #[Body] SwaggerPostStuffDTO $dto,
         #[File] UploadedFile $file,
