@@ -4,9 +4,12 @@ namespace Emsifa\Evo\Tests;
 
 use Emsifa\Evo\ControllerDispatcher;
 use Emsifa\Evo\Tests\Samples\Controllers\SampleController;
+use Emsifa\Evo\Tests\Samples\Controllers\SampleDispatchedController;
 use Emsifa\Evo\Tests\Samples\DTO\PostStuffDTO;
+use Emsifa\Evo\Tests\Samples\Responses\SampleSuccessResponse;
 use Illuminate\Container\Container;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Illuminate\Validation\ValidationException;
 
 class ControllerDispatcherTest extends TestCase
@@ -72,5 +75,44 @@ class ControllerDispatcherTest extends TestCase
 
             throw $e;
         }
+    }
+
+    public function testReturnMockedResponse()
+    {
+        $controller = new SampleDispatchedController;
+        $dispatcher = new ControllerDispatcher($this->app);
+        $route = new Route('POST', '/', SampleDispatchedController::class.'@methodWithMock');
+        $result = $dispatcher->dispatch($route, $controller, 'methodWithMock');
+
+        $this->assertInstanceOf(SampleSuccessResponse::class, $result);
+        $this->assertTrue(in_array($result->id, [1, 2, 3]));
+        $this->assertTrue(in_array($result->name, ["John Doe", "Jane Doe"]));
+    }
+
+    public function testOptionalMockShouldNotReturnMockIfDoesntHasMockQuery()
+    {
+        $controller = new SampleDispatchedController;
+        $dispatcher = new ControllerDispatcher($this->app);
+        $route = new Route('POST', '/', SampleDispatchedController::class.'@methodWithOptionalMock');
+        $result = $dispatcher->dispatch($route, $controller, 'methodWithOptionalMock');
+
+        $this->assertInstanceOf(SampleSuccessResponse::class, $result);
+        $this->assertEquals($result->id, 456);
+        $this->assertEquals($result->name, "Nikola Tesla");
+    }
+
+    public function testOptionalMockShouldReturnMockedResponseIfHasMockQuery()
+    {
+        $this->app->bind(Request::class, function () {
+            return new Request(query: ['_mock' => '1']);
+        });
+        $controller = new SampleDispatchedController;
+        $dispatcher = new ControllerDispatcher($this->app);
+        $route = new Route('POST', '/', SampleDispatchedController::class.'@methodWithOptionalMock');
+        $result = $dispatcher->dispatch($route, $controller, 'methodWithOptionalMock');
+
+        $this->assertInstanceOf(SampleSuccessResponse::class, $result);
+        $this->assertTrue(in_array($result->id, [1, 2, 3]));
+        $this->assertTrue(in_array($result->name, ["John Doe", "Jane Doe"]));
     }
 }

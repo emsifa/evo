@@ -8,6 +8,7 @@ use Emsifa\Evo\Http\File;
 use Emsifa\Evo\Http\Header;
 use Emsifa\Evo\Http\Param;
 use Emsifa\Evo\Http\Query;
+use Emsifa\Evo\Http\Response\Mock;
 use Emsifa\Evo\Route\Post;
 use Emsifa\Evo\Route\RoutePrefix;
 use Emsifa\Evo\Swagger\OpenApi\Description;
@@ -22,6 +23,7 @@ use Illuminate\Routing\Controller;
 class SampleSwaggerController extends Controller
 {
     #[Post('stuff')]
+    #[Mock(optional: true)]
     #[Summary('Post Stuff')]
     #[Description('Post stuff endpoint')]
     public function postStuff(
