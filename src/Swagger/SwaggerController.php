@@ -9,7 +9,11 @@ class SwaggerController extends Controller
 {
     public function showUi()
     {
-        return view('evo::swagger-ui');
+        $fallbackTitle = config('app.name') . ' API Documentation';
+        $title = config('evo.openapi.info.title', $fallbackTitle);
+        return view('evo::swagger-ui', [
+            'title' => $title,
+        ]);
     }
 
     public function openApi(Generator $generator)
