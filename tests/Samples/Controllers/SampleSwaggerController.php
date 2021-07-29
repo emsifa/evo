@@ -21,7 +21,8 @@ class SampleSwaggerController extends Controller
 {
     #[Post('stuff')]
     public function postStuff(
-        #[Param('path_param'), Description('Parameter from path')] float $param,
+        #[Param('path_param'),
+        Description('Parameter from path')] float $param,
         #[Query('query_param')] int $query,
         #[Body] SwaggerPostStuffDTO $dto,
         #[File] UploadedFile $file,
