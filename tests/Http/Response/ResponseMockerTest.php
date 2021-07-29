@@ -37,7 +37,7 @@ class ResponseMockerTest extends TestCase
         $this->assertEquals("Nicola Tesla", $response->nameFromRequest);
 
         $this->assertEquals(1, preg_match("/^[0-9A-F]+-[0-9A-F]+-[0-9A-F]+-[89AB][0-9A-F]+-[0-9A-F]+$/i", $response->uuid));
-        $this->assertTrue(is_string($response->creditCardNumber) && is_numeric($response->creditCardNumber));
+        $this->assertIsNumeric($response->creditCardNumber);
 
         $this->assertTrue($response->fakeInt >= 1500 && $response->fakeInt <= 1505);
         $this->assertTrue($response->fakeFloat >= 2000 && $response->fakeInt <= 2001);
@@ -45,7 +45,7 @@ class ResponseMockerTest extends TestCase
         $this->assertTrue(in_array($response->fakeString, ["foo", "bar", "baz"]));
 
         $this->assertTrue($response->child->id >= 1 && $response->child->id <= 1000);
-        $this->assertTrue(! preg_match("/[a-z]/i", $response->child->phoneNumber));
+        $this->assertIsNumeric($response->child->creditCardNumber);
 
         $this->assertCount(7, $response->childs);
     }
