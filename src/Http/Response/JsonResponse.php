@@ -52,13 +52,23 @@ abstract class JsonResponse extends DTO implements JsonData, Responsable
 
     protected function getJsonTemplate(): ?JsonTemplate
     {
-        $useJsonTemplate = ReflectionHelper::getFirstClassAttribute($this, UseJsonTemplate::class, ReflectionAttribute::IS_INSTANCEOF);
-        if (! $useJsonTemplate) {
+        $useJsonTemplateAttr = ReflectionHelper::getFirstClassAttribute($this, UseJsonTemplate::class, ReflectionAttribute::IS_INSTANCEOF);
+        if (! $useJsonTemplateAttr) {
             return null;
         }
 
-        $jsonTemplateClass = ($useJsonTemplate->newInstance())->getTemplateClassName();
+        /**
+         * @var UseJsonTemplate $useJsonTemplate
+         */
+        $useJsonTemplate = $useJsonTemplateAttr->newInstance();
 
-        return app($jsonTemplateClass);
+        $jsonTemplateClass = $useJsonTemplate->getTemplateClassName();
+
+        $template = app($jsonTemplateClass);
+        foreach ($useJsonTemplate->getProperties() as $key => $value) {
+            $template->{$key} = $value;
+        }
+
+        return $template;
     }
 }

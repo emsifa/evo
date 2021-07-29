@@ -2,6 +2,7 @@
 
 namespace Emsifa\Evo\Http;
 
+use Emsifa\Evo\Tests\Samples\Http\CreateStuffResponse;
 use Emsifa\Evo\Tests\Samples\Http\CreateUserResponse;
 use Emsifa\Evo\Tests\Samples\Http\SampleViewResponse;
 use Emsifa\Evo\Tests\TestCase;
@@ -29,6 +30,26 @@ class ResponseTest extends TestCase
                 'name' => "John Doe",
                 'email' => "johndoe@mail.com",
                 'createdAt' => "2015-12-15",
+            ],
+        ]);
+
+        $this->assertEquals($expected, $response->getContent());
+    }
+
+    public function testTemplatedJsonResponseWithProperties()
+    {
+        $request = new Request();
+        $response = CreateStuffResponse::fromArray([
+            'id' => "1",
+            'stuff' => "a stuff",
+        ])
+        ->toResponse($request);
+
+        $expected = json_encode([
+            'status' => 201,
+            'data' => [
+                'id' => 1,
+                'stuff' => "a stuff",
             ],
         ]);
 
