@@ -94,7 +94,7 @@ class GeneratorTest extends TestCase
                         ],
                         'responses' => [
                             '200' => [
-                                'description' => 'OK',
+                                'description' => 'Post stuff success response',
                                 'content' => [
                                     'application/json' => [
                                         'schema' => [
