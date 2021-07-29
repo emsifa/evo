@@ -113,9 +113,9 @@ class GeneratorTest extends TestCase
                         'type' => 'object',
                         'required' => ['age', 'name', 'email', 'child', 'file'],
                         'properties' => [
-                            'age' => ['type' => 'integer'],
-                            'name' => ['type' => 'string'],
-                            'email' => ['type' => 'string'],
+                            'age' => ['type' => 'integer', 'example' => 18],
+                            'name' => ['type' => 'string', 'example' => 'John Doe'],
+                            'email' => ['type' => 'string', 'example' => 'johndoe@mail.com'],
                             'child' => [
                                 'type' => 'object',
                                 'properties' => [
