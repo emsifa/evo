@@ -19,8 +19,7 @@ class UseJsonTemplate implements OpenApiSchemaModifier
     public function __construct(
         protected string $templateClassName,
         mixed ...$properties,
-    )
-    {
+    ) {
         $this->properties = $properties;
     }
 
