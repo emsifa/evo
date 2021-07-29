@@ -3,13 +3,15 @@
 namespace Emsifa\Evo\Swagger\OpenApi;
 
 use Attribute;
+use Emsifa\Evo\Contracts\OpenApiOperationModifier;
 use Emsifa\Evo\Contracts\OpenApiParameterModifier;
 use Emsifa\Evo\Contracts\OpenApiRequestBodyModifier;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Operation;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Parameter;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\RequestBody;
 
-#[Attribute(Attribute::TARGET_PARAMETER + Attribute::TARGET_CLASS + Attribute::TARGET_PROPERTY)]
-class Description implements OpenApiRequestBodyModifier, OpenApiParameterModifier
+#[Attribute]
+class Description implements OpenApiRequestBodyModifier, OpenApiParameterModifier, OpenApiOperationModifier
 {
     public function __construct(protected string $description)
     {
@@ -20,8 +22,13 @@ class Description implements OpenApiRequestBodyModifier, OpenApiParameterModifie
         $body->description = $this->description;
     }
 
-    public function modifyOpenApiParameter(Parameter $parameter, mixed $reflection = null)
+    public function modifyOpenApiParameter(Parameter $parameter)
     {
         $parameter->description = $this->description;
+    }
+
+    public function modifyOpenApiOperation(Operation $operation)
+    {
+        $operation->description = $this->description;
     }
 }

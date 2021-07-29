@@ -2,6 +2,7 @@
 
 namespace Emsifa\Evo\Swagger\OpenApi;
 
+use Emsifa\Evo\Contracts\OpenApiOperationModifier;
 use Emsifa\Evo\Contracts\OpenApiParameter;
 use Emsifa\Evo\Contracts\OpenApiParameterModifier;
 use Emsifa\Evo\Contracts\OpenApiRequestBody;
@@ -170,13 +171,21 @@ class Generator
         [$className, $methodName] = explode("@", $controller);
         $method = new ReflectionMethod($className, $methodName);
 
-        $path = new Operation;
-        $path->operationId = $route->getAction('controller');
-        $path->parameters = $this->getPathParameters($method, $route);
-        $path->requestBody = $this->getRequestBody($method);
-        $path->responses = $this->getResponses($method);
+        $operation = new Operation;
+        $operation->operationId = $route->getAction('controller');
+        $operation->parameters = $this->getPathParameters($method, $route);
+        $operation->requestBody = $this->getRequestBody($method);
+        $operation->responses = $this->getResponses($method);
 
-        return $path;
+        /**
+         * @var OpenApiOperationModifier[] $modifiers
+         */
+        $modifiers = ReflectionHelper::getAttributesInstances($method, OpenApiOperationModifier::class, ReflectionAttribute::IS_INSTANCEOF);
+        foreach ($modifiers as $modifier) {
+            $modifier->modifyOpenApiOperation($operation);
+        }
+
+        return $operation;
     }
 
     public function getPathParameters(ReflectionMethod $method): array

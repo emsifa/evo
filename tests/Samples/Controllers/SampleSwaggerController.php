@@ -20,6 +20,7 @@ use Illuminate\Routing\Controller;
 class SampleSwaggerController extends Controller
 {
     #[Post('stuff')]
+    #[Description('Post stuff endpoint')]
     public function postStuff(
         #[Param('path_param'),
         Description('Parameter from path')] float $param,
