@@ -43,7 +43,7 @@ class ControllerDispatcher extends BaseControllerDispatcher
 
     public function shouldReturnMock(Mock $mock, Request $request): bool
     {
-        return !$mock->isOptional() || $request->query('_mock') == 1;
+        return ! $mock->isOptional() || $request->query('_mock') == 1;
     }
 
     public function resolveParameters(Request $request, $controller, $method): array

@@ -103,7 +103,7 @@ class ControllerDispatcherTest extends TestCase
 
     public function testOptionalMockShouldReturnMockedResponseIfHasMockQuery()
     {
-        $this->app->bind(Request::class, function() {
+        $this->app->bind(Request::class, function () {
             return new Request(query: ['_mock' => '1']);
         });
         $controller = new SampleDispatchedController;
