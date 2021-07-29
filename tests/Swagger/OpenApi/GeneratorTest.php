@@ -113,18 +113,19 @@ class GeneratorTest extends TestCase
                         'type' => 'object',
                         'required' => ['age', 'name', 'email', 'child', 'file'],
                         'properties' => [
-                            'age' => ['type' => 'integer'],
-                            'name' => ['type' => 'string'],
-                            'email' => ['type' => 'string'],
+                            'age' => ['type' => 'integer', 'example' => 18],
+                            'name' => ['type' => 'string', 'example' => 'John Doe'],
+                            'email' => ['type' => 'string', 'example' => 'johndoe@mail.com'],
                             'child' => [
                                 'type' => 'object',
                                 'properties' => [
-                                    'thing' => ['type' => 'string'],
+                                    'thing' => ['type' => 'string', 'example' => 'A thing'],
                                     'numbers' => [
                                         'type' => 'array',
                                         'items' => [
                                             'type' => 'integer',
                                         ],
+                                        'example' => [1, 2, 3],
                                     ],
                                 ],
                             ],
@@ -141,13 +142,13 @@ class GeneratorTest extends TestCase
                             'data' => [
                                 'type' => 'object',
                                 'properties' => [
-                                    'id' => ['type' => 'integer'],
-                                    'name' => ['type' => 'string'],
-                                    'stuff' => ['type' => 'string'],
+                                    'id' => ['type' => 'integer', 'example' => 1],
+                                    'name' => ['type' => 'string', 'example' => 'Lorem Ipsum'],
+                                    'stuff' => ['type' => 'string', 'example' => 'A stuff'],
                                     'relation' => [
                                         'type' => 'object',
                                         'properties' => [
-                                            'thing' => ['type' => 'string'],
+                                            'thing' => ['type' => 'string', 'example' => 'Relation thing'],
                                         ],
                                     ],
                                 ],
