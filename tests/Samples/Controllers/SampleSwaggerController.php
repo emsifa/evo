@@ -11,6 +11,7 @@ use Emsifa\Evo\Http\Query;
 use Emsifa\Evo\Route\Post;
 use Emsifa\Evo\Route\RoutePrefix;
 use Emsifa\Evo\Swagger\OpenApi\Description;
+use Emsifa\Evo\Swagger\OpenApi\Example;
 use Emsifa\Evo\Tests\Samples\DTO\SwaggerPostStuffDTO;
 use Emsifa\Evo\Tests\Samples\Responses\PostStuffResponse;
 use Illuminate\Http\UploadedFile;
@@ -24,11 +25,14 @@ class SampleSwaggerController extends Controller
     public function postStuff(
         #[Param('path_param'),
         Description('Parameter from path')] float $param,
-        #[Query('query_param')] int $query,
+        #[Query('query_param'),
+        Example('query value')] int $query,
         #[Body] SwaggerPostStuffDTO $dto,
         #[File] UploadedFile $file,
-        #[Header('header_param')] string $header = "foo",
-        #[Cookie('cookie_param')] bool $cookie = false,
+        #[Header('header_param'),
+        Example('header value')] string $header = "foo",
+        #[Cookie('cookie_param'),
+        Example('klepon')] bool $cookie = false,
     ): PostStuffResponse {
         return PostStuffResponse::fromArray([
             'id' => "1",
