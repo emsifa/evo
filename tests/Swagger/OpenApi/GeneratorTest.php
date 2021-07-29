@@ -74,6 +74,7 @@ class GeneratorTest extends TestCase
             'paths' => [
                 '/sample/stuff' => [
                     'post' => [
+                        'summary' => 'Post Stuff',
                         'description' => 'Post stuff endpoint',
                         'parameters' => [
                             ['name' => 'path_param', 'in' => 'path', 'description' => 'Parameter from path'],

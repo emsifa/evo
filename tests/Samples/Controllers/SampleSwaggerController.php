@@ -12,6 +12,7 @@ use Emsifa\Evo\Route\Post;
 use Emsifa\Evo\Route\RoutePrefix;
 use Emsifa\Evo\Swagger\OpenApi\Description;
 use Emsifa\Evo\Swagger\OpenApi\Example;
+use Emsifa\Evo\Swagger\OpenApi\Summary;
 use Emsifa\Evo\Tests\Samples\DTO\SwaggerPostStuffDTO;
 use Emsifa\Evo\Tests\Samples\Responses\PostStuffResponse;
 use Illuminate\Http\UploadedFile;
@@ -21,6 +22,7 @@ use Illuminate\Routing\Controller;
 class SampleSwaggerController extends Controller
 {
     #[Post('stuff')]
+    #[Summary('Post Stuff')]
     #[Description('Post stuff endpoint')]
     public function postStuff(
         #[Param('path_param'),
