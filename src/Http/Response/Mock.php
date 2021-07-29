@@ -3,8 +3,12 @@
 namespace Emsifa\Evo\Http\Response;
 
 use Attribute;
+use Emsifa\Evo\Contracts\OpenApiOperationModifier;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Emsifa\Evo\Helpers\TypeHelper;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Operation;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Parameter;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
@@ -15,10 +19,22 @@ use ReflectionUnionType;
 use UnexpectedValueException;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class Mock
+class Mock implements OpenApiOperationModifier
 {
-    public function __construct()
+    public function __construct(protected bool $optional = false)
     {
+    }
+
+    public function modifyOpenApiOperation(Operation $operation)
+    {
+        if ($this->optional) {
+            $operation->parameters[] = new Parameter(
+                name: '_mock',
+                in: 'query',
+                description: 'Use 1 to return mocked response',
+                schema: new Schema(Schema::TYPE_INTEGER, default: 0, example: 1),
+            );
+        }
     }
 
     public function getMockedResponse(

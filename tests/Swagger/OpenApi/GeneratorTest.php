@@ -81,6 +81,7 @@ class GeneratorTest extends TestCase
                             ['name' => 'query_param', 'in' => 'query', 'example' => 'query value'],
                             ['name' => 'header_param', 'in' => 'header', 'example' => 'header value'],
                             ['name' => 'cookie_param', 'in' => 'cookie', 'example' => 'klepon'],
+                            ['name' => '_mock', 'in' => 'query', 'schema' => ['default' => 0, 'example' => 1]],
                         ],
                         'requestBody' => [
                             'required' => true,
