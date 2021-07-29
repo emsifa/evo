@@ -3,6 +3,7 @@
 namespace Emsifa\Evo\Tests\Http\Response;
 
 use Emsifa\Evo\Http\Response\ResponseMocker;
+use Emsifa\Evo\Tests\Samples\Responses\SampleMockableResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleMockResponse;
 use Emsifa\Evo\Tests\TestCase;
 use Illuminate\Http\Request;
@@ -47,5 +48,17 @@ class ResponseMockerTest extends TestCase
         $this->assertTrue(! preg_match("/[a-z]/i", $response->child->phoneNumber));
 
         $this->assertCount(7, $response->childs);
+    }
+
+    public function testMockMockableResponse()
+    {
+        $reflectionMockableResponse = new ReflectionClass(SampleMockableResponse::class);
+        $mocker = new ResponseMocker($this->app);
+        $response = $mocker->mock($reflectionMockableResponse, new Request());
+
+        $this->assertTrue($response->int >= 1000 && $response->int <= 1005);
+        $this->assertTrue($response->float >= 2000 && $response->float <= 2005);
+        $this->assertTrue(in_array($response->string, ["foo", "bar", "baz"]));
+        $this->assertTrue($response->bool);
     }
 }
