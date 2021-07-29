@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Swagger UI</title>
+    <title>{{ $title }}</title>
     <link rel="stylesheet" type="text/css" href="{{ asset('vendor/evo/swagger-ui.css') }}" />
     <link rel="icon" type="image/png" href="{{ asset('vendor/evo/favicon-32x32.png') }}" sizes="32x32" />
     <link rel="icon" type="image/png" href="{{ asset('vendor/evo/favicon-16x16.png') }}" sizes="16x16" />
