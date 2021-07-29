@@ -25,11 +25,14 @@ class SampleSwaggerController extends Controller
     public function postStuff(
         #[Param('path_param'),
         Description('Parameter from path')] float $param,
-        #[Query('query_param'), Example('query value')] int $query,
+        #[Query('query_param'),
+        Example('query value')] int $query,
         #[Body] SwaggerPostStuffDTO $dto,
         #[File] UploadedFile $file,
-        #[Header('header_param'), Example('header value')] string $header = "foo",
-        #[Cookie('cookie_param'), Example('klepon')] bool $cookie = false,
+        #[Header('header_param'),
+        Example('header value')] string $header = "foo",
+        #[Cookie('cookie_param'),
+        Example('klepon')] bool $cookie = false,
     ): PostStuffResponse {
         return PostStuffResponse::fromArray([
             'id' => "1",
