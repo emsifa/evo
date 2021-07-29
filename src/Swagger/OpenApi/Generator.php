@@ -3,6 +3,7 @@
 namespace Emsifa\Evo\Swagger\OpenApi;
 
 use Emsifa\Evo\Contracts\OpenApiParameter;
+use Emsifa\Evo\Contracts\OpenApiParameterModifier;
 use Emsifa\Evo\Contracts\OpenApiRequestBody;
 use Emsifa\Evo\Contracts\OpenApiRequestBodyModifier;
 use Emsifa\Evo\Contracts\OpenApiResponseModifier;
@@ -188,7 +189,17 @@ class Generator
              */
             $openApiParam = ReflectionHelper::getFirstAttributeInstance($param, OpenApiParameter::class, ReflectionAttribute::IS_INSTANCEOF);
             if ($openApiParam) {
-                $openApiParams[] = $openApiParam->getOpenApiParameter($param);
+                $parameter = $openApiParam->getOpenApiParameter($param);
+
+                /**
+                 * @var OpenApiParameterModifier[] $modifiers
+                 */
+                $modifiers = ReflectionHelper::getAttributesInstances($param, OpenApiParameterModifier::class, ReflectionAttribute::IS_INSTANCEOF);
+                foreach ($modifiers as $modifier) {
+                    $modifier->modifyOpenApiParameter($parameter);
+                }
+
+                $openApiParams[] = $parameter;
             }
         }
 
