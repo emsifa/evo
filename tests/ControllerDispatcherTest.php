@@ -115,4 +115,32 @@ class ControllerDispatcherTest extends TestCase
         $this->assertTrue(in_array($result->id, [1, 2, 3]));
         $this->assertTrue(in_array($result->name, ["John Doe", "Jane Doe"]));
     }
+
+    public function testIgnoreMockWhenIgnoreMockConfigIsTrue()
+    {
+        config(['evo' => ['ignore_mock' => true]]);
+
+        $controller = new SampleDispatchedController;
+        $dispatcher = new ControllerDispatcher($this->app);
+        $route = new Route('POST', '/', SampleDispatchedController::class.'@methodWithMock');
+        $result = $dispatcher->dispatch($route, $controller, 'methodWithMock');
+
+        $this->assertInstanceOf(SampleSuccessResponse::class, $result);
+        $this->assertEquals($result->id, 789);
+        $this->assertEquals($result->name, "John Doe");
+    }
+
+    public function testDontIgnoreMockWhenIgnoreMockConfigIsFalse()
+    {
+        config(['evo' => ['ignore_mock' => false]]);
+
+        $controller = new SampleDispatchedController;
+        $dispatcher = new ControllerDispatcher($this->app);
+        $route = new Route('POST', '/', SampleDispatchedController::class.'@methodWithMock');
+        $result = $dispatcher->dispatch($route, $controller, 'methodWithMock');
+
+        $this->assertInstanceOf(SampleSuccessResponse::class, $result);
+        $this->assertTrue(in_array($result->id, [1, 2, 3]));
+        $this->assertTrue(in_array($result->name, ["John Doe", "Jane Doe"]));
+    }
 }

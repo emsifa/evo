@@ -1,6 +1,7 @@
 <?php
 // config for Emsifa/Evo
 return [
+    'ignore_mock' => env('IGNORE_MOCK') === 'true',
     'openapi' => [
         'info' => [
             'title' => 'API Documentation',

@@ -30,10 +30,15 @@ class ControllerDispatcher extends BaseControllerDispatcher
         $parameters = $this->resolveParameters($request, $controller, $method);
 
         $methodReflection = new ReflectionMethod($controller, $method);
+
+        $ignoreMock = config('evo.ignore_mock');
         /**
          * @var Mock $mock
          */
-        $mock = ReflectionHelper::getFirstAttributeInstance($methodReflection, Mock::class, ReflectionAttribute::IS_INSTANCEOF);
+        $mock = $ignoreMock
+            ? null
+            : ReflectionHelper::getFirstAttributeInstance($methodReflection, Mock::class, ReflectionAttribute::IS_INSTANCEOF);
+
         if ($mock && $this->shouldReturnMock($mock, $request)) {
             return $mock->getMockedResponse($this->container, $methodReflection, $request);
         }
