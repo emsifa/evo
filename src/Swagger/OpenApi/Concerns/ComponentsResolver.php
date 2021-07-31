@@ -64,6 +64,8 @@ trait ComponentsResolver
             return;
         }
 
+        $this->addComponentsIfNotExists($openApi);
+
         /**
          * @var Response $response
          */
@@ -116,9 +118,8 @@ trait ComponentsResolver
         $refClassName = $schema->getClassNameReference();
         $refName = $this->resolveSchemaReferenceName($refClassName);
 
-        if (! $openApi->components) {
-            $openApi->components = new Components;
-        }
+        $this->addComponentsIfNotExists($openApi);
+
         $openApi->components->schemas[$refName] = clone $schema;
 
         $ref = new Reference;
@@ -130,5 +131,12 @@ trait ComponentsResolver
     protected function resolveSchemaReferenceName(string $className): string
     {
         return str_replace("\\", ".", $className);
+    }
+
+    protected function addComponentsIfNotExists(OpenApi $openApi): void
+    {
+        if (! $openApi->components) {
+            $openApi->components = new Components;
+        }
     }
 }
