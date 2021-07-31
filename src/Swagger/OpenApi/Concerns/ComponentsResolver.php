@@ -135,7 +135,7 @@ trait ComponentsResolver
 
     protected function addComponentsIfNotExists(OpenApi $openApi): void
     {
-        if (!$openApi->components) {
+        if (! $openApi->components) {
             $openApi->components = new Components;
         }
     }
