@@ -11,6 +11,10 @@ class SampleDispatchedController extends Controller
     #[Mock]
     public function methodWithMock(): SampleSuccessResponse
     {
+        return SampleSuccessResponse::fromArray([
+            'id' => 789,
+            'name' => "John Doe",
+        ]);
     }
 
     #[Mock(optional: true)]
