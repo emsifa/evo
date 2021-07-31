@@ -64,7 +64,7 @@ class Mock implements OpenApiOperationModifier, RouteModifier
 
     public function modifyRoute(Route $route)
     {
-        $route->middleware([new AddMockHeader($this)]);
+        $route->middleware(AddMockHeader::class);
     }
 
     public function getMockedResponse(
@@ -78,6 +78,9 @@ class Mock implements OpenApiOperationModifier, RouteModifier
         }
 
         $this->className = $className;
+        $container->bind(Mock::class, function() {
+            return $this;
+        });
 
         $reflectionClass = new ReflectionClass($className);
         $mocker = new ResponseMocker($container);

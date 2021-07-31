@@ -4,10 +4,11 @@ namespace Emsifa\Evo\Http\Middlewares;
 
 use Closure;
 use Emsifa\Evo\Http\Response\Mock;
+use Illuminate\Contracts\Container\Container;
 
 class AddMockHeader
 {
-    public function __construct(protected Mock $mock)
+    public function __construct(protected Container $container)
     {
     }
 
@@ -15,7 +16,8 @@ class AddMockHeader
     {
         $response = $next($request);
 
-        $response->headers->set("Evo-Mock", $this->mock->getClassName());
+        $mock = $this->container->make(Mock::class);
+        $response->headers->set("Evo-Mock", $mock->getClassName());
 
         return $response;
     }
