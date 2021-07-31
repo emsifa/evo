@@ -2,6 +2,8 @@
 
 namespace Emsifa\Evo\Swagger\OpenApi\Schemas;
 
+use Illuminate\Contracts\Support\Arrayable;
+
 class Components extends BaseSchema
 {
     public ?array $schemas = null;
@@ -20,7 +22,7 @@ class Components extends BaseSchema
         foreach ($array as $key => $values) {
             if (is_array($values)) {
                 foreach ($values as $i => $value) {
-                    $array[$key][$i] = $value->toArray();
+                    $array[$key][$i] = $value instanceof Arrayable ? $value->toArray() : $value;
                 }
             }
         }
