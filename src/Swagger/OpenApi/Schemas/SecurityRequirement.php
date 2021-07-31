@@ -12,6 +12,6 @@ class SecurityRequirement extends BaseSchema
 
     public function toArray()
     {
-        return $this->names;
+        return [$this->key => $this->names];
     }
 }

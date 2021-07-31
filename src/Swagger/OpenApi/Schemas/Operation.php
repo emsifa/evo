@@ -50,7 +50,7 @@ class Operation extends BaseSchema
         }
         if (is_array($this->security)) {
             foreach ((array) $this->security as $key => $security) {
-                $array['security'][$key] = $security->toArray();
+                $array['security'][] = $security->toArray();
             }
         }
 
