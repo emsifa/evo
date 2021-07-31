@@ -85,13 +85,13 @@ class Evo
     {
         $routes = [];
         $reflection = new ReflectionClass($controller);
-        $routeModifiers = ReflectionHelper::getAttributesInstances($reflection, RouteModifier::class, ReflectionAttribute::IS_INSTANCEOF);
+        $classRouteModifiers = ReflectionHelper::getAttributesInstances($reflection, RouteModifier::class, ReflectionAttribute::IS_INSTANCEOF);
 
         $methods = $reflection->getMethods();
         foreach ($methods as $method) {
             $methodRoutes = ReflectionHelper::getAttributesInstances($method, Route::class, ReflectionAttribute::IS_INSTANCEOF);
             $routeModifiers = array_merge(
-                $routeModifiers,
+                $classRouteModifiers,
                 ReflectionHelper::getAttributesInstances(
                     $method,
                     RouteModifier::class,
