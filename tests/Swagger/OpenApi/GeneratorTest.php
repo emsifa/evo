@@ -108,6 +108,39 @@ class GeneratorTest extends TestCase
                         ],
                     ],
                 ],
+                '/sample/multiple-response' => [
+                    'post' => [
+                        'responses' => [
+                            '201' => [
+                                'content' => [
+                                    'application/json' => [
+                                        'schema' => [
+                                            '$ref' => '#/components/schemas/Emsifa.Evo.Tests.Samples.Responses.SampleSuccessResponse',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            '404' => [
+                                'content' => [
+                                    'application/json' => [
+                                        'schema' => [
+                                            '$ref' => '#/components/schemas/Emsifa.Evo.Tests.Samples.Responses.SampleNotFoundResponse',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            '500' => [
+                                'content' => [
+                                    'application/json' => [
+                                        'schema' => [
+                                            '$ref' => '#/components/schemas/Emsifa.Evo.Tests.Samples.Responses.SampleErrorResponse',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
             'components' => [
                 'schemas' => [
@@ -155,6 +188,25 @@ class GeneratorTest extends TestCase
                                     ],
                                 ],
                             ],
+                        ],
+                    ],
+                    'Emsifa.Evo.Tests.Samples.Responses.SampleSuccessResponse' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'id' => ['type' => 'integer'],
+                            'name' => ['type' => 'string'],
+                        ],
+                    ],
+                    'Emsifa.Evo.Tests.Samples.Responses.SampleNotFoundResponse' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'message' => ['type' => 'string'],
+                        ],
+                    ],
+                    'Emsifa.Evo.Tests.Samples.Responses.SampleErrorResponse' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'message' => ['type' => 'string'],
                         ],
                     ],
                 ],
