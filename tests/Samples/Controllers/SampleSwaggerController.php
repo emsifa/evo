@@ -24,6 +24,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller;
 
 #[RoutePrefix('sample')]
+#[UseGuards('web')]
 class SampleSwaggerController extends Controller
 {
     #[Post('stuff')]
