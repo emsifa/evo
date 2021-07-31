@@ -16,6 +16,9 @@ use Emsifa\Evo\Swagger\OpenApi\Example;
 use Emsifa\Evo\Swagger\OpenApi\Summary;
 use Emsifa\Evo\Tests\Samples\DTO\SwaggerPostStuffDTO;
 use Emsifa\Evo\Tests\Samples\Responses\PostStuffResponse;
+use Emsifa\Evo\Tests\Samples\Responses\SampleErrorResponse;
+use Emsifa\Evo\Tests\Samples\Responses\SampleNotFoundResponse;
+use Emsifa\Evo\Tests\Samples\Responses\SampleSuccessResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller;
 
@@ -43,5 +46,11 @@ class SampleSwaggerController extends Controller
             'name' => "John Doe",
             'stuff' => "Lorem ipsum dolor sit amet",
         ]);
+    }
+
+    #[Post('multiple-response')]
+    public function multipleResponse(): SampleSuccessResponse | SampleNotFoundResponse | SampleErrorResponse
+    {
+        return new SampleNotFoundResponse();
     }
 }
