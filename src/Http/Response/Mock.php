@@ -78,7 +78,7 @@ class Mock implements OpenApiOperationModifier, RouteModifier
         }
 
         $this->className = $className;
-        $container->bind(Mock::class, function() {
+        $container->bind(Mock::class, function () {
             return $this;
         });
 
