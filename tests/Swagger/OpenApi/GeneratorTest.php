@@ -235,7 +235,7 @@ class GeneratorTest extends TestCase
                         "type" => "http",
                         "scheme" => "basic",
                     ],
-                ]
+                ],
             ],
         ], $result);
     }
