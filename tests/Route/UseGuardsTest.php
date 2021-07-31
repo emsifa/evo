@@ -9,7 +9,7 @@ use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use ReflectionMethod;
 
-class UseGuardTest extends TestCase
+class UseGuardsTest extends TestCase
 {
     /**
      * @test

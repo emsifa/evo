@@ -4,26 +4,26 @@ namespace Emsifa\Evo\Tests\Samples\Controllers;
 
 use Emsifa\Evo\Route\Get;
 use Emsifa\Evo\Route\RoutePrefix;
-use Emsifa\Evo\Route\UseGuard;
+use Emsifa\Evo\Route\UseGuards;
 use Illuminate\Routing\Controller;
 
 #[RoutePrefix('guarded')]
 class SampleGuardedController extends Controller
 {
     #[Get('default')]
-    #[UseGuard]
+    #[UseGuards]
     public function defaultGuard()
     {
     }
 
     #[Get('jwt')]
-    #[UseGuard('jwt')]
+    #[UseGuards('jwt')]
     public function jwtGuard()
     {
     }
 
     #[Get('jwt/web')]
-    #[UseGuard(['jwt', 'web'])]
+    #[UseGuards("jwt", "web")]
     public function webAndJwtGuard()
     {
     }

@@ -6,11 +6,13 @@ use Attribute;
 use Emsifa\Evo\Contracts\RouteModifier;
 
 #[Attribute(Attribute::TARGET_CLASS + Attribute::TARGET_METHOD)]
-class UseGuard implements RouteModifier
+class UseGuards implements RouteModifier
 {
-    public function __construct(
-        protected string | array | null $guards = null,
-    ) {
+    protected array $guards = [];
+
+    public function __construct(string ...$guards)
+    {
+        $this->guards = $guards;
     }
 
     public function modifyRoute(Route $route)
@@ -21,10 +23,6 @@ class UseGuard implements RouteModifier
 
     public function getGuardsArray(): array
     {
-        if (is_null($this->guards)) {
-            return [config('auth.defaults.guard')];
-        }
-
-        return (array) $this->guards;
+        return $this->guards ?: [config('auth.defaults.guard')];
     }
 }
