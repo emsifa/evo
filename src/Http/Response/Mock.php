@@ -4,8 +4,11 @@ namespace Emsifa\Evo\Http\Response;
 
 use Attribute;
 use Emsifa\Evo\Contracts\OpenApiOperationModifier;
+use Emsifa\Evo\Contracts\RouteModifier;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Emsifa\Evo\Helpers\TypeHelper;
+use Emsifa\Evo\Http\Middlewares\AddMockHeader;
+use Emsifa\Evo\Route\Route;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Operation;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Parameter;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
@@ -19,8 +22,10 @@ use ReflectionUnionType;
 use UnexpectedValueException;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class Mock implements OpenApiOperationModifier
+class Mock implements OpenApiOperationModifier, RouteModifier
 {
+    protected string $className = "";
+
     public function __construct(protected bool $optional = false)
     {
     }
@@ -28,6 +33,21 @@ class Mock implements OpenApiOperationModifier
     public function isOptional()
     {
         return $this->optional;
+    }
+
+    public function getClassName(): string
+    {
+        return $this->className;
+    }
+
+    public function shouldBeUsed(Request $request): bool
+    {
+        $ignoreMock = config('evo.ignore_mock');
+        if ($ignoreMock) {
+            return false;
+        }
+
+        return $this->optional ? $request->query('_mock') == 1 : true;
     }
 
     public function modifyOpenApiOperation(Operation $operation)
@@ -42,6 +62,11 @@ class Mock implements OpenApiOperationModifier
         }
     }
 
+    public function modifyRoute(Route $route)
+    {
+        $route->middleware(AddMockHeader::class);
+    }
+
     public function getMockedResponse(
         Container $container,
         ReflectionMethod $method,
@@ -51,6 +76,11 @@ class Mock implements OpenApiOperationModifier
         if (! $className || ! is_a($className, Responsable::class, true)) {
             throw new UnexpectedValueException("Cannot create mock response from class: '{$className}'");
         }
+
+        $this->className = $className;
+        $container->bind(Mock::class, function () {
+            return $this;
+        });
 
         $reflectionClass = new ReflectionClass($className);
         $mocker = new ResponseMocker($container);
