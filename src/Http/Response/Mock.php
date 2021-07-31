@@ -30,6 +30,16 @@ class Mock implements OpenApiOperationModifier
         return $this->optional;
     }
 
+    public function shouldBeUsed(Request $request): bool
+    {
+        $ignoreMock = config('evo.ignore_mock');
+        if ($ignoreMock) {
+            return false;
+        }
+
+        return $this->optional ? $request->query('_mock') == 1 : true;
+    }
+
     public function modifyOpenApiOperation(Operation $operation)
     {
         if ($this->optional) {
