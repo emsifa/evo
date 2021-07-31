@@ -11,6 +11,7 @@ use Emsifa\Evo\Swagger\OpenApi\Schemas\Reference;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Response;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
 use Illuminate\Support\Arr;
+use UnexpectedValueException;
 
 trait ComponentsResolver
 {
@@ -39,6 +40,13 @@ trait ComponentsResolver
 
     public function collectComponentsFromOperation(Operation $operation, OpenApi $openApi)
     {
+        $this->collectRequestBody($operation, $openApi);
+        $this->collectResponses($operation, $openApi);
+        $this->collectSecuritySchemes($operation, $openApi);
+    }
+
+    protected function collectRequestBody(Operation $operation, OpenApi $openApi)
+    {
         $requestBody = $operation->requestBody;
         /**
          * @var MediaType|null $requestBodyContent
@@ -48,6 +56,36 @@ trait ComponentsResolver
             $ref = $this->collectComponent($requestBodyContent->schema, $openApi);
             $requestBodyContent->schema = $ref;
         }
+    }
+
+    protected function collectResponses(Operation $operation, OpenApi $openApi)
+    {
+        if (is_null($operation->security)) {
+            return;
+        }
+
+        /**
+         * @var Response $response
+         */
+        foreach ((array) $operation->security as $name => $security) {
+            $hasAdded = is_array($openApi->components->securitySchemes)
+                && array_key_exists($name, $openApi->components->securitySchemes);
+
+            if ($hasAdded) {
+                continue;
+            }
+
+            $scheme = config('evo.openapi.security_schemes.'.$name);
+            if (is_null($scheme)) {
+                throw new UnexpectedValueException("Operation '{$operation->operationId}' use security '{$name}' which is not described in config: evo.openapi.security_schemes");
+            }
+
+            $openApi->components->securitySchemes[$name] = $scheme;
+        }
+    }
+
+    protected function collectSecuritySchemes(Operation $operation, OpenApi $openApi)
+    {
         /**
          * @var Response $response
          */
@@ -63,7 +101,7 @@ trait ComponentsResolver
         }
     }
 
-    public function componentHasCollected(Schema $schema, OpenApi $openApi): bool
+    protected function componentHasCollected(Schema $schema, OpenApi $openApi): bool
     {
         $refClassName = $schema->getClassNameReference();
         $refName = $this->resolveSchemaReferenceName($refClassName);
@@ -73,7 +111,7 @@ trait ComponentsResolver
             && array_key_exists($refName, $openApi->components->schemas);
     }
 
-    public function collectComponent(Schema $schema, OpenApi $openApi): Reference
+    protected function collectComponent(Schema $schema, OpenApi $openApi): Reference
     {
         $refClassName = $schema->getClassNameReference();
         $refName = $this->resolveSchemaReferenceName($refClassName);
@@ -89,7 +127,7 @@ trait ComponentsResolver
         return $ref;
     }
 
-    public function resolveSchemaReferenceName(string $className): string
+    protected function resolveSchemaReferenceName(string $className): string
     {
         return str_replace("\\", ".", $className);
     }

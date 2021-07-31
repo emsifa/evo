@@ -39,6 +39,17 @@ class GeneratorTest extends TestCase
                             'description' => 'Mock server',
                         ],
                     ],
+                    'security_schemes' => [
+                        'jwt' => [
+                            "type" => "http",
+                            "scheme" => "bearer",
+                            "bearerFormat" => "JWT",
+                        ],
+                        'web' => [
+                            "type" => "http",
+                            "scheme" => "basic",
+                        ],
+                    ],
                 ],
             ],
         ]);
@@ -105,6 +116,10 @@ class GeneratorTest extends TestCase
                                     ],
                                 ],
                             ],
+                        ],
+                        'security' => [
+                            'web' => [],
+                            'jwt' => [],
                         ],
                     ],
                 ],
@@ -208,6 +223,17 @@ class GeneratorTest extends TestCase
                         'properties' => [
                             'message' => ['type' => 'string'],
                         ],
+                    ],
+                ],
+                'securitySchemes' => [
+                    'jwt' => [
+                        "type" => "http",
+                        "scheme" => "bearer",
+                        "bearerFormat" => "JWT",
+                    ],
+                    'web' => [
+                        "type" => "http",
+                        "scheme" => "basic",
                     ],
                 ],
             ],

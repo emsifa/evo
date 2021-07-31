@@ -169,7 +169,10 @@ class Generator
     {
         $controller = $route->getAction('controller');
         [$className, $methodName] = explode("@", $controller);
+        $class = new ReflectionClass($className);
         $method = new ReflectionMethod($className, $methodName);
+
+        $classOperationModifiers = ReflectionHelper::getAttributesInstances($class, OpenApiOperationModifier::class, ReflectionAttribute::IS_INSTANCEOF);
 
         $operation = new Operation;
         $operation->operationId = $route->getAction('controller');
@@ -181,7 +184,7 @@ class Generator
          * @var OpenApiOperationModifier[] $modifiers
          */
         $modifiers = ReflectionHelper::getAttributesInstances($method, OpenApiOperationModifier::class, ReflectionAttribute::IS_INSTANCEOF);
-        foreach ($modifiers as $modifier) {
+        foreach ([...$classOperationModifiers, ...$modifiers] as $modifier) {
             $modifier->modifyOpenApiOperation($operation);
         }
 

@@ -28,7 +28,7 @@ class Operation extends BaseSchema
     public ?bool $deprecated = null;
 
     /**
-     * @var SecurityRequirement[]|null
+     * @var array[string]SecurityRequirement|null
      */
     public ?array $security = null;
 
@@ -46,6 +46,11 @@ class Operation extends BaseSchema
         if (is_array($array['responses'])) {
             foreach ($array['responses'] as $type => $response) {
                 $array['responses'][$type] = $response->toArray();
+            }
+        }
+        if (is_array($this->security)) {
+            foreach ((array) $this->security as $key => $security) {
+                $array['security'][$key] = $security->toArray();
             }
         }
 

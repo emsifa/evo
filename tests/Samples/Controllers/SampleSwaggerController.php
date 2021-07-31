@@ -11,6 +11,7 @@ use Emsifa\Evo\Http\Query;
 use Emsifa\Evo\Http\Response\Mock;
 use Emsifa\Evo\Route\Post;
 use Emsifa\Evo\Route\RoutePrefix;
+use Emsifa\Evo\Route\UseGuards;
 use Emsifa\Evo\Swagger\OpenApi\Description;
 use Emsifa\Evo\Swagger\OpenApi\Example;
 use Emsifa\Evo\Swagger\OpenApi\Summary;
@@ -23,9 +24,11 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller;
 
 #[RoutePrefix('sample')]
+#[UseGuards('web')]
 class SampleSwaggerController extends Controller
 {
     #[Post('stuff')]
+    #[UseGuards('jwt')]
     #[Mock(optional: true)]
     #[Summary('Post Stuff')]
     #[Description('Post stuff endpoint')]
