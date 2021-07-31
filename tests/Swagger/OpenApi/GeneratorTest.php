@@ -106,6 +106,7 @@ class GeneratorTest extends TestCase
                                 ],
                             ],
                         ],
+                        'security' => ['jwt' => []],
                     ],
                 ],
                 '/sample/multiple-response' => [
