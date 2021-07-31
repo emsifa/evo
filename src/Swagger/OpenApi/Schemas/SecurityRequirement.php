@@ -7,8 +7,7 @@ class SecurityRequirement extends BaseSchema
     public function __construct(
         public string $key,
         public array $names,
-    )
-    {
+    ) {
     }
 
     public function toArray()

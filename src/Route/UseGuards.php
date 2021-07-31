@@ -26,7 +26,7 @@ class UseGuards implements RouteModifier, OpenApiOperationModifier
 
     public function modifyOpenApiOperation(Operation $operation)
     {
-        if (!$operation->security) {
+        if (! $operation->security) {
             $operation->security = [];
         }
 
