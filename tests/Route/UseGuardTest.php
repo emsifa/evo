@@ -19,7 +19,7 @@ class UseGuardTest extends TestCase
         config([
             'auth' => [
                 'defaults' => [
-                    'guard' => 'web'
+                    'guard' => 'web',
                 ],
             ],
         ]);

@@ -9,9 +9,8 @@ use Emsifa\Evo\Contracts\RouteModifier;
 class UseGuard implements RouteModifier
 {
     public function __construct(
-        protected string|array|null $guards = null,
-    )
-    {
+        protected string | array | null $guards = null,
+    ) {
     }
 
     public function modifyRoute(Route $route)
