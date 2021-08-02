@@ -400,7 +400,7 @@ Example above will do similar validation like below:
 $request->validate([
     'name' => 'required',
     'email' => 'required|email|unique:users,email',
-    'password' => 'required|email|unique:users,email',
+    'password' => 'required|min:6',
     'password_confirmation' => 'required|same:password',
 ], [
     'email.email' => "Incorrect email format",
