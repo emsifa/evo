@@ -3,6 +3,7 @@
 namespace Emsifa\Evo\Http\Response;
 
 use Emsifa\Evo\Contracts\Mockable;
+use Emsifa\Evo\Contracts\ValueFaker;
 use Emsifa\Evo\DTO\FakesCount;
 use Emsifa\Evo\DTO\UseFaker;
 use Emsifa\Evo\Helpers\ReflectionHelper;
@@ -98,7 +99,19 @@ class ResponseMocker
             $method = $useFaker->getFakerMethodName();
             $args = $useFaker->getArgs();
 
-            return call_user_func_array([$faker, $method], $args);
+            if ($this->fakerHasFormatter($faker, $method)) {
+                return call_user_func_array([$faker, $method], $args);
+            }
+
+            if (class_exists($method) && is_subclass_of($method, ValueFaker::class, true)) {
+                /**
+                 * @var ValueFaker $instance
+                 */
+                $instance = $this->container->make($method, $args);
+                return $instance->generateFakeValue($faker, $prop);
+            }
+
+            throw new InvalidArgumentException("Cannot generate UseFaker value: '{$method}'. Faker formatter or ValueFaker doesn't exists.");
         }
 
         // If `$key` available in faker generator

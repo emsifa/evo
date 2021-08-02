@@ -48,6 +48,8 @@ class ResponseMockerTest extends TestCase
         $this->assertIsNumeric($response->child->creditCardNumber);
 
         $this->assertCount(7, $response->childs);
+
+        $this->assertTrue(in_array($response->category, ["Laravel", "Nest.js", "Express.js"]));
     }
 
     public function testMockMockableResponse()

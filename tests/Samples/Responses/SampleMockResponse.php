@@ -5,6 +5,7 @@ namespace Emsifa\Evo\Tests\Samples\Responses;
 use Emsifa\Evo\DTO\FakesCount;
 use Emsifa\Evo\DTO\UseFaker;
 use Emsifa\Evo\Http\Response\JsonResponse;
+use Emsifa\Evo\Tests\Samples\CategoryFaker;
 use Emsifa\Evo\Types\ArrayOf;
 
 class SampleMockResponse extends JsonResponse
@@ -43,4 +44,7 @@ class SampleMockResponse extends JsonResponse
     #[ArrayOf(ChildMockData::class)]
     #[FakesCount(7)]
     public array $childs;
+
+    #[UseFaker(CategoryFaker::class, type: "framework")]
+    public string $category;
 }
