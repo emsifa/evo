@@ -82,7 +82,7 @@ class ReflectionHelper
      * @param  int $flags
      * @return bool
      */
-    public static function hasAttribute($reflection, array|string|null $name = null, int $flags = 0): bool
+    public static function hasAttribute($reflection, array | string | null $name = null, int $flags = 0): bool
     {
         if (is_array($name)) {
             foreach ($name as $n) {
@@ -90,6 +90,7 @@ class ReflectionHelper
                     return true;
                 }
             }
+
             return false;
         }
 

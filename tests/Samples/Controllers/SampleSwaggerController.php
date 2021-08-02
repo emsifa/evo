@@ -20,7 +20,6 @@ use Emsifa\Evo\Swagger\OpenApi\Summary;
 use Emsifa\Evo\Tests\Samples\DTO\SwaggerPostStuffDTO;
 use Emsifa\Evo\Tests\Samples\Responses\PostStuffResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleCustomErrorResponse;
-use Emsifa\Evo\Tests\Samples\Responses\SampleErrorResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleInvalidResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleNotFoundResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleSuccessResponse;
