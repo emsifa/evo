@@ -6,10 +6,10 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/emsifa/evo.svg?style=flat-square)](https://packagist.org/packages/emsifa/evo)
 
 ---
-Laravel Evo is package to evolve your Laravel code into something like this:
+Laravel Evo is package to change the way you write Laravel app into something like this:
 
 ```php
-#[UsePrefix('users')]
+#[RoutePrefix('users')]
 class UserController extends Controller
 {
     #[Get]
@@ -41,12 +41,13 @@ class UserController extends Controller
 }
 ```
 
-## Why?
+## Motivation
 
 Defining input and output types in head part of a function will trigger your brain to specifies input and output before writing its logic.
 So when it comes to write logic, you know exactly what you have, where it comes, and what to return.
 
 Also, by defining input and output type like this, not only you and your teammate would easily read the specifications. Machines too.
+That is why Evo can provide some amazing features such as auto validation, auto casting, live swagger documentation, mocking API, etc.
 
 ## Features
 
@@ -59,8 +60,8 @@ Also, by defining input and output type like this, not only you and your teammat
 * [x] Custom value casters.
 * [x] Generate DTO file.
 * [x] Generate Response file.
-* [ ] Generate OpenAPI file.
-* [ ] Display Swagger page.
+* [x] Generate OpenAPI file.
+* [x] Display Swagger page.
 
 
 ## Installation
@@ -73,6 +74,10 @@ composer require emsifa/evo
 
 ## Usage
 
+### Routing
+
+#### Register Route
+
 To be able to use Laravel Controller in Evo way, you have to register route with `EvoFacade::routes` method like below:
 
 ```php
@@ -83,6 +88,159 @@ use Emsifa\Evo\EvoFacade as Evo;
 Evo::routes(App\Http\Controllers\UserController::class);
 ```
 
+Then in your `UserController`, you can attach route attribute such as `Get`, `Post`, `Put`, `Patch`, `Delete` like example below:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Emsifa\Evo\Route\Get;
+use Emsifa\Evo\Route\Post;
+use Emsifa\Evo\Route\Put;
+use Emsifa\Evo\Route\Delete;
+
+class UserController extends Controller
+{
+    #[Get('users')]
+    public function index()
+    {
+        // ...
+    }
+    
+    #[Post('users')]
+    public function store()
+    {
+        // ...
+    }
+    
+    #[Get('users/{id}')]
+    public function show($id)
+    {
+        // ...
+    }
+    
+    #[Put('users/{id}')]
+    public function update($id)
+    {
+        // ...
+    }
+    
+    #[Delete('users/{id}')]
+    public function destroy($id)
+    {
+        // ...
+    }
+}
+```
+
+#### Route Prefixing
+
+If you want apply route prefix into your controller, you can attach `RoutePrefix` attribute to  your controller class.
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Emsifa\Evo\Route\RoutePrefix;
+use Emsifa\Evo\Route\Get;
+use Emsifa\Evo\Route\Post;
+use Emsifa\Evo\Route\Put;
+use Emsifa\Evo\Route\Delete;
+
+#[RoutePrefix('users')]
+class UserController extends Controller
+{
+    #[Get]
+    public function index()
+    {
+        // ...
+    }
+    
+    #[Post]
+    public function store()
+    {
+        // ...
+    }
+    
+    #[Get('{id}')]
+    public function show($id)
+    {
+        // ...
+    }
+    
+    #[Put('{id}')]
+    public function update($id)
+    {
+        // ...
+    }
+    
+    #[Delete('{id}')]
+    public function destroy($id)
+    {
+        // ...
+    }
+}
+```
+
+#### Applying Middleware
+
+Every route attribute has `$middleware` parameter that you can use to apply middleware. Here is an example:
+
+```
+<?php
+
+namespace App\Http\Controllers;
+
+use Emsifa\Evo\Route\RoutePrefix;
+use Emsifa\Evo\Route\Get;
+
+#[RoutePrefix('users')]
+class UserController extends Controller
+{
+    #[Get("/", middleware: "auth")]
+    public function index()
+    {
+        // ...
+    }
+    
+    #[Post("/", middleware: "auth")]
+    public function store()
+    {
+        // ...
+    }
+}
+```
+
+If you want to apply same middleware to all routes in a controller, you can attach `RouteMiddleware` to your controller class like example below:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Emsifa\Evo\Route\RoutePrefix;
+use Emsifa\Evo\Route\RouteMiddleware;
+use Emsifa\Evo\Route\Get;
+
+#[RoutePrefix('users')]
+#[RouteMiddleware('auth')]
+class UserController extends Controller
+{
+    #[Get]
+    public function index()
+    {
+        // ...
+    }
+    
+    #[Post]
+    public function store()
+    {
+        // ...
+    }
+}
+```
 
 
 ## Testing
