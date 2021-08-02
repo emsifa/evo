@@ -3,9 +3,17 @@
 namespace Emsifa\Evo\Tests\Samples\Controllers;
 
 use Emsifa\Evo\Http\Response\Mock;
+use Emsifa\Evo\Http\Response\UseErrorResponse;
+use Emsifa\Evo\Tests\Samples\Responses\SampleCustomErrorResponse;
+use Emsifa\Evo\Tests\Samples\Responses\SampleErrorResponse;
+use Emsifa\Evo\Tests\Samples\Responses\SampleInvalidResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleSuccessResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Validation\ValidationException;
+use InvalidArgumentException;
 
+#[UseErrorResponse(SampleErrorResponse::class)]
+#[UseErrorResponse(SampleInvalidResponse::class, [ValidationException::class])]
 class SampleDispatchedController extends Controller
 {
     #[Mock]
@@ -24,5 +32,10 @@ class SampleDispatchedController extends Controller
             'id' => 456,
             'name' => "Nikola Tesla",
         ]);
+    }
+
+    #[UseErrorResponse(SampleCustomErrorResponse::class, [InvalidArgumentException::class])]
+    public function methodWithSpecificErrorResponse()
+    {
     }
 }
