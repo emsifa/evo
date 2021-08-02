@@ -495,6 +495,97 @@ public function show(
 }
 ```
 
+#### Creating Custom Request Attribute
+
+You can create your own request getter attribute by creating a class implementing `Emsifa\Evo\Contracts\RequestGetter` interface.
+
+For example we will create `JwtToken` attribute to retrieve JWT token from header or cookie.
+
+First, create a file `app/Http/Attributes/JwtToken.php`.
+
+Then you can use code below:
+
+```php
+<?php
+
+namespace App\Http\Attributes;
+
+use Attribute;
+use Emsifa\Evo\Contracts\RequestGetter;
+use Illuminate\Http\Request;
+use ReflectionParameter;
+use ReflectionProperty;
+
+#[Attribute(Attribute::TARGET_PARAMETER)]
+class JwtToken implements RequestGetter
+{
+    public function getRequestValue(Request $request, ReflectionParameter | ReflectionProperty $reflection): mixed
+    {
+        $tokenFromHeader = $request->header("authorization");
+        $tokenFromCookie = $request->cookie("token");
+
+        return $tokenFromHeader
+            ? Str::after($tokenFromHeader, "Bearer ")
+            : $tokenFromCookie;
+    }
+}
+```
+
+Now you can use it like any other request attributes like this:
+
+```php
+public function doSomething(#[JwtToken] ?string $token)
+{
+    // ...
+}
+```
+
+In most case you may want to validate the value to make sure it is safe for Evo type cast it and inject it to your parameter.
+To do that, you can implement `Emsifa\Evo\Contracts\RequestValidator` like an example below:
+
+
+```php
+<?php
+
+namespace App\Http\Attributes;
+
+use Attribute;
+use Emsifa\Evo\Contracts\RequestGetter;
+use Emsifa\Evo\Contracts\RequestValidator;
+use Illuminate\Http\Request;
+use ReflectionParameter;
+use ReflectionProperty;
+
+#[Attribute(Attribute::TARGET_PARAMETER)]
+class JwtToken implements RequestGetter, RequestValidator
+{
+    public function getRequestValue(Request $request, ReflectionParameter | ReflectionProperty $reflection): mixed
+    {
+        $tokenFromHeader = $request->header("authorization");
+        $tokenFromCookie = $request->cookie("token");
+
+        return $tokenFromHeader
+            ? Str::after($tokenFromHeader, "Bearer ")
+            : $tokenFromCookie;
+    }
+
+    public function validateRequest(Request $request, ReflectionProperty | ReflectionParameter $reflection)
+    {
+        $data = [
+            "token" => $this->getRequestValue($request, $reflection)
+        ];
+
+        $rules = [
+            "token" => "required|string",
+        ];
+
+        Validator::make($data, $rules)->validate();
+    }
+}
+```
+
+Now Evo will run `validateRequest` before type cast it's value and inject it to your parameter.
+
 ## Testing
 
 ```bash
