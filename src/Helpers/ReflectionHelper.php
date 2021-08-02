@@ -28,6 +28,21 @@ class ReflectionHelper
         return $attributes;
     }
 
+    /**
+     * Get class (including its parents) attribute instances
+     *
+     * @param  ReflectionClass $class
+     * @param  string|null $attrName
+     * @param  int $flags
+     * @return \ReflectionAttribute[]
+     */
+    public static function getClassAttributeInstances(ReflectionClass $class, ?string $attrName = null, int $flags = 0): array
+    {
+        $attributes = static::getClassAttributes($class->getName(), $attrName, $flags);
+
+        return array_map(fn ($attr) => $attr->newInstance(), $attributes);
+    }
+
     public static function getFirstClassAttribute($object, ?string $attrName = null, int $flags = 0): ?ReflectionAttribute
     {
         $attributes = static::getClassAttributes($object, $attrName, $flags);
