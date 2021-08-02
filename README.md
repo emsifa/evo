@@ -136,7 +136,7 @@ class UserController extends Controller
 
 #### Route Prefixing
 
-If you want apply route prefix into your controller, you can attach `RoutePrefix` attribute to  your controller class.
+If you want to apply route prefix into your controller, you can attach `RoutePrefix` attribute to  your controller class.
 
 ```php
 <?php
