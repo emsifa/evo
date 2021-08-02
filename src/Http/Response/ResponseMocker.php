@@ -108,6 +108,7 @@ class ResponseMocker
                  * @var ValueFaker $instance
                  */
                 $instance = $this->container->make($method, $args);
+
                 return $instance->generateFakeValue($faker, $prop);
             }
 
