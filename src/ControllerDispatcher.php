@@ -2,14 +2,20 @@
 
 namespace Emsifa\Evo;
 
+use Emsifa\Evo\Contracts\ExceptionResponse;
 use Emsifa\Evo\Contracts\RequestGetter;
 use Emsifa\Evo\Contracts\RequestValidator;
+use Emsifa\Evo\Error\DontReport;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Emsifa\Evo\Http\Response\Mock;
+use Emsifa\Evo\Http\Response\UseErrorResponse;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\ControllerDispatcher as BaseControllerDispatcher;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Arr;
 use ReflectionAttribute;
+use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
 
@@ -39,7 +45,99 @@ class ControllerDispatcher extends BaseControllerDispatcher
             return $mock->getMockedResponse($this->container, $methodReflection, $request);
         }
 
-        return call_user_func_array([$controller, $method], $parameters);
+        try {
+            return call_user_func_array([$controller, $method], $parameters);
+        } catch (Exception $exception) {
+            $mapErrorResponses = $this->getErrorResponsesMap($methodReflection);
+            $exceptionResponse = $this->makeExceptionResponse($exception, $mapErrorResponses);
+
+            if (! $exceptionResponse) {
+                throw $exception;
+            }
+
+            $exceptionReflection = new ReflectionClass($exception);
+            $shouldNotReported = ReflectionHelper::hasAttribute($exceptionReflection, DontReport::class, ReflectionAttribute::IS_INSTANCEOF);
+            if ($shouldNotReported === false) {
+                report($exception);
+            }
+
+            return $exceptionResponse;
+        }
+    }
+
+    public function getErrorResponsesMap(ReflectionMethod $method): array
+    {
+        /**
+         * @var UseErrorResponse[] $useErrorResponses
+         */
+        $useErrorResponses = [
+            ...ReflectionHelper::getAttributesInstances($method, UseErrorResponse::class, ReflectionAttribute::IS_INSTANCEOF),
+            ...ReflectionHelper::getClassAttributeInstances($method->getDeclaringClass(), UseErrorResponse::class, ReflectionAttribute::IS_INSTANCEOF),
+        ];
+
+        $map = [];
+        foreach ($useErrorResponses as $useErrorResponse) {
+            $exceptions = $useErrorResponse->getExceptionClassNames();
+            $responseClass = $useErrorResponse->getResponseClassName();
+            if (empty($exceptions) && ! Arr::has($map, '_')) {
+                $map['_'] = $responseClass;
+            } else {
+                foreach ($exceptions as $exception) {
+                    if (! Arr::has($map, $exception)) {
+                        $map[$exception] = $responseClass;
+                    }
+                }
+            }
+        }
+
+        return $map;
+    }
+
+    public function makeExceptionResponse(Exception $exception, array $mapExceptionResponses)
+    {
+        if (empty($mapExceptionResponses)) {
+            return null;
+        }
+
+        $responseClassName = $this->findBestMatchErrorResponse($exception, $mapExceptionResponses);
+
+        if (is_null($responseClassName)) {
+            return null;
+        }
+
+        $response = $this->container->make($responseClassName);
+
+        if ($response instanceof ExceptionResponse) {
+            $response->forException($exception);
+        } else {
+            ObjectFiller::fillObject($response, [
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTrace(),
+            ]);
+        }
+
+        return $response;
+    }
+
+    public function findBestMatchErrorResponse(Exception $exception, array $mapExceptionResponses): ?string
+    {
+        $targetExceptionName = get_class($exception);
+
+        if (Arr::has($mapExceptionResponses, $targetExceptionName)) {
+            return Arr::get($mapExceptionResponses, $targetExceptionName);
+        }
+
+        foreach ($mapExceptionResponses as $exceptionClassName => $responseClassName) {
+            if (is_subclass_of($targetExceptionName, $exceptionClassName)) {
+                return $responseClassName;
+            }
+        }
+
+        if (Arr::has($mapExceptionResponses, '_')) {
+            return Arr::get($mapExceptionResponses, '_');
+        }
+
+        return null;
     }
 
     public function resolveParameters(Request $request, $controller, $method): array

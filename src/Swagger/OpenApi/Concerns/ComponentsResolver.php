@@ -10,6 +10,7 @@ use Emsifa\Evo\Swagger\OpenApi\Schemas\Path;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Reference;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Response;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\SecurityRequirement;
 use Illuminate\Support\Arr;
 use UnexpectedValueException;
 
@@ -58,7 +59,7 @@ trait ComponentsResolver
         }
     }
 
-    protected function collectResponses(Operation $operation, OpenApi $openApi)
+    protected function collectSecuritySchemes(Operation $operation, OpenApi $openApi)
     {
         if (is_null($operation->security)) {
             return;
@@ -67,7 +68,7 @@ trait ComponentsResolver
         $this->addComponentsIfNotExists($openApi);
 
         /**
-         * @var Response $response
+         * @var SecurityRequirement $security
          */
         foreach ((array) $operation->security as $name => $security) {
             $hasAdded = is_array($openApi->components->securitySchemes)
@@ -86,7 +87,7 @@ trait ComponentsResolver
         }
     }
 
-    protected function collectSecuritySchemes(Operation $operation, OpenApi $openApi)
+    protected function collectResponses(Operation $operation, OpenApi $openApi)
     {
         /**
          * @var Response $response
@@ -96,9 +97,12 @@ trait ComponentsResolver
              * @var MediaType $content
              */
             $content = Arr::first($response->content);
+
             if (! $this->componentHasCollected($content->schema, $openApi)) {
                 $ref = $this->collectComponent($content->schema, $openApi);
                 $content->schema = $ref;
+            } else {
+                $content->schema = $this->getReference($content->schema);
             }
         }
     }
@@ -121,6 +125,17 @@ trait ComponentsResolver
         $this->addComponentsIfNotExists($openApi);
 
         $openApi->components->schemas[$refName] = clone $schema;
+
+        $ref = new Reference;
+        $ref->ref = "#/components/schemas/{$refName}";
+
+        return $ref;
+    }
+
+    protected function getReference(Schema $schema)
+    {
+        $refClassName = $schema->getClassNameReference();
+        $refName = $this->resolveSchemaReferenceName($refClassName);
 
         $ref = new Reference;
         $ref->ref = "#/components/schemas/{$refName}";

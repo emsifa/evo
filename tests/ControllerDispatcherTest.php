@@ -2,18 +2,31 @@
 
 namespace Emsifa\Evo\Tests;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Emsifa\Evo\ControllerDispatcher;
 use Emsifa\Evo\Tests\Samples\Controllers\SampleController;
 use Emsifa\Evo\Tests\Samples\Controllers\SampleDispatchedController;
 use Emsifa\Evo\Tests\Samples\DTO\PostStuffDTO;
+use Emsifa\Evo\Tests\Samples\Exceptions\CustomException;
+use Emsifa\Evo\Tests\Samples\Responses\SampleCustomErrorResponse;
+use Emsifa\Evo\Tests\Samples\Responses\SampleErrorResponse;
+use Emsifa\Evo\Tests\Samples\Responses\SampleInvalidResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleSuccessResponse;
 use Illuminate\Container\Container;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
+use Illuminate\Translation\ArrayLoader;
+use Illuminate\Translation\Translator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Validator;
+use InvalidArgumentException;
+use ReflectionMethod;
+use UnexpectedValueException;
 
 class ControllerDispatcherTest extends TestCase
 {
+    use ArraySubsetAsserts;
+
     /**
      * @test
      */
@@ -142,5 +155,58 @@ class ControllerDispatcherTest extends TestCase
         $this->assertInstanceOf(SampleSuccessResponse::class, $result);
         $this->assertTrue(in_array($result->id, [1, 2, 3]));
         $this->assertTrue(in_array($result->name, ["John Doe", "Jane Doe"]));
+    }
+
+    public function testGetErrorResponseMap()
+    {
+        $controller = new SampleDispatchedController;
+        $dispatcher = new ControllerDispatcher($this->app);
+
+        $result = $dispatcher->getErrorResponsesMap(new ReflectionMethod($controller, "methodWithSpecificErrorResponse"));
+
+        $this->assertArraySubset($result, [
+            InvalidArgumentException::class => SampleCustomErrorResponse::class,
+            ValidationException::class => SampleInvalidResponse::class,
+            '_' => SampleErrorResponse::class,
+        ]);
+    }
+
+    /**
+     * @dataProvider findBestMatchProvider
+     */
+    public function testFindBestMatchErrorResponseShouldReturnCorrectResponseClass($exception, $responseClass)
+    {
+        $controller = new SampleDispatchedController;
+        $dispatcher = new ControllerDispatcher($this->app);
+        $responseMap = $dispatcher->getErrorResponsesMap(new ReflectionMethod($controller, "methodWithSpecificErrorResponse"));
+
+        $result = $dispatcher->findBestMatchErrorResponse($exception, $responseMap);
+
+        $this->assertEquals($responseClass, $result);
+    }
+
+    public function findBestMatchProvider()
+    {
+        $translator = new Translator(new ArrayLoader(), 'en');
+        $validator = new Validator($translator, [], []);
+
+        return [
+            [new InvalidArgumentException, SampleCustomErrorResponse::class],
+            [new ValidationException($validator), SampleInvalidResponse::class],
+            [new CustomException, SampleCustomErrorResponse::class],
+            [new UnexpectedValueException, SampleErrorResponse::class],
+        ];
+    }
+
+    public function testDispatchMethodThrownException()
+    {
+        $controller = new SampleDispatchedController;
+        $dispatcher = new ControllerDispatcher($this->app);
+        $route = new Route('POST', '/', SampleDispatchedController::class.'@methodWithSpecificErrorResponse');
+        $result = $dispatcher->dispatch($route, $controller, 'methodWithSpecificErrorResponse');
+
+        $this->assertInstanceOf(SampleCustomErrorResponse::class, $result);
+        $this->assertEquals($result->code, "E102");
+        $this->assertEquals($result->message, "Whops! something went wrong");
     }
 }

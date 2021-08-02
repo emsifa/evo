@@ -116,6 +116,24 @@ class GeneratorTest extends TestCase
                                     ],
                                 ],
                             ],
+                            '422' => [
+                                'content' => [
+                                    'application/json' => [
+                                        'schema' => [
+                                            '$ref' => '#/components/schemas/Emsifa.Evo.Tests.Samples.Responses.SampleInvalidResponse',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            '500' => [
+                                'content' => [
+                                    'application/json' => [
+                                        'schema' => [
+                                            '$ref' => '#/components/schemas/Emsifa.Evo.Tests.Samples.Responses.SampleCustomErrorResponse',
+                                        ],
+                                    ],
+                                ],
+                            ],
                         ],
                         'security' => [
                             ['web' => []],
@@ -148,7 +166,7 @@ class GeneratorTest extends TestCase
                                 'content' => [
                                     'application/json' => [
                                         'schema' => [
-                                            '$ref' => '#/components/schemas/Emsifa.Evo.Tests.Samples.Responses.SampleErrorResponse',
+                                            '$ref' => '#/components/schemas/Emsifa.Evo.Tests.Samples.Responses.SampleCustomErrorResponse',
                                         ],
                                     ],
                                 ],
@@ -218,9 +236,10 @@ class GeneratorTest extends TestCase
                             'message' => ['type' => 'string'],
                         ],
                     ],
-                    'Emsifa.Evo.Tests.Samples.Responses.SampleErrorResponse' => [
+                    'Emsifa.Evo.Tests.Samples.Responses.SampleCustomErrorResponse' => [
                         'type' => 'object',
                         'properties' => [
+                            'code' => ['type' => 'string'],
                             'message' => ['type' => 'string'],
                         ],
                     ],
