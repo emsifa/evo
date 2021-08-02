@@ -331,6 +331,98 @@ public function index(#[Cookie] string $token)
 In example above, Evo will get `token` cookie value and inject it to `$token` parameter.
 
 
+#### `Body` Attribute
+
+`Body` attribute used to get value from request body.
+To use `Body` attribute you have to use `DTO` class as the type of your parameter.
+You can create `DTO` class by using `evo:make-dto` command.
+
+In this example, we will inject `RegisterDTO` to `register` method.
+
+First, we have to generate `RegisterDTO` class with command:
+
+```bash
+php artisan evo:make-dto RegisterDTO name:string email:string password:string password_confirmation:string
+```
+
+Then you will get `app/DTO/RegisterDTO.php` file with code like this:
+
+```php
+<?php
+
+namespace App\DTO;
+
+use Emsifa\Evo\DTO;
+
+class RegisterDTO extends DTO
+{
+    public string $name;
+    public string $email;
+    public string $password;
+    public string $password_confirmation;
+}
+```
+
+Now you may want to add some validation to it. You can do that by attaching rules attribute like an example below:
+
+
+```php
+<?php
+
+namespace App\DTO;
+
+use Emsifa\Evo\DTO;
+use Emsifa\Evo\Rules;
+
+class RegisterDTO extends DTO
+{
+    #[Rules\Required]
+    public string $name;
+
+    #[Rules\Required]
+    #[Rules\Email(message: "Incorrect email format")]
+    #[Rules\Unique(table: 'users', column: 'email', message: "Email already used by someone")]
+    public string $email;
+
+    #[Rules\Required]
+    #[Rules\Min(6, message: "Password must have at least 6 characters")]
+    public string $password;
+
+    #[Rules\Required]
+    #[Rules\SameWith('password', message: "Password confirmation doesn't match with password")]
+    public string $password_confirmation;
+}
+```
+
+Example above will do similar validation like below:
+
+```php
+$request->validate([
+    'name' => 'required',
+    'email' => 'required|email|unique:users,email',
+    'password' => 'required|email|unique:users,email',
+    'password_confirmation' => 'required|same:password',
+], [
+    'email.email' => "Incorrect email format",
+    'email.unique' => "Email already used by someone",
+    'password.min' => "Password must have at least 6 characters",
+    'password_confirmation.same' => "Password confirmation doesn't match with password",
+]);
+```
+
+After defining validation rules to properties, you can inject `RegisterDTO` instance to your method like any other attributes before, but with `Body` attribute.
+
+```php
+#[Post('register')]
+public function register(#[Body] RegisterDTO $dto)
+{
+    // ...
+}
+```
+
+And there you go. Same like any other attributes. Evo will validate the values, resolving `RegisterDTO` instance, and inject it to `$dto` parameter.
+
+
 ## Testing
 
 ```bash
