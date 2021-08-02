@@ -287,6 +287,16 @@ public function index(#[Query('p')] int $page)
 
 In example above Evo will get `p` query value and inject it to `$page` parameter.
 
+If you want to make it optional, you can just give default value to it. For example:
+
+```php
+#[Get]
+public function index(#[Query('q')] ?string $keyword = null)
+{
+    // ...
+} 
+```
+
 #### `Param` Attribute
 
 `Param` attribute used to get URI parameter value.
@@ -422,6 +432,53 @@ public function register(#[Body] RegisterDTO $dto)
 
 And there you go. Same like any other attributes. Evo will validate the values, resolving `RegisterDTO` instance, and inject it to `$dto` parameter.
 
+#### Uploaded File
+
+You can get uploaded files in two ways:
+
+1. Using DTO class and `Body` attribute.
+2. Using `File` attribute.
+
+##### 1. Getting uploaded file using DTO and `Body` attribute
+
+To get uploaded file using DTO, you can just add property with type `Illuminate\Http\UploadedFile`.
+
+```php
+<?php
+
+namespace App\DTO;
+
+use Emsifa\Evo\DTO;
+use Emsifa\Evo\Rules;
+use Illuminate\Http\UploadedFile;
+
+class UpdateProfileDTO extends DTO
+{
+    #[Rules\Required]
+    public string $name;
+
+    #[Rules\Mimes(['jpeg', 'png'])]
+    #[Rules\Image]
+    public ?UploadedFile $avatar = null;
+}
+```
+
+In example above Evo will inject `$avatar` property with `request()->file('avatar')` value.
+
+##### 2. Getting uploaded file using `File` attribute
+
+If you want directly inject uploaded file instance to your controller method, you can use `File` attribute like an example below:
+
+```php
+#[Post('register')]
+public function register(
+    #[Body] RegisterDTO $dto,
+    #[File(rules: 'required|mimes:jpeg,png|image')] UploadedFile $avatar,
+)
+{
+    // ...
+}
+```
 
 ## Testing
 
