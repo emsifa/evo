@@ -13,6 +13,7 @@ use Illuminate\Validation\ValidationException;
 use InvalidArgumentException;
 
 #[UseErrorResponse(SampleErrorResponse::class)]
+#[UseErrorResponse(SampleErrorResponse::class, [InvalidArgumentException::class])]
 #[UseErrorResponse(SampleInvalidResponse::class, [ValidationException::class])]
 class SampleDispatchedController extends Controller
 {
