@@ -13,6 +13,7 @@ class UseErrorResponse
          * @var string[]
          */
         protected array $exceptionClassNames = [],
+        protected string|array|null $ifHas = null,
     ) {
     }
 
@@ -24,5 +25,10 @@ class UseErrorResponse
     public function getExceptionClassNames(): array
     {
         return $this->exceptionClassNames;
+    }
+
+    public function getIfHas(): string|array|null
+    {
+        return $this->ifHas;
     }
 }

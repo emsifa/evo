@@ -6,7 +6,7 @@ use Emsifa\Evo\Http\Response\JsonResponse;
 use Emsifa\Evo\Http\Response\ResponseStatus;
 use Emsifa\Evo\Types\ArrayOf;
 
-#[ResponseStatus(500)]
+#[ResponseStatus(422)]
 class SampleInvalidResponse extends JsonResponse
 {
     public string $message;

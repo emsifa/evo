@@ -78,12 +78,21 @@ class ReflectionHelper
 
     /**
      * @param  \ReflectionClass|\ReflectionMethod|\ReflectionProperty|\ReflectionParameter $reflection
-     * @param  string|null $name
+     * @param  array|string|null $name
      * @param  int $flags
      * @return bool
      */
-    public static function hasAttribute($reflection, ?string $name, int $flags = 0): bool
+    public static function hasAttribute($reflection, array|string|null $name = null, int $flags = 0): bool
     {
+        if (is_array($name)) {
+            foreach ($name as $n) {
+                if (static::hasAttribute($reflection, $n, $flags)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         return count($reflection->getAttributes($name, $flags)) > 0;
     }
 

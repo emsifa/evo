@@ -14,6 +14,7 @@ use Emsifa\Evo\Helpers\ReflectionHelper;
 use Emsifa\Evo\Http\Response\JsonResponse;
 use Emsifa\Evo\Http\Response\ResponseStatus;
 use Emsifa\Evo\Http\Response\ResponseType;
+use Emsifa\Evo\Http\Response\UseErrorResponse;
 use Emsifa\Evo\Route\Route;
 use Emsifa\Evo\Swagger\OpenApi\Concerns\ComponentsResolver;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Contact;
@@ -252,9 +253,11 @@ class Generator
             return [];
         }
         $types = $returnType instanceof ReflectionUnionType ? $returnType->getTypes() : [$returnType];
+        $typeNames = array_map(fn ($type) => $type->getName(), $types);
+        $exceptionResponses = $this->getExceptionResponses($method);
+
         $responses = [];
-        foreach ($types as $type) {
-            $className = $type->getName();
+        foreach ([...$typeNames, ...$exceptionResponses] as $className) {
             if (! is_subclass_of($className, JsonResponse::class)) {
                 continue;
             }
@@ -265,6 +268,33 @@ class Generator
         }
 
         return $responses;
+    }
+
+    public function getExceptionResponses(ReflectionMethod $method)
+    {
+        /**
+         * @var UseErrorResponse[] $useErrorResponses
+         */
+        $useErrorResponses = [
+            ...ReflectionHelper::getAttributesInstances($method, UseErrorResponse::class, ReflectionAttribute::IS_INSTANCEOF),
+            ...ReflectionHelper::getClassAttributeInstances($method->getDeclaringClass(), UseErrorResponse::class, ReflectionAttribute::IS_INSTANCEOF),
+        ];
+
+        $classes = [];
+
+        foreach ($useErrorResponses as $useErrorResponse) {
+            $responseClass = $useErrorResponse->getResponseClassName();
+            $ifHas = $useErrorResponse->getIfHas();
+            $shouldBeAdded = empty($ifHas)
+                || ReflectionHelper::hasAttribute($method, $ifHas, ReflectionAttribute::IS_INSTANCEOF)
+                || Arr::where($method->getParameters(), fn ($param) => ReflectionHelper::hasAttribute($param, $ifHas, ReflectionAttribute::IS_INSTANCEOF));
+
+            if ($shouldBeAdded) {
+                $classes[] = $responseClass;
+            }
+        }
+
+        return $classes;
     }
 
     public function getResponseStatusFromClass(ReflectionClass $class): int
@@ -323,6 +353,7 @@ class Generator
             401 => "Unauthorized",
             402 => "Payment Required",
             403 => "Forbidden",
+            404 => "Not Found",
             405 => "Method not Allowed",
             406 => "Not Acceptable",
             407 => "Proxy Authentication Required",
