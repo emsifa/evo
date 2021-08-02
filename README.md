@@ -186,9 +186,9 @@ class UserController extends Controller
 
 #### Applying Middleware
 
-Every route attribute has `$middleware` parameter that you can use to apply middleware. Here is an example:
+Every route attribute has `$middleware` parameter that you can set to apply middleware. Here is some example:
 
-```
+```php
 <?php
 
 namespace App\Http\Controllers;
@@ -205,7 +205,7 @@ class UserController extends Controller
         // ...
     }
     
-    #[Post("/", middleware: "auth")]
+    #[Post("/", middleware: ["auth", "can:store-post"])]
     public function store()
     {
         // ...
@@ -234,7 +234,7 @@ class UserController extends Controller
         // ...
     }
     
-    #[Post]
+    #[Post(middleware: "can:store-post")]
     public function store()
     {
         // ...
