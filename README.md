@@ -301,6 +301,20 @@ public function index(#[Param] int $id)
 
 Like `Query` attribute before, Evo will do validation, type casting, and inject it to the `$id` parameter. 
 
+#### `Header` Attribute
+
+`Header` attribute used to get request header value.
+
+```php
+#[Get('users/{id}')]
+public function index(#[Header('user-agent')] string $userAgent)
+{
+    // ...
+} 
+```
+
+In example above, Evo will get `user-agent` header value and inject it to `$userAgent` parameter.
+
 ## Testing
 
 ```bash
