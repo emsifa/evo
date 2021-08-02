@@ -189,6 +189,7 @@ class ControllerDispatcherTest extends TestCase
     {
         $translator = new Translator(new ArrayLoader(), 'en');
         $validator = new Validator($translator, [], []);
+
         return [
             [new InvalidArgumentException, SampleCustomErrorResponse::class],
             [new ValidationException($validator), SampleInvalidResponse::class],
