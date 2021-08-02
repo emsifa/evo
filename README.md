@@ -244,11 +244,21 @@ class UserController extends Controller
 
 ### Accessing Request Value
 
-In Evo, you can access request value by attaching attributes such as `Query`, `Cookie`, `Header`, `Param`, `Body`, etc to your controller method. Then Evo will automatically inject corresponding value to your parameters. Evo will also automatically validate and cast the value according to parameter type and definition.
+In Evo, you can access request value by attaching attributes such as `Query`, `Cookie`, `Header`, `Param`, `Body`, etc to your method parameters. Then Evo will automatically inject corresponding value to your parameters. Evo will also automatically validate and cast the value according to parameter type and definition.
+
+Before using those attributes, make sure you have use these full class names.
+
+```php
+use Emsifa\Evo\Http\Param;
+use Emsifa\Evo\Http\Query;
+use Emsifa\Evo\Http\Header;
+use Emsifa\Evo\Http\Cookie;
+use Emsifa\Evo\Http\Body;
+```
 
 #### `Query` Attribute
 
-Query attribute used to get value from HTTP request query.
+`Query` attribute used to get value from HTTP request query.
 
 ```php
 #[Get]
@@ -260,9 +270,10 @@ public function index(#[Query] int $page)
 
 In example above, Evo will:
 
-1. Apply validation to `page` query value to make sure it's numeric.
-2. Cast `query` value to `int`.
-3. Inject casted value to `$page` parameter.
+1. Getting `request()->query('page')` value.
+2. Apply validation to the value to make sure it's numeric.
+3. Cast value to `int`.
+4. Inject casted value to `$page` parameter.
 
 If you want to use different query and parameter name, you can set `$key` parameter to `Query` attribute like an example below:
 
@@ -274,7 +285,21 @@ public function index(#[Query('p')] int $page)
 } 
 ```
 
-In example above Evo will inject `$page` value retrieved from `p` query value.
+In example above Evo will get `p` query value and inject it to `$page` parameter.
+
+#### `Param` Attribute
+
+`Param` attribute used to get URI parameter value.
+
+```php
+#[Get('users/{id}')]
+public function index(#[Param] int $id)
+{
+    // ...
+} 
+```
+
+Like `Query` attribute before, Evo will do validation, type casting, and inject it to the `$id` parameter. 
 
 ## Testing
 
