@@ -480,6 +480,21 @@ public function register(
 }
 ```
 
+#### `LoggedUser` Attribute
+
+`LoggedUser` attribute is used to get current logged user instance from `request()->user()`.
+You can use it like any other request attributes before, just make sure if its optional, you have to make it nullable and give it null default value.
+
+```php
+public function show(
+    #[Param] int $id,
+    #[LoggedUser] ?User $user = null,
+)
+{
+    // ...
+}
+```
+
 ## Testing
 
 ```bash
