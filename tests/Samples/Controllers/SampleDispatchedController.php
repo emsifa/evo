@@ -38,5 +38,6 @@ class SampleDispatchedController extends Controller
     #[UseErrorResponse(SampleCustomErrorResponse::class, [InvalidArgumentException::class])]
     public function methodWithSpecificErrorResponse()
     {
+        throw new InvalidArgumentException("Whops! something went wrong");
     }
 }

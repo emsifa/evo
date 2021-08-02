@@ -197,4 +197,16 @@ class ControllerDispatcherTest extends TestCase
             [new UnexpectedValueException, SampleErrorResponse::class],
         ];
     }
+
+    public function testDispatchMethodThrownException()
+    {
+        $controller = new SampleDispatchedController;
+        $dispatcher = new ControllerDispatcher($this->app);
+        $route = new Route('POST', '/', SampleDispatchedController::class.'@methodWithSpecificErrorResponse');
+        $result = $dispatcher->dispatch($route, $controller, 'methodWithSpecificErrorResponse');
+
+        $this->assertInstanceOf(SampleCustomErrorResponse::class, $result);
+        $this->assertEquals($result->code, "E102");
+        $this->assertEquals($result->message, "Whops! something went wrong");
+    }
 }

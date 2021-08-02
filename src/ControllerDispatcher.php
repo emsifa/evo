@@ -5,6 +5,8 @@ namespace Emsifa\Evo;
 use Emsifa\Evo\Contracts\RequestGetter;
 use Emsifa\Evo\Contracts\RequestValidator;
 use Emsifa\Evo\Helpers\ReflectionHelper;
+use Emsifa\Evo\Contracts\ExceptionResponse;
+use Emsifa\Evo\Error\DontReport;
 use Emsifa\Evo\Http\Response\Mock;
 use Emsifa\Evo\Http\Response\UseErrorResponse;
 use Exception;
@@ -12,7 +14,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\ControllerDispatcher as BaseControllerDispatcher;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Arr;
+use Reflection;
 use ReflectionAttribute;
+use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
 
@@ -50,6 +54,12 @@ class ControllerDispatcher extends BaseControllerDispatcher
 
             if (! $exceptionResponse) {
                 throw $exception;
+            }
+
+            $exceptionReflection = new ReflectionClass($exception);
+            $shouldNotReported = ReflectionHelper::hasAttribute($exceptionReflection, DontReport::class, ReflectionAttribute::IS_INSTANCEOF);
+            if ($shouldNotReported === false) {
+                report($exception);
             }
 
             return $exceptionResponse;
@@ -95,6 +105,19 @@ class ControllerDispatcher extends BaseControllerDispatcher
         if (is_null($responseClassName)) {
             return null;
         }
+
+        $response = $this->container->make($responseClassName);
+
+        if ($response instanceof ExceptionResponse) {
+            $response->forException($exception);
+        } else {
+            ObjectFiller::fillObject($response, [
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTrace(),
+            ]);
+        }
+
+        return $response;
     }
 
     public function findBestMatchErrorResponse(Exception $exception, array $mapExceptionResponses): ?string
