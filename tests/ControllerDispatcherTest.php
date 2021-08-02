@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Validation\ValidationException;
 use InvalidArgumentException;
-use Psalm\Issue\InvalidArgument;
 use ReflectionMethod;
 
 class ControllerDispatcherTest extends TestCase

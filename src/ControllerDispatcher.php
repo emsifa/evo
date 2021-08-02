@@ -70,11 +70,11 @@ class ControllerDispatcher extends BaseControllerDispatcher
         foreach ($useErrorResponses as $useErrorResponse) {
             $exceptions = $useErrorResponse->getExceptionClassNames();
             $responseClass = $useErrorResponse->getResponseClassName();
-            if (empty($exceptions) && !Arr::has($map, '_')) {
+            if (empty($exceptions) && ! Arr::has($map, '_')) {
                 $map['_'] = $responseClass;
             } else {
                 foreach ($exceptions as $exception) {
-                    if (!Arr::has($map, $exception)) {
+                    if (! Arr::has($map, $exception)) {
                         $map[$exception] = $responseClass;
                     }
                 }
@@ -95,8 +95,6 @@ class ControllerDispatcher extends BaseControllerDispatcher
         if (is_null($responseClassName)) {
             return null;
         }
-
-
     }
 
     public function findBestMatchErrorResponse(Exception $exception, array $mapExceptionResponses): ?string
