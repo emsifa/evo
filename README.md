@@ -242,6 +242,39 @@ class UserController extends Controller
 }
 ```
 
+### Accessing Request Value
+
+In Evo, you can access request value by attaching attributes such as `Query`, `Cookie`, `Header`, `Param`, `Body`, etc to your controller method. Then Evo will automatically inject corresponding value to your parameters. Evo will also automatically validate and cast the value according to parameter type and definition.
+
+#### `Query` Attribute
+
+Query attribute used to get value from HTTP request query.
+
+```php
+#[Get]
+public function index(#[Query] int $page)
+{
+    // ...
+} 
+```
+
+In example above, Evo will:
+
+1. Apply validation to `page` query value to make sure it's numeric.
+2. Cast `query` value to `int`.
+3. Inject casted value to `$page` parameter.
+
+If you want to use different query and parameter name, you can set `$key` parameter to `Query` attribute like an example below:
+
+```php
+#[Get]
+public function index(#[Query('p')] int $page)
+{
+    // ...
+} 
+```
+
+In example above Evo will inject `$page` value retrieved from `p` query value.
 
 ## Testing
 
