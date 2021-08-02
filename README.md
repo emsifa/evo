@@ -315,6 +315,22 @@ public function index(#[Header('user-agent')] string $userAgent)
 
 In example above, Evo will get `user-agent` header value and inject it to `$userAgent` parameter.
 
+
+#### `Cookie` Attribute
+
+`Cookie` attribute used to get request cookie value.
+
+```php
+#[Get('users/{id}')]
+public function index(#[Cookie] string $token)
+{
+    // ...
+} 
+```
+
+In example above, Evo will get `token` cookie value and inject it to `$token` parameter.
+
+
 ## Testing
 
 ```bash
