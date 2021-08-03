@@ -925,11 +925,11 @@ Other than that, it throws `Emsifa\Evo\Exceptions\CastErrorException`.
 
 To create your own type caster, you have to create a class implementing `Emsifa\Evo\Contracts\Caster` interface.
 
-In this example we will create a boolean caster. Then we will override Evo's default boolean caster with our custom caster.
+In this example we will create a boolean caster. Also we will override Evo's default boolean caster with our custom caster.
 
 First, let's create file `BoolCaster.php` in `app/Casters` directory. If you don't have `Casters` directory yet, just create it.
 
-Then let's write a blank caster code:
+Then let's write this blank caster code:
 
 ```php
 <?php
@@ -1014,20 +1014,7 @@ abstract class DTO extends EvoBaseDTO
 }
 ```
 
-Now we need to change our `LoginDTO` like this:
-
-```php
-<?php
-
-namespace App\DTO;
-
-class LoginDTO extends DTO
-{
-    public string $email;
-    public string $password;
-    public bool $remember;
-}
-```
+Then in your DTO classes you just have to extends `App\DTO\DTO` class instead of `Emsifa\Evo\DTO`.
 
 
 ## Testing
