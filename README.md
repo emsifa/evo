@@ -588,6 +588,38 @@ class JwtToken implements RequestGetter, RequestValidator
 
 Now Evo will run `validateRequest` before type casting it's value and inject it to your parameter.
 
+### Using DTO
+
+DTO (Data Transfer Object) is basically an object that have some declared properties in it. DTO used to carry data between processes. In typical PHP application, we often store data as associative array or as `stdClass`. The downside of storing data as associative array or `stdClass` is we don't really know what is inside and what type it is. If we are not carefully to check it, it could cause some security problem to our application.
+
+By replacing them with DTO, we, Text Editor, and IDE know exactly what it is, what properties in it, the type of each properties, etc.
+
+But creating DTO instance with PHP native way sometimes can be quite annoying. You have to create an instance, set its properties value one by one, also you have to cast its type properly.
+
+That is why Evo provide `Emsifa\Evo\DTO` class that comes with some useful utilities.
+
+In the [`Body` Attribute](#body-attribute) section, we are creating `RegisterDTO` class that will be injected using `Body` attribute. Yes, the validation process does comes from `Body` attribute, but the ability to create `RegisterDTO` instance with the correct types for its properties is comes from its parent class: `Emsifa\Evo\DTO`.
+
+`Emsifa\Evo\DTO` doing type casting by looking for type casters attached to it. If you look at the source of `Emsifa\Evo\DTO`, you will see something like this:
+
+```php
+#[UseCaster('int', IntCaster::class)]
+#[UseCaster('float', FloatCaster::class)]
+#[UseCaster('string', StringCaster::class)]
+#[UseCaster('bool', BoolCaster::class)]
+#[UseCaster('array', ArrayCaster::class)]
+#[UseCaster(DateTime::class, DateTimeCaster::class)]
+#[UseCaster(Collection::class, CollectionCaster::class)]
+abstract class DTO implements Arrayable
+{
+    ...
+}
+```
+
+In code above, `UseCaster` is used to tell your DTO what caster class to be used to cast each types.
+
+In this section we will explore how those default casters behave and how to create and use your own caster.
+
 ## Testing
 
 ```bash
