@@ -740,6 +740,187 @@ It will generate:
     }
     ```
 
+#### Default Casters
+
+Here are some examples of Evo's default casters behave:
+##### `BoolCaster`
+
+| Property        | Original Value | Casted Value       |
+|-----------------|----------------|--------------------|
+| bool $property  | null           | false              |
+| ?bool $property | null           | null               |
+| bool $property  | true           | true               |
+| bool $property  | false          | false              |
+| bool $property  | "true"         | true               |
+| bool $property  | "false"        | false              |
+| bool $property  | 1              | true               |
+| bool $property  | 0              | false              |
+| bool $property  | "1"            | true               |
+| bool $property  | "0"            | false              |
+| bool $property  | 123            | CastErrorException |
+| bool $property  | 123.45         | CastErrorException |
+| bool $property  | "123"          | CastErrorException |
+| bool $property  | "123.45"       | CastErrorException |
+| bool $property  | "lorem ipsum"  | CastErrorException |
+| bool $property  | []             | CastErrorException |
+| bool $property  | [1,2,3]        | CastErrorException |
+| bool $property  | stdClass       | CastErrorException |
+
+##### `IntCaster`
+
+| Property     | Original Value | Casted Value       |
+|--------------|----------------|--------------------|
+| int $number  | null           | 0                  |
+| ?int $number | null           | null               |
+| int $number  | 123            | 123                |
+| int $number  | "123"          | 123                |
+| int $number  | 123.45         | 123                |
+| int $number  | "123.45"       | 123                |
+| int $number  | "123.99"       | 123                |
+| int $number  | true           | CastErrorException |
+| int $number  | false          | CastErrorException |
+| int $number  | "123-ipsum"    | CastErrorException |
+| int $number  | "123-ipsum"    | CastErrorException |
+| int $number  | []             | CastErrorException |
+| int $number  | stdClass       | CastErrorException |
+
+##### `FloatCaster`
+
+| Property       | Original Value | Casted Value       |
+|----------------|----------------|--------------------|
+| float $number  | null           | 0                  |
+| ?float $number | null           | null               |
+| float $number  | 123            | 123.0              |
+| float $number  | "123"          | 123.0              |
+| float $number  | 123.45         | 123.45             |
+| float $number  | "123.45"       | 123.45             |
+| float $number  | "123.99"       | 123.99             |
+| float $number  | true           | CastErrorException |
+| float $number  | false          | CastErrorException |
+| float $number  | "123-ipsum"    | CastErrorException |
+| float $number  | "123-ipsum"    | CastErrorException |
+| float $number  | []             | CastErrorException |
+| float $number  | stdClass       | CastErrorException |
+
+##### `FloatCaster`
+
+| Property       | Original Value | Casted Value       |
+|----------------|----------------|--------------------|
+| float $number  | null           | 0                  |
+| ?float $number | null           | null               |
+| float $number  | 123            | 123.0              |
+| float $number  | "123"          | 123.0              |
+| float $number  | 123.45         | 123.45             |
+| float $number  | "123.45"       | 123.45             |
+| float $number  | "123.99"       | 123.99             |
+| float $number  | true           | CastErrorException |
+| float $number  | false          | CastErrorException |
+| float $number  | "123-ipsum"    | CastErrorException |
+| float $number  | "123-ipsum"    | CastErrorException |
+| float $number  | []             | CastErrorException |
+| float $number  | stdClass       | CastErrorException |
+
+##### `StringCaster`
+
+| Property     | Original Value | Casted Value       |
+|--------------|----------------|--------------------|
+| string $str  | null           | ""                 |
+| ?string $str | null           | null               |
+| string $str  | true           | "true"             |
+| string $str  | false          | "false"            |
+| string $str  | "123"          | "123"              |
+| string $str  | 123            | "123"              |
+| string $str  | 123.45         | "123.45"           |
+| string $str  | 123.0          | "123"              |
+| string $str  | Stringable     | __toString()       |
+| string $str  | []             | CastErrorException |
+
+##### `ArrayCaster`
+
+`ArrayCaster` basically only accept array and `Illuminate\Contracts\Support\Arrayable` value, otherwise it throws `Emsifa\Evo\Exceptions\CastErrorException`.
+
+`ArrayCaster` will check `Emsifa\Evo\Types\ArrayOf` attribute to cast its items.
+
+For example if you have property like this:
+
+```php
+#[ArrayOf('int')]
+public array $numbers;
+```
+
+And inject it with value: 
+
+```php
+[1, "2", "3.0", null]
+```
+
+Evo will apply `int` caster to each items, so the result would be: 
+
+```php
+[1, 2, 3, 0]
+```
+
+In example above, if you inject it with value:
+
+```php
+[1, "2", "lorem-ipsum", null]
+```
+
+It will throw `Emsifa\Evo\Exceptions\CastErrorException`.
+
+But sometimes you may want to treat it differently. Instead of thrown an error, you may want to skip the item, make it null, or just keep as is. That is why the second parameter of `ArrayOf` comes in handy.
+
+You can use `ArrayOf::SKIP_ITEM`, `ArrayOf::NULL_ITEM`, `ArrayOf::KEEP_AS_IS` as second parameter of `ArrayOf` attribute.
+
+For example, if you change your property definition to this:
+
+```php
+#[ArrayOf('int', ArrayOf::SKIP_ITEM)]
+public array $numbers;
+```
+
+If you inject it with value:
+
+```php
+[1, "2", "lorem-ipsum", "4.2", "5"]
+```
+
+It will give you result:
+
+```php
+[1, 2, 4, 5]
+```
+
+If you change second parameter to `ArrayOf::NULL_ITEM`, it would give you result below:
+
+```php
+[1, 2, null, 4, 5]
+```
+
+Lastly if you change second parameter to `ArrayOf::KEEP_AS_IS`, it would give you this result:
+
+```php
+[1, 2, "lorem-ipsum", 4, 5]
+```
+
+##### `CollectionCaster`
+
+Same like `ArrayCaster`, but it will apply `collect($result)` to transform the result into `Illuminate\Support\Collection` instance.
+
+##### `DateTimeCaster`
+
+`DateTimeCaster` will transform any string that is accepted by `date_create()` function to `DateTime` object.
+
+For example:
+
+```php
+public DateTime $date;
+```
+
+It would transform string `"2010-01-02"`, `"2010-01-02 12:34:56"`, etc into `DateTime` instance.
+
+Otherwise it throws `Emsifa\Evo\Exceptions\CastErrorException`.
+
 ## Testing
 
 ```bash
