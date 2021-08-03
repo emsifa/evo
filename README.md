@@ -51,13 +51,13 @@ That is why Evo can provide some amazing features such as auto validation, auto 
 
 ## Features
 
-* [x] Inject request data (Header, Param, Cookie, Body, Query) into arguments using attribute.
+* [x] Inject request data (Header, Param, Cookie, Body, Query) into parameters using attribute.
 * [x] Applying middleware using attribute. 
 * [x] Route prefixing using attribute. 
-* [x] Automatic type casting. Evo can automatically cast date string input into `DateTime` object, file into Laravel `UploadedFile` object, etc.
-* [x] Automatic type validation. When you define `#[Query] int $limit`, Evo will reject request if limit query is not numeric.
-* [x] Define validation rules directly in DTO using attribute.
-* [x] Custom value casters.
+* [x] Automatic type casting.
+* [x] Automatic type validation.
+* [x] Define validation rules directly in DTO properties using attribute.
+* [x] Custom value caster.
 * [x] Generate DTO file.
 * [x] Generate Response file.
 * [x] Generate OpenAPI file.
@@ -186,7 +186,7 @@ class UserController extends Controller
 
 #### Applying Middleware
 
-Every route attribute has `$middleware` parameter that you can set to apply middleware. Here is some example:
+Every route attribute has `$middleware` parameter that you can set to apply middleware. Here is some examples:
 
 ```php
 <?php
@@ -213,7 +213,7 @@ class UserController extends Controller
 }
 ```
 
-If you want to apply same middleware to all routes in a controller, you can attach `RouteMiddleware` to your controller class like example below:
+If you want to apply same middleware to every routes in a controller, you can attach `RouteMiddleware` to your controller class like an example below:
 
 ```php
 <?php
@@ -246,7 +246,7 @@ class UserController extends Controller
 
 In Evo, you can access request value by attaching attributes such as `Query`, `Cookie`, `Header`, `Param`, `Body`, etc to your method parameters. Then Evo will automatically inject corresponding value to your parameters. Evo will also automatically validate and cast the value according to parameter type and definition.
 
-Before using those attributes, make sure you have use these full class names.
+Before using those attributes, make sure you have import their full class names.
 
 ```php
 use Emsifa\Evo\Http\Param;
@@ -323,12 +323,12 @@ public function index(#[Header('user-agent')] string $userAgent)
 } 
 ```
 
-In example above, Evo will get `user-agent` header value and inject it to `$userAgent` parameter.
+In example above, Evo will get `user-agent` header value and inject it to the `$userAgent` parameter.
 
 
 #### `Cookie` Attribute
 
-`Cookie` attribute used to get request cookie value.
+`Cookie` attribute used to get cookie value from HTTP request.
 
 ```php
 #[Get('users/{id}')]
@@ -343,11 +343,11 @@ In example above, Evo will get `token` cookie value and inject it to `$token` pa
 
 #### `Body` Attribute
 
-`Body` attribute used to get value from request body.
+`Body` attribute is used to get value from HTTP request body.
 To use `Body` attribute you have to use `DTO` class as the type of your parameter.
 You can create `DTO` class by using `evo:make-dto` command.
 
-In this example, we will inject `RegisterDTO` to `register` method.
+In this example, we will inject request body value as `RegisterDTO` instance into `register` method.
 
 First, we have to generate `RegisterDTO` class with command:
 
@@ -483,7 +483,7 @@ public function register(
 #### `LoggedUser` Attribute
 
 `LoggedUser` attribute is used to get current logged user instance from `request()->user()`.
-You can use it like any other request attributes before, just make sure if its optional, you have to make it nullable and give it null default value.
+You can use it like any other request attributes before, just make sure if its optional, you have to make it nullable and set default value to null.
 
 ```php
 public function show(
@@ -534,13 +534,13 @@ class JwtToken implements RequestGetter
 Now you can use it like any other request attributes like this:
 
 ```php
-public function doSomething(#[JwtToken] ?string $token)
+public function doSomething(#[JwtToken] ?string $token = null)
 {
     // ...
 }
 ```
 
-In most case you may want to validate the value to make sure it is safe for Evo type cast it and inject it to your parameter.
+In most case you may want to validate the value to make sure it is safe for Evo to type cast it and inject it to your parameter.
 To do that, you can implement `Emsifa\Evo\Contracts\RequestValidator` like an example below:
 
 
@@ -584,7 +584,7 @@ class JwtToken implements RequestGetter, RequestValidator
 }
 ```
 
-Now Evo will run `validateRequest` before type cast it's value and inject it to your parameter.
+Now Evo will run `validateRequest` before type casting it's value and inject it to your parameter.
 
 ## Testing
 
