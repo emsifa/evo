@@ -62,6 +62,7 @@ That is why Evo can provide some amazing features such as auto validation, auto 
 * [x] Generate Response file.
 * [x] Generate OpenAPI file.
 * [x] Display Swagger page.
+* [x] Mocking API.
 
 
 ## Installation
