@@ -374,7 +374,7 @@ class RegisterDTO extends DTO
 }
 ```
 
-Now you may want to add some validation to it. You can do that by attaching rules attribute like an example below:
+Now you may want to add an extra validation to each properties. You can do that by attaching rules attribute like an example below:
 
 
 ```php
@@ -618,7 +618,129 @@ abstract class DTO implements Arrayable
 
 In code above, `UseCaster` is used to tell your DTO what caster class to be used to cast each types.
 
-In this section we will explore how those default casters behave and how to create and use your own caster.
+In this section we will explore how to generate DTO file, how default casters behave, and how to create and overriding default caster.
+
+#### Generating DTO File
+
+We can generate DTO file using `evo:make-dto` command. Below is the signature of the command:
+
+```bash
+php artisan evo:make-dto {filename} {...properties}
+```
+
+Argument `filename` is required and `properties` are optional.
+
+For example, to create `LoginDTO` that have `string $email` and `string $password` properties. We should run:
+
+```bash
+php artisan evo:make-dto LoginDTO email:string password:string
+```
+
+It will generate `app/DTO/LoginDTO.php` with code:
+
+```php
+<?php
+
+namespace App\DTO;
+
+use Emsifa\Evo\DTO;
+
+class LoginDTO extends DTO
+{
+    public string $email;
+    public string $password;
+}
+
+```
+
+You can also generate nested object by giving the name of the object for the type. For example:
+
+```bash
+php artisan evo:make-dto SaveProfileDTO name:string contact:ContactDTO address:AddressDTO
+```
+
+It will generate 3 files below: 
+
+1. `app/DTO/SaveProfileDTO.php`:
+    ```php
+    <?php
+
+    namespace App\DTO;
+
+    use Emsifa\Evo\DTO;
+
+    class LoginDTO extends DTO
+    {
+        public string $name;
+        public ContactDTO $contact;
+        public AddressDTO $contact;
+    }
+    ```
+2. `app/DTO/ContactDTO.php` (if not exists):
+    ```php
+    <?php
+
+    namespace App\DTO;
+
+    use Emsifa\Evo\DTO;
+
+    class ContactDTO extends DTO
+    {
+    }
+    ```
+
+3. `app/DTO/AddressDTO.php` (if not exists):
+    ```php
+    <?php
+
+    namespace App\DTO;
+
+    use Emsifa\Evo\DTO;
+
+    class AddressDTO extends DTO
+    {
+    }
+    ```
+
+You can also generate typed array by adding `[]` sign after type name. For example:
+
+```bash
+php artisan evo:make-dto CheckoutOrderDTO items:CheckoutItemDTO[]
+```
+
+It will generate:
+
+1. `app/DTO/CheckoutOrderDTO.php`:
+
+    ```php
+    <?php
+
+    namespace App\DTO;
+
+    use Emsifa\Evo\DTO;
+    use Emsifa\Evo\Types\ArrayOf;
+
+    class CheckoutOrderDTO extends DTO
+    {
+        #[ArrayOf(CheckoutItemDTO::class)]
+        public array $items;
+    }
+    ```
+2. `app/DTO/CheckoutItemDTO.php` (if not exists):
+
+    ```php
+    <?php
+
+    namespace App\DTO;
+
+    use Emsifa\Evo\DTO;
+
+    class CheckoutItemDTO extends DTO
+    {
+    }
+    ```
+
+
 
 ## Testing
 
