@@ -919,7 +919,116 @@ public DateTime $date;
 
 It would transform string `"2010-01-02"`, `"2010-01-02 12:34:56"`, etc into `DateTime` instance.
 
-Otherwise it throws `Emsifa\Evo\Exceptions\CastErrorException`.
+Other than that, it throws `Emsifa\Evo\Exceptions\CastErrorException`.
+
+#### Creating Custom Type Caster
+
+To create your own type caster, you have to create a class implementing `Emsifa\Evo\Contracts\Caster` interface.
+
+In this example we will create a boolean caster. Then we will override Evo's default boolean caster with our custom caster.
+
+First, let's create file `BoolCaster.php` in `app/Casters` directory. If you don't have `Casters` directory yet, just create it.
+
+Then let's write a blank caster code:
+
+```php
+<?php
+
+namespace App\Casters;
+
+use Emsifa\Evo\Contracts\Caster;
+use Emsifa\Evo\Exceptions\CastErrorException;
+use ReflectionParameter;
+use ReflectionProperty;
+
+class BoolCaster implements Caster
+{
+    public function cast($value, ReflectionProperty | ReflectionParameter $prop): mixed
+    {
+        // ...
+    }
+}
+```
+
+Now we will put some logic to our `cast` method. For example in this custom `BoolCaster` we want to convert string "1", "true", "on", "yes" to `true` and "0", "false", "no", "off" to `false`. Also, we want to make sure if our property is nullable, and the value is `null`, we should returns `null`. Other than that we will throw `Emsifa\Evo\Exceptions\CastErrorException`.
+
+```php
+class BoolCaster implements Caster
+{
+    public function cast($value, ReflectionProperty | ReflectionParameter $prop): mixed
+    {
+        $nullable = optional($prop->getType())->allowsNull();
+        $truthy = [true, "true", 1, "1", "yes", "on"];
+        $falsy = [false, "false", 0, "0", "no", "off"];
+
+        return match (true) {
+            $nullable && is_null($value) => null,
+            in_array($value, $truthy) => true,
+            in_array($value, $falsy) => false,
+            default => throw new CastErrorException("Cannot cast boolean from type: " . gettype($value)),
+        };
+    }
+}
+```
+
+Now our `BoolCaster` is done. To use our `BoolCaster`, we can attach `Emsifa\Evo\DTO\UseCaster` attribute to our DTO class.
+
+In this example we will attach it to `LoginDTO` class.
+
+```php
+<?php
+
+namespace App\DTO;
+
+use Emsifa\Evo\DTO;
+use Emsifa\Evo\DTO\UseCaster;
+use App\Casters\BoolCaster;
+
+#[UseCaster('bool', BoolCaster::class)]
+class LoginDTO extends DTO
+{
+    public string $email;
+    public string $password;
+    public bool $remember;
+}
+```
+
+Now, our `BoolCaster` will be applied to cast `bool $remember` property.
+
+If you want to apply it to all of your DTO classes, you can create your own abstract DTO class to be used as a parent of your DTO classes.
+
+For example, create your own `app/DTO/DTO.php` file with code below:
+
+```php
+<?php
+
+namespace App\DTO;
+
+use Emsifa\Evo\DTO as EvoBaseDTO;
+use Emsifa\Evo\DTO\UseCaster;
+use App\Casters\BoolCaster;
+
+#[UseCaster('bool', BoolCaster::class)]
+abstract class DTO extends EvoBaseDTO
+{
+}
+```
+
+Now we need to change our `LoginDTO` like this:
+
+```php
+<?php
+
+namespace App\DTO;
+
+class LoginDTO extends DTO
+{
+    public string $email;
+    public string $password;
+    public bool $remember;
+}
+```
+
 
 ## Testing
 
