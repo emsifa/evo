@@ -669,7 +669,7 @@ It will generate 3 files below:
 
     use Emsifa\Evo\DTO;
 
-    class LoginDTO extends DTO
+    class SaveProfileDTO extends DTO
     {
         public string $name;
         public ContactDTO $contact;
@@ -739,8 +739,6 @@ It will generate:
     {
     }
     ```
-
-
 
 ## Testing
 
