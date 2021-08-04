@@ -31,21 +31,20 @@ class ControllerDispatcher extends BaseControllerDispatcher
      */
     public function dispatch(Route $route, $controller, $method)
     {
-        $request = $this->getRequest();
-
-        $parameters = $this->resolveParameters($request, $controller, $method);
-
         $methodReflection = new ReflectionMethod($controller, $method);
 
-        /**
-         * @var Mock $mock
-         */
-        $mock = ReflectionHelper::getFirstAttributeInstance($methodReflection, Mock::class, ReflectionAttribute::IS_INSTANCEOF);
-        if ($mock && $mock->shouldBeUsed($request)) {
-            return $mock->getMockedResponse($this->container, $methodReflection, $request);
-        }
-
         try {
+            $request = $this->getRequest();
+            $parameters = $this->resolveParameters($request, $controller, $method);
+
+            /**
+             * @var Mock $mock
+             */
+            $mock = ReflectionHelper::getFirstAttributeInstance($methodReflection, Mock::class, ReflectionAttribute::IS_INSTANCEOF);
+            if ($mock && $mock->shouldBeUsed($request)) {
+                return $mock->getMockedResponse($this->container, $methodReflection, $request);
+            }
+
             return call_user_func_array([$controller, $method], $parameters);
         } catch (Exception $exception) {
             $mapErrorResponses = $this->getErrorResponsesMap($methodReflection);
