@@ -1253,7 +1253,6 @@ public function store(#[Body] StoreTodoDTO $dto): StoreTodoResponse
 ```
 
 `StoreTodoResponse::fromArray` method will create `StoreTodoResponse` instance by mapping `StoreTodoResponse` public properties with `$todo` array values. It also apply type casting for each properties.
-
 #### Using View Response
 
 In this example we will create view response in Evo's way.
@@ -1311,6 +1310,29 @@ public function edit(#[Param] int $id): EditTodoResponse
 ```
 
 Yes, Evo will automatically transform your `Todo` model into `TodoDTO` instance.
+
+#### Define Response Status
+
+To define response status in your response class, you can attach `Emsifa\Evo\Http\Response\ResponseStatus` attribute in your response class like this:
+
+```php
+<?php
+
+namespace App\Http\Responses;
+
+use Emsifa\Evo\Http\Response\JsonResponse;
+use Emsifa\Evo\Http\Response\ResponseStatus;
+
+#[ResponseStatus(201)]
+class StoreTodoResponse extends JsonResponse
+{
+    public int $id;
+    public string $title;
+    public bool $completed;
+}
+```
+
+Now, when you return `StoreTodoResponse`, Evo will set response status to `201`.
 
 #### Using Json Template
 
@@ -1393,7 +1415,269 @@ class StoreTodoResponse extends JsonResponse
 
 Now whenever you return `StoreTodoResponse` in your controller, it will be wrapped with `SuccessJsonTemplate` data.
 
+### Swagger UI
 
+Swagger UI is a web based app to visualize and interacts with API's resources without having any of the implementation logic in place. It uses OpenAPI specification to display and interact with API endpoints.
+
+Evo can automatically reflect your code into OpenAPI specification so you can display Swagger UI with minimal configuration.
+
+In this section we will guide you how to use Swagger UI with Evo.
+
+#### Publishing Assets Files
+
+First, you have to publish assets files that will be used by Swagger UI page.
+
+```php
+php artisan vendor:publish --tag=evo-assets
+```
+
+#### Register Swagger Routes
+
+Then, you have to register two routes. First route is for displaying Swagger UI and second route is for rendering OpenAPI specification as JSON.
+
+You can add this line to your `routes/web.php`:
+
+```php
+Evo::swagger('/docs');
+```
+
+Now if you run `php artisan route:list`, you should see `GET /docs` and `GET /docs/openapi` routes there.
+
+You can check it by running your app with `php artisan serve`, then in your browser, open URL `http://localhost:8000/docs`.
+
+You should see Swagger UI page with no endpoints.
+
+#### Add an Example Endpoint
+
+Now we will create an example endpoint to be displayed in our Swagger UI.
+
+First, let's create controller with following command:
+
+```php
+php artisan make:controller ExampleController
+```
+
+Then, add this to your `routes/api.php`:
+
+```php
+Evo::routes(ExampleController::class);
+```
+
+Now, let's add a route in our `ExampleController`:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Emsifa\Evo\Route\Post;
+use Emsifa\Evo\Route\RoutePrefix;
+
+#[RoutePrefix('examples')]
+class ExampleController extends Controller
+{
+    #[Post('post-something')]
+    public function postSomething()
+    {
+
+    }
+}
+
+```
+
+This time Evo will not render any endpoint to Swagger UI because Evo will only register endpoints that returns `Emsifa\Evo\Http\Response\JsonResponse` instance.
+
+Let's create DTO and JsonResponse class for our `postSomething` method by running following commands.
+
+```php
+php artisan evo:make-dto PostSomethingDTO number:int message:string
+php artisan evo:make-response PostSomethingResponse number:int message:string
+```
+
+Now we can use it in `postSomething` method like this:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Emsifa\Evo\Route\Post;
+use Emsifa\Evo\Route\RoutePrefix;
+use App\DTO\PostSomethingDTO;
+use App\Http\Responses\PostSomethingResponse;
+
+#[RoutePrefix('examples')]
+class ExampleController extends Controller
+{
+    #[Post('post-something')]
+    public function postSomething(
+        #[Body] PostSomethingDTO $dto
+    ): PostSomethingResponse
+    {
+        return PostSomethingResponse::fromArray($dto);
+    }
+}
+```
+
+Save it. Now if you back to your browser `http://localhost:8000/docs`, you will see there is `POST /examples/post-something` endpoint.
+
+#### Configuring OpenAPI
+
+To configure OpenAPI, Evo provides some attributes modifier that modify OpenAPI schema. Also Evo have configuration file to modify some information in OpenAPI.
+
+To configure info with configuration file. First you have to publish configuration file by running following command:
+
+```bash
+php artisan vendor:publish --tag=evo-config
+```
+
+It will generate `config/evo.php` in your project directory. Take a look, and modify it as you want.
+
+##### `Example` Attribute
+
+`Emsifa\Evo\Swagger\OpenAPI\Example` attribute is used to define example value to response or DTO's property.
+
+If you expand your endpoint in Swagger UI, you will see in response that Swagger will display default value for string is `"string"`, and integer is `0`.
+
+If we want to modify them with more informative example, we can modify `PostSomethingResponse` into something like this:
+
+```php
+<?php
+
+namespace App\Http\Responses;
+
+use Emsifa\Evo\Http\Response\JsonResponse;
+use Emsifa\Evo\Swagger\OpenApi\Example;
+
+class PostSomethingResponse extends JsonResponse
+{
+    #[Example(12)]
+    public int $number;
+
+    #[Example("Lorem dolor sit amet")]
+    public string $message;
+}
+```
+
+Now if you refresh Swagger UI page, you will see that the example value will use our defined example.
+
+##### `Summary` Attribute
+
+`Emsifa\Evo\Swagger\OpenApi\Summary` attribute is used to define summary to your endpoint operation.
+
+You can attach it to your controller method like this:
+
+```php
+#[RoutePrefix('examples')]
+class ExampleController extends Controller
+{
+    #[Post('post-something')]
+    #[Summary('Post Something')]
+    public function postSomething(
+        #[Body] PostSomethingDTO $dto
+    ): PostSomethingResponse
+    {
+        return PostSomethingResponse::fromArray($dto);
+    }
+}
+```
+
+Now if you refresh Swagger UI, you will see "Post Something" in `POST /examples/post-something` endpoint.
+
+##### `Description` Attribute
+
+`Emsifa\Evo\Swagger\OpenApi\Description` attribute is used to define description operation, schema (properties), response class, or DTO class.
+
+For example we will add description to `PostSomethingResponse` and its properties like this:
+
+```php
+<?php
+
+namespace App\Http\Responses;
+
+use Emsifa\Evo\Http\Response\JsonResponse;
+use Emsifa\Evo\Swagger\OpenApi\Example;
+use Emsifa\Evo\Swagger\OpenApi\Description;
+
+#[Description("Post something succeed")]
+class PostSomethingResponse extends JsonResponse
+{
+    #[Description("A random number")]
+    #[Example(12)]
+    public int $number;
+
+    #[Description("A message to stored")]
+    #[Example("Lorem dolor sit amet")]
+    public string $message;
+}
+```
+
+Now if you refresh Swagger UI, you will see those description there.
+
+##### Create Custom OpenAPI Modifiers
+
+To use create custom OpenAPI modifiers, Evo provides some interfaces that you can use to your custom attribute.
+
+Those interfaces are:
+
+* `Emsifa\Evo\Contracts\OpenApiPathModifier`
+* `Emsifa\Evo\Contracts\OpenApiSchemaModifier`
+* `Emsifa\Evo\Contracts\OpenApiResponseModifier`
+* `Emsifa\Evo\Contracts\OpenApiOperationModifier`
+* `Emsifa\Evo\Contracts\OpenApiParameterModifier`
+* `Emsifa\Evo\Contracts\OpenApiRequestBodyModifier`
+
+For example, you can take a look to `Description` attribute:
+
+```php
+<?php
+
+namespace Emsifa\Evo\Swagger\OpenApi;
+
+use Attribute;
+use Emsifa\Evo\Contracts\OpenApiOperationModifier;
+use Emsifa\Evo\Contracts\OpenApiParameterModifier;
+use Emsifa\Evo\Contracts\OpenApiRequestBodyModifier;
+use Emsifa\Evo\Contracts\OpenApiResponseModifier;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Operation;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Parameter;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\RequestBody;
+use Emsifa\Evo\Swagger\OpenApi\Schemas\Response;
+
+#[Attribute]
+class Description implements
+    OpenApiRequestBodyModifier,
+    OpenApiParameterModifier,
+    OpenApiOperationModifier,
+    OpenApiResponseModifier
+{
+    public function __construct(protected string $description)
+    {
+    }
+
+    public function modifyOpenApiRequestBody(RequestBody $body, mixed $reflection = null)
+    {
+        $body->description = $this->description;
+    }
+
+    public function modifyOpenApiParameter(Parameter $parameter)
+    {
+        $parameter->description = $this->description;
+    }
+
+    public function modifyOpenApiOperation(Operation $operation)
+    {
+        $operation->description = $this->description;
+    }
+
+    public function modifyOpenApiResponse(Response $response)
+    {
+        $response->description = $this->description;
+    }
+}
+```
 
 ## Testing
 
