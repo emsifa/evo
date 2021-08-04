@@ -4,11 +4,13 @@ namespace Emsifa\Evo\Http\Response;
 
 use Emsifa\Evo\DTO;
 use Emsifa\Evo\Helpers\ObjectHelper;
+use Emsifa\Evo\Helpers\ReflectionHelper;
 use Illuminate\Contracts\Support\Responsable;
+use ReflectionClass;
 
 abstract class ViewResponse extends DTO implements Responsable
 {
-    protected string $viewName;
+    protected string $viewName = "";
 
     /**
      * {@inheritdoc}
@@ -23,6 +25,18 @@ abstract class ViewResponse extends DTO implements Responsable
 
     public function getViewName(): string
     {
-        return $this->viewName;
+        return $this->getViewNameFromAttribute() ?: $this->viewName;
+    }
+
+    protected function getViewNameFromAttribute(): ?string
+    {
+        $reflection = new ReflectionClass($this);
+
+        /**
+         * @var UseView|null $useView
+         */
+        $useView = ReflectionHelper::getFirstAttributeInstance($reflection, UseView::class);
+
+        return $useView ? $useView->getViewName() : null;
     }
 }

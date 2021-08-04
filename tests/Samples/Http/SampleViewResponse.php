@@ -2,12 +2,12 @@
 
 namespace Emsifa\Evo\Tests\Samples\Http;
 
+use Emsifa\Evo\Http\Response\UseView;
 use Emsifa\Evo\Http\Response\ViewResponse;
 
+#[UseView('sample-view')]
 class SampleViewResponse extends ViewResponse
 {
-    protected string $viewName = "sample-view";
-
     public int $id;
     public string $name;
     public string $email;
