@@ -2,6 +2,7 @@
 
 namespace Emsifa\Evo\Tests\Samples\Controllers;
 
+use Emsifa\Evo\Http\Query;
 use Emsifa\Evo\Http\Response\Mock;
 use Emsifa\Evo\Http\Response\UseErrorResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleCustomErrorResponse;
@@ -39,5 +40,9 @@ class SampleDispatchedController extends Controller
     public function methodWithSpecificErrorResponse()
     {
         throw new InvalidArgumentException("Whops! something went wrong");
+    }
+
+    public function methodThrownValidationException(#[Query] int $number)
+    {
     }
 }
