@@ -212,7 +212,7 @@ class ControllerDispatcherTest extends TestCase
 
     public function testValidationExceptionShouldBeResolved()
     {
-        $this->app->bind(Request::class, function() {
+        $this->app->bind(Request::class, function () {
             return new Request(query: ['number' => 'not a number']);
         });
 

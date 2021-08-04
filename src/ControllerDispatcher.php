@@ -32,6 +32,7 @@ class ControllerDispatcher extends BaseControllerDispatcher
     public function dispatch(Route $route, $controller, $method)
     {
         $methodReflection = new ReflectionMethod($controller, $method);
+
         try {
             $request = $this->getRequest();
             $parameters = $this->resolveParameters($request, $controller, $method);
