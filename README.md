@@ -6,7 +6,8 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/emsifa/evo.svg?style=flat-square)](https://packagist.org/packages/emsifa/evo)
 
 ---
-Laravel Evo is package to change the way you write Laravel app into something like this:
+
+Laravel Evo is a package that leverages PHP 8 features. It change the way you write Laravel app into something like this:
 
 ```php
 #[RoutePrefix('users')]
@@ -43,7 +44,7 @@ class UserController extends Controller
 
 ## Motivation
 
-Defining input and output types in a head of a function will trigger your brain to specifies input and output before writing the logic. So when it comes to write logic, you know exactly what you have, where it comes, and what to return.
+Defining input and output types in a head of a function will trigger your brain to specifies input and output types before writing the logic. So when it comes to write the logic, you know exactly what you have, where it comes, and what to return.
 
 Also, by defining input and output type in this way, not only you and your teammate would easily read the specifications. Machines too. That is why Evo can provide some amazing features such as auto validation, auto casting, live swagger documentation, mocking API, etc.
 
