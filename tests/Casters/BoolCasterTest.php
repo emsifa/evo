@@ -14,22 +14,24 @@ class BoolCasterTest extends TestCase
         $nullableBoolProp = new ReflectionProperty(SampleBool::class, 'nullableBool');
 
         return [
-            ["lorem ipsum", $boolProp, true],
-            ["lorem ipsum", $nullableBoolProp, true],
-            [12, $boolProp, true],
-            [12, $nullableBoolProp, true],
-            [12.34, $boolProp, true],
-            [12.34, $nullableBoolProp, true],
-            [true, $boolProp, true],
-            [true, $nullableBoolProp, true],
-            [0, $boolProp, false],
-            [0, $nullableBoolProp, false],
-            ["", $boolProp, false],
-            ["", $nullableBoolProp, false],
-            [false, $boolProp, false],
-            [false, $nullableBoolProp, false],
             [null, $boolProp, false],
             [null, $nullableBoolProp, null],
+            [true, $boolProp, true],
+            [true, $nullableBoolProp, true],
+            ["true", $boolProp, true],
+            ["true", $nullableBoolProp, true],
+            [false, $boolProp, false],
+            [false, $nullableBoolProp, false],
+            ["false", $boolProp, false],
+            ["false", $nullableBoolProp, false],
+            [1, $boolProp, true],
+            [1, $nullableBoolProp, true],
+            ["1", $boolProp, true],
+            ["1", $nullableBoolProp, true],
+            [0, $boolProp, false],
+            [0, $nullableBoolProp, false],
+            ["0", $boolProp, false],
+            ["0", $nullableBoolProp, false],
         ];
     }
 
