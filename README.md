@@ -964,8 +964,8 @@ class BoolCaster implements Caster
 
         return match (true) {
             $nullable && is_null($value) => null,
-            in_array($value, $truthy) => true,
-            in_array($value, $falsy) => false,
+            in_array($value, $truthy, true) => true,
+            in_array($value, $falsy, true) => false,
             default => throw new CastErrorException("Cannot cast boolean from type: " . gettype($value)),
         };
     }
