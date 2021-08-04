@@ -1679,6 +1679,188 @@ class Description implements
 }
 ```
 
+### Mocking API
+
+Mocking API is a feature that allows your controller to send response with fake data.
+
+When developing REST API with a team consisting of Back-end and Front-end Developers. Creating an API implementation could takes time. Sometimes it makes Front-end developer have to wait Back-end Developer to finish the implementation. This will make development time less efficient.
+
+To make development time more efficient. We can use Mocking API so Front-end Developer can consume our API without waiting for real implementation to be done.
+
+To do that, in Evo you can simply attach `Emsifa\Evo\Http\Response\Mock` attribute to your controller method. So when you call that endpoint, Evo will prevent your method to be executed, instead Evo will read your return type, create its instance with fake data in it, and respond that fake instance.
+
+#### Using `Mock` Attribute
+
+For example, we will use `ExampleController` in Swagger UI section before.
+
+To respond mock on `postSomething` method, we need to attach `Emsifa\Evo\Http\Response\Mock` like an example below:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Emsifa\Evo\Route\Post;
+use Emsifa\Evo\Route\RoutePrefix;
+use Emsifa\Evo\Http\Response\Mock;
+use App\DTO\PostSomethingDTO;
+use App\Http\Responses\PostSomethingResponse;
+
+#[RoutePrefix('examples')]
+class ExampleController extends Controller
+{
+    #[Post('post-something')]
+    #[Mock]
+    public function postSomething(
+        #[Body] PostSomethingDTO $dto
+    ): PostSomethingResponse
+    {
+        return PostSomethingResponse::fromArray($dto);
+    }
+}
+```
+
+That's it!
+
+Now to try this, open your Swagger UI page. Expand `POST /examples/post-something` endpoint, click `Try it out`, then click execute.
+
+You should see it responded with random data.
+
+#### Using Specific Faker
+
+Behind the scene Evo uses Faker to generate mock data. By default Evo choosing faker to be used is by looking the data type and the name of each property.
+
+For example, if you have `$name` property, Evo will use `$faker->name()`. For `$title` property, Evo will use `$faker->title()`. For `float $latitude`, Evo will use `$faker->latitude()`. If property name doesn't have related faker formatter available, Evo will choose faker formatter by it's data type.
+
+If you want to use another faker instead of default choosed faker. You can use `Emsifa\Evo\DTO\UseFaker` to define what formatter you want to use.
+
+For example, we will use `paragraph(5)` formatter to `$message` property.
+
+Here is the code:
+
+```php
+<?php
+
+namespace App\Http\Responses;
+
+use Emsifa\Evo\DTO\UseFaker;
+use Emsifa\Evo\Http\Response\JsonResponse;
+
+#[Description("Post something succeed")]
+class PostSomethingResponse extends JsonResponse
+{
+    public int $number;
+
+    #[UseFaker("paragraph", 5)]
+    public string $message;
+}
+```
+
+Now when you execute your endpoint again, it will respond `message` with paragraph contains 5 sentences.
+
+
+#### Create Custom Faker
+
+If you want to use your own custom faker formatter, you can create a class implementing `Emsifa\Evo\Contracts\ValueFaker`.
+
+For example, we will create `MealsFaker` that will resulting a random meals name.
+
+First, create `app/Fakers/MealsFaker.php` file.
+
+Fill it with code below:
+
+```php
+<?php
+
+namespace App\Fakers;
+
+use Emsifa\Evo\Contracts\ValueFaker;
+use Faker\Generator;
+use ReflectionProperty;
+
+class MealsFaker implements ValueFaker
+{
+    public function generateFakeValue(Generator $faker, ReflectionProperty $property): mixed
+    {
+        return $faker->randomElement([
+            "Kebab",
+            "Ramen",
+            "Fried Chicken",
+            "Pizza",
+            "Sandwich"
+        ]);
+    }
+}
+```
+
+Now to use it, we will add new `$meal` property to our `PostSomethingResponse`, so our `PostSomethingResponse.php` would be like this:
+
+```php
+<?php
+
+namespace App\Http\Responses;
+
+use Emsifa\Evo\DTO\UseFaker;
+use Emsifa\Evo\Http\Response\JsonResponse;
+use Emsifa\Fakers\MealsFaker;
+
+#[Description("Post something succeed")]
+class PostSomethingResponse extends JsonResponse
+{
+    public int $number;
+
+    #[UseFaker("paragraph", 5)]
+    public string $message;
+
+    #[UseFaker(MealsFaker::class)]
+    public string $meal;
+}
+```
+
+Now if you execute your endpoint again, you will get
+`meal` data that is could be "Kebab", "Ramen", "Fried Chicken", "Pizza", or "Sandwich".
+
+#### `FakesCount` Attribute
+
+`FakesCount` attribute is used to define how many fake items you want to be generated into your `array` property.
+
+For example, we will add `$numbers` property to `PostSomethingResponse` that is attached with `FakesCount` attribute:
+
+```php
+<?php
+
+namespace App\Http\Responses;
+
+use Emsifa\Evo\DTO\UseFaker;
+use Emsifa\Evo\DTO\FakesCount;
+use Emsifa\Evo\Types\ArrayOf;
+use Emsifa\Evo\Http\Response\JsonResponse;
+use Emsifa\Fakers\MealsFaker;
+
+#[Description("Post something succeed")]
+class PostSomethingResponse extends JsonResponse
+{
+    public int $number;
+
+    #[UseFaker("paragraph", 5)]
+    public string $message;
+
+    #[UseFaker(MealsFaker::class)]
+    public string $meal;
+    
+    #[ArrayOf('int')]
+    #[FakesCount(5)]
+    public array $numbers;
+}
+```
+
+It will generate 5 random numbers when you execute your mock API.
+
+#### Ignoring Mock
+
+In local development environment, you may not want your API to be mocked. Instead of remove `Mock` attribute temporarily, you can just add `IGNORE_MOCK=true` in your `.env` file.
+
 ## Testing
 
 ```bash
