@@ -515,6 +515,7 @@ namespace App\Http\Attributes;
 use Attribute;
 use Emsifa\Evo\Contracts\RequestGetter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use ReflectionParameter;
 use ReflectionProperty;
 
@@ -523,12 +524,12 @@ class JwtToken implements RequestGetter
 {
     public function getRequestValue(Request $request, ReflectionParameter | ReflectionProperty $reflection): mixed
     {
-        $tokenFromHeader = $request->header("authorization");
-        $tokenFromCookie = $request->cookie("token");
+        $token_from_header = $request->header("authorization");
+        $token_from_cookie = $request->cookie("token");
 
-        return $tokenFromHeader
-            ? Str::after($tokenFromHeader, "Bearer ")
-            : $tokenFromCookie;
+        return $token_from_header
+            ? Str::after($token_from_header, "Bearer ")
+            : $token_from_cookie;
     }
 }
 ```
@@ -555,6 +556,7 @@ use Attribute;
 use Emsifa\Evo\Contracts\RequestGetter;
 use Emsifa\Evo\Contracts\RequestValidator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use ReflectionParameter;
 use ReflectionProperty;
@@ -564,12 +566,12 @@ class JwtToken implements RequestGetter, RequestValidator
 {
     public function getRequestValue(Request $request, ReflectionParameter | ReflectionProperty $reflection): mixed
     {
-        $tokenFromHeader = $request->header("authorization");
-        $tokenFromCookie = $request->cookie("token");
+        $token_from_header = $request->header("authorization");
+        $token_from_cookie = $request->cookie("token");
 
-        return $tokenFromHeader
-            ? Str::after($tokenFromHeader, "Bearer ")
-            : $tokenFromCookie;
+        return $token_from_header
+            ? Str::after($token_from_header, "Bearer ")
+            : $token_from_cookie;
     }
 
     public function validateRequest(Request $request, ReflectionProperty | ReflectionParameter $reflection)
