@@ -43,11 +43,9 @@ class UserController extends Controller
 
 ## Motivation
 
-Defining input and output types in head part of a function will trigger your brain to specifies input and output before writing its logic.
-So when it comes to write logic, you know exactly what you have, where it comes, and what to return.
+Defining input and output types in a head of a function will trigger your brain to specifies input and output before writing the logic. So when it comes to write logic, you know exactly what you have, where it comes, and what to return.
 
-Also, by defining input and output type like this, not only you and your teammate would easily read the specifications. Machines too.
-That is why Evo can provide some amazing features such as auto validation, auto casting, live swagger documentation, mocking API, etc.
+Also, by defining input and output type in this way, not only you and your teammate would easily read the specifications. Machines too. That is why Evo can provide some amazing features such as auto validation, auto casting, live swagger documentation, mocking API, etc.
 
 ## Features
 
@@ -67,10 +65,12 @@ That is why Evo can provide some amazing features such as auto validation, auto 
 
 ## Installation
 
+> Evo currently is still in the development, it could have some breaking changes before the final release.
+
 You can install the package via composer:
 
 ```bash
-composer require emsifa/evo
+composer require emsifa/evo:dev-main
 ```
 
 ## Usage
@@ -1419,7 +1419,7 @@ Now whenever you return `StoreTodoResponse` in your controller, it will be wrapp
 
 Swagger UI is a web based app to visualize and interacts with API's resources without having any of the implementation logic in place. It uses OpenAPI specification to display and interact with API endpoints.
 
-Evo can automatically reflect your code into OpenAPI specification so you can display Swagger UI with minimal configuration.
+Evo can reflect your code and generate OpenAPI specification on-the-fly, so you can display Swagger UI with minimal configuration.
 
 In this section we will guide you how to use Swagger UI with Evo.
 
