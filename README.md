@@ -625,10 +625,10 @@ In this section we will explore how to generate DTO file, how default casters be
 We can generate DTO file using `evo:make-dto` command. Below is the signature of the command:
 
 ```bash
-php artisan evo:make-dto {filename} {...properties}
+php artisan evo:make-dto {classname} {...properties}
 ```
 
-Argument `filename` is required and `properties` are optional.
+Argument `classname` is required and `properties` are optional.
 
 For example, to create `LoginDTO` that have `string $email` and `string $password` properties. We should run:
 
@@ -1191,6 +1191,207 @@ class MyDTO extends DTO
 ```
 
 ### Using Response
+
+Evo provide custom response class `Emsifa\Evo\Http\Response\JsonResponse` and `Emsifa\Evo\Http\Response\ViewResponse` that is inherit from `Emsifa\Evo\DTO` class.
+They are all implements `Illuminate\Contracts\Support\Responsable`, so that they can be transformed to HTTP response.
+
+You can extend them to your response classes then use your response classes as return type of your controller action to get these benefits:
+
+* Easier to identify how the response data should be.
+* It prevents you to send wrong data types. Eg: integer as string, null to non-nullable property, etc.
+* It makes your endpoint can be generated to OpenAPI.
+* It also makes your endpoint mockable.
+
+#### Generate Response Class
+
+Evo provide `evo:make-response` command to generate response class. Here is the command signature:
+
+```bash
+php artisan evo:make-response {classname} {...properties} {--view} {--json-template=} 
+```
+
+* `classname` (required): class name to be generated.
+* `properties` (optional): class properties.
+* `--view` (optional): by default `evo:make-response` command will use `JsonResponse` as parent class, if you want to use `ViewResponse`, you can add this option.
+* `--json-template=`: add this if you want to apply `UseJsonTemplate` attribute in generated response class.
+
+For example, we will generate `StoreTodoResponse` with command below:
+
+```bash
+php artisan evo:make-response StoreTodoResponse id:int title:string completed:bool
+```
+
+It will generate `app/Http/Responses/StoreTodoResponse` class with following code:
+
+```php
+<?php
+
+namespace App\Http\Responses;
+
+use Emsifa\Evo\Http\Response\JsonResponse;
+
+class StoreTodoResponse extends JsonResponse
+{
+    public int $id;
+    public string $title;
+    public bool $completed;
+}
+```
+
+#### Using Response Class
+
+To use `StoreTodoResponse` you need to put it as return type, then in your controller you can use `fromArray` method like an example below:
+
+```php
+#[Post]
+public function store(#[Body] StoreTodoDTO $dto): StoreTodoResponse
+{
+    $todo = Todo::create($dto);
+
+    return StoreTodoResponse::fromArray($todo);
+}
+```
+
+`StoreTodoResponse::fromArray` method will create `StoreTodoResponse` instance by mapping `StoreTodoResponse` public properties with `$todo` array values. It also apply type casting for each properties.
+
+#### Using View Response
+
+In this example we will create view response in Evo's way.
+
+First let's generate our response view with following command:
+
+```bash
+php artisan evo:make-response EditTodoResponse todo:TodoDTO --view
+```
+
+Since you put `TodoDTO` type there, it will generate 2 files below:
+
+1. `app/Http/Responses/EditTodoResponse`:
+
+    ```php
+    <?php
+
+    namespace App\Http\Responses;
+
+    use Emsifa\Evo\Http\Response\UseView;
+    use Emsifa\Evo\Http\Response\ViewResponse;
+
+    #[UseView('edit-todo')]
+    class EditTodoResponse extends ViewResponse
+    {
+        public TodoDTO $todo;
+    }
+    ```
+2. `app/Http/Responses/TodoDTO`:
+
+    ```php
+    <?php
+
+    namespace App\Http\Responses;
+
+    use Emsifa\Evo\Http\Response\ResponseDTO;
+
+    class TodoDTO extends ResponseDTO
+    {
+    }
+    ```
+
+`UseView` attribute above is used to identify what view file should be rendered, and the data passed to the view is its properties, in this case `$todo` that is `TodoDTO` instance.
+
+And here is the example on how to use `EditTodoResponse` view:
+
+```php
+#[Get('{id}')]
+public function edit(#[Param] int $id): EditTodoResponse
+{
+    $todo = Todo::findOrFail($id);
+
+    return EditTodoResponse::fromArray(['todo' => $todo]);
+}
+```
+
+Yes, Evo will automatically transform your `Todo` model into `TodoDTO` instance.
+
+#### Using Json Template
+
+Evo provide `Emsifa\Evo\Contracts\JsonTemplate` class to wrap your `JsonResponse` instance.
+
+When building RESTful API you may have a convention/standard on how your data formatted.
+
+For example we want our `StoreTodoResponse` instead of just rendered like this:
+
+```json
+{
+    "id": 1,
+    "title": "Write documentation",
+    "completed": false
+}
+```
+
+We want it to be wrapped like this:
+
+```json
+{
+    "status": "ok",
+    "data": {
+        "id": 1,
+        "title": "Write documentation",
+        "completed": false
+    }
+}
+```
+
+To do this, we have to create a JSON response class that implements `Emsifa\Evo\Contracts\JsonTemplate` as a wrapper to all of your JSON response classes.
+
+Let's create file `app/Http/Responses/SuccessJsonTemplate.php` with following code:
+
+```php
+<?php
+
+namespace App\Http\Responses;
+
+use Emsifa\Evo\Contracts\JsonData;
+use Emsifa\Evo\Contracts\JsonTemplate as JsonTemplateContract;
+use Emsifa\Evo\Http\Response\JsonResponse;
+
+class SuccessJsonTemplate implements JsonTemplateContract
+{
+    public string $status;
+    public JsonData $data;
+
+    /**
+     * @param BaseResponse $response
+     */
+    public function forJsonResponse(JsonResponse $response): static
+    {
+        $this->status = "ok";
+        $this->data = $response->getData();
+
+        return $this;
+    }
+}
+```
+
+Now you can use this template using `Emsifa\Evo\Http\Response\UseJsonTemplate` like code below:
+
+```php
+<?php
+
+namespace App\Http\Responses;
+
+use Emsifa\Evo\Http\Response\JsonResponse;
+use Emsifa\Evo\Http\Response\UseJsonTemplate;
+
+#[UseJsonTemplate(SuccessJsonTemplate::class)]
+class StoreTodoResponse extends JsonResponse
+{
+    public int $id;
+    public string $title;
+    public bool $completed;
+}
+```
+
+Now whenever you return `StoreTodoResponse` in your controller, it will be wrapped with `SuccessJsonTemplate` data.
 
 
 
