@@ -1450,9 +1450,9 @@ Now whenever you return `StoreTodoResponse` in your controller, it will be wrapp
 
 ### Swagger UI
 
-Swagger UI is a web based application to visualize and interacts with API's resources without having any of the implementation logic in place. It uses OpenAPI specification to display and interact with API endpoints.
+Swagger UI is a web based application to visualize and interacts with API's resources without having any of the implementation logic in place. It reads OpenAPI schema to display and interact with API endpoints.
 
-Evo can reflect your code and generate OpenAPI specification on-the-fly, so you can display Swagger UI with minimal configuration.
+Evo can reflect your code and generate OpenAPI schema on-the-fly, so you can display Swagger UI with minimal configuration.
 
 In this section we will guide you on how to use Swagger UI with Evo.
 
@@ -1468,7 +1468,7 @@ php artisan vendor:publish --tag=evo-assets
 
 Then, you have to register two routes. First route is for displaying Swagger UI and second route is for rendering OpenAPI specification as JSON.
 
-To do that, you can add this line to your `routes/web.php`:
+To do that, you can simply add this line to your `routes/web.php`:
 
 ```php
 Evo::swagger('/docs');
@@ -1572,9 +1572,16 @@ It will create `config/evo.php` in your project directory. Take a look, and modi
 
 `Emsifa\Evo\Swagger\OpenAPI\Example` attribute is used to define example value to response or DTO's property.
 
-If you expand your endpoint in Swagger UI, you will see in response that Swagger will display default value for string is `"string"`, and integer is `0`.
+For example, if you expand our `POST /api/examples/post-something` in Swagger UI, you will see our response example value like this:
 
-If we want to modify them with more realistic example, we can modify `PostSomethingResponse` into something like this:
+```json
+{
+    "number": 0,
+    "message": "string"
+}
+```
+
+If you want to modify it with more realistic example, we can modify `PostSomethingResponse` into something like this:
 
 ```php
 <?php
@@ -1594,7 +1601,7 @@ class PostSomethingResponse extends JsonResponse
 }
 ```
 
-Now if you refresh Swagger UI page, you will see that the example value will use our defined example.
+Now if you refresh Swagger UI page, you will see that it shows our defined example value.
 
 ##### `Summary` Attribute
 
@@ -1621,9 +1628,9 @@ Now if you refresh Swagger UI, you will see "Post Something" in `POST /api/examp
 
 ##### `Description` Attribute
 
-`Emsifa\Evo\Swagger\OpenApi\Description` attribute is used to define description operation, schema (properties), response class, or DTO class.
+`Emsifa\Evo\Swagger\OpenApi\Description` attribute is used to define description for operation, schema (properties), response class, or DTO class.
 
-For example we will add description to `PostSomethingResponse` and its properties like this:
+For example we will add description to `PostSomethingResponse` and its properties like following code below:
 
 ```php
 <?php
@@ -1647,7 +1654,7 @@ class PostSomethingResponse extends JsonResponse
 }
 ```
 
-Now if you refresh Swagger UI, you will see those description there.
+Now if you refresh Swagger UI, you will see those description shows there.
 
 ##### Create Custom OpenAPI Modifiers
 
@@ -1764,7 +1771,7 @@ You should see it responded with random data.
 
 Behind the scene Evo uses Faker to generate mock data. By default Evo choosing faker to be used is by looking the data type and the name of each property.
 
-For example, if you have `$name` property, Evo will use `$faker->name()`. For `$title` property, Evo will use `$faker->title()`. For `float $latitude`, Evo will use `$faker->latitude()`. If property name doesn't have related faker formatter available, Evo will choose faker formatter by it's data type.
+For example, if you have `$name` property, Evo will use `$faker->name()`. For `$title` property, Evo will use `$faker->title()`. For `float $latitude`, Evo will use `$faker->latitude()`. If the property name doesn't have related faker formatter available, Evo will choose faker formatter by it's data type.
 
 If you want to use another faker instead of default choosed faker. You can use `Emsifa\Evo\DTO\UseFaker` to define what formatter you want to use.
 
