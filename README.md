@@ -1574,7 +1574,7 @@ It will create `config/evo.php` in your project directory. Take a look, and modi
 
 If you expand your endpoint in Swagger UI, you will see in response that Swagger will display default value for string is `"string"`, and integer is `0`.
 
-If we want to modify them with more informative example, we can modify `PostSomethingResponse` into something like this:
+If we want to modify them with more realistic example, we can modify `PostSomethingResponse` into something like this:
 
 ```php
 <?php
