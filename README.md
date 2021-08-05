@@ -1,5 +1,5 @@
 <div align="center">
-    <img alt="Logo" src="https://raw.githubusercontent.com/emsifa/evo/main/logo.svg"/>
+    <img alt="Logo" src="https://raw.githubusercontent.com/emsifa/evo/main/logo.svg" height="100px"/>
 </div>
 
 <div align="center">
@@ -13,7 +13,7 @@
 
 ---
 
-Laravel Evo is a package that leverages PHP 8 features. It change the way you write Laravel app into something like this:
+Evo is a Laravel package that leverages PHP 8 features. It change the way you write Laravel app into something like this:
 
 ```php
 #[RoutePrefix('users')]
