@@ -1342,7 +1342,7 @@ public function edit(#[Param] int $id): EditTodoResponse
 }
 ```
 
-Yes, Evo will automatically transform your `Todo` model into `TodoDTO` instance. Means it will map `id`, `title`, `is_completed`, `created_at`, and `updated_at` value into `TodoDTO` instance properties. 
+Yes, Evo will automatically transform your `Todo` model into `TodoDTO` instance. Means it will map `id`, `title`, `is_completed`, `created_at`, and `updated_at` value from database into `TodoDTO` instance properties. 
 
 #### Define Response Status
 
@@ -1720,7 +1720,7 @@ When developing REST API with a team consisting of Back-end and Front-end Develo
 
 To make development time more efficient. We can use Mocking API so Front-end Developer can consume our API without waiting for real implementation to be done.
 
-To do that, in Evo you can simply attach `Emsifa\Evo\Http\Response\Mock` attribute to your controller method. So when you call that endpoint, Evo will prevent your method to be executed, instead Evo will read your return type, create its instance with fake data in it, and respond that fake instance.
+To do that, in Evo you can simply attach `Emsifa\Evo\Http\Response\Mock` attribute to your controller method. So when user call that endpoint, Evo will prevent its controller to be executed, instead Evo will read its return type, create return type instance and fill its properties with fake data, finally Evo will respond that fake instance.
 
 #### Using `Mock` Attribute
 
