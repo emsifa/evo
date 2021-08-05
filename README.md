@@ -1554,7 +1554,7 @@ class ExampleController extends Controller
 }
 ```
 
-Save it. Now if you back to your browser `http://localhost:8000/docs`, you will see there is `POST /examples/post-something` operation a.k.a endpoint.
+Save it. Now if you back to your browser `http://localhost:8000/docs`, you will see there is `POST /api/examples/post-something` operation a.k.a endpoint.
 
 #### Configuring OpenAPI
 
@@ -1617,7 +1617,7 @@ class ExampleController extends Controller
 }
 ```
 
-Now if you refresh Swagger UI, you will see "Post Something" in `POST /examples/post-something` endpoint.
+Now if you refresh Swagger UI, you will see "Post Something" in `POST /api/examples/post-something` endpoint.
 
 ##### `Description` Attribute
 
@@ -1756,7 +1756,7 @@ class ExampleController extends Controller
 
 That's it!
 
-Now to try this, open your Swagger UI page. Expand `POST /examples/post-something` endpoint, click `Try it out`, then click execute.
+Now to try this, open your Swagger UI page. Expand `POST /api/examples/post-something` endpoint, click `Try it out`, then click execute.
 
 You should see it responded with random data.
 
