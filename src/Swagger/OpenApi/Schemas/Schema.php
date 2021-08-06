@@ -42,6 +42,7 @@ class Schema extends BaseSchema
         public Schema | Reference | null $items = null,
         public ?float $minimum = null,
         public ?float $maximum = null,
+        public ?Schema $additionalProperties = null,
         protected ?string $classNameReference = null,
     ) {
     }
