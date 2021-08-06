@@ -26,4 +26,7 @@ class PostStuffResponse extends JsonResponse
 
     #[ArrayOf(StuffRelation::class)]
     public array $otherRelations;
+
+    #[ArrayOf(StuffRelation::class, associative: true)]
+    public array $assoc;
 }

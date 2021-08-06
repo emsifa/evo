@@ -219,6 +219,15 @@ class GeneratorTest extends TestCase
                                             'thing' => ['type' => 'string', 'example' => 'Relation thing'],
                                         ],
                                     ],
+                                    'assoc' => [
+                                        'type' => 'object',
+                                        'additionalProperties' => [
+                                            'type' => 'object',
+                                            'properties' => [
+                                                'thing' => ['type' => 'string', 'example' => 'Relation thing'],
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],

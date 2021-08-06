@@ -22,6 +22,7 @@ class ArrayOf implements OpenApiSchemaModifier
     public function __construct(
         protected string $type,
         protected int $ifCastError = 0,
+        protected bool $associative = false,
     ) {
     }
 
@@ -40,9 +41,16 @@ class ArrayOf implements OpenApiSchemaModifier
         $isResponse = ! TypeHelper::isBuiltInType($this->type)
             && (is_subclass_of($this->type, JsonResponse::class) || is_subclass_of($this->type, ResponseDTO::class));
 
-        $schema->type = Schema::TYPE_ARRAY;
-        $schema->items = TypeHelper::isBuiltInType($this->type)
+        $itemsSchema = TypeHelper::isBuiltInType($this->type)
             ? new Schema(type: OpenApiHelper::getType($this->type))
             : OpenApiHelper::makeSchemaFromClass(new ReflectionClass($this->type), ! $isResponse);
+
+        if ($this->associative) {
+            $schema->type = Schema::TYPE_OBJECT;
+            $schema->additionalProperties = $itemsSchema;
+        } else {
+            $schema->type = Schema::TYPE_ARRAY;
+            $schema->items = $itemsSchema;
+        }
     }
 }
