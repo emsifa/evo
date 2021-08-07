@@ -412,7 +412,7 @@ class RegisterDTO extends DTO
 }
 ```
 
-Now behind the scene, Evo will do validation like Laravel code below:
+Behind the scene, code above will do validation like Laravel code below:
 
 ```php
 $request->validate([
