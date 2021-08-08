@@ -1,13 +1,19 @@
-![Logo](https://raw.githubusercontent.com/emsifa/evo/main/logo.svg)
+<div align="center">
+    <img alt="Logo" src="https://raw.githubusercontent.com/emsifa/evo/main/logo.svg" height="100px"/>
+</div>
 
+<div align="center">
+    
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/emsifa/evo.svg?style=flat-square)](https://packagist.org/packages/emsifa/evo)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/emsifa/evo/run-tests?label=tests)](https://github.com/emsifa/evo/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/emsifa/evo/Check%20&%20fix%20styling?label=code%20style)](https://github.com/emsifa/evo/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/emsifa/evo/run-tests?label=tests&style=flat-square)](https://github.com/emsifa/evo/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/emsifa/evo/Check%20&%20fix%20styling?label=code%20style&style=flat-square)](https://github.com/emsifa/evo/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/emsifa/evo.svg?style=flat-square)](https://packagist.org/packages/emsifa/evo)
+    
+</div>
 
 ---
 
-Laravel Evo is a package that leverages PHP 8 features. It change the way you write Laravel app into something like this:
+Evo is a Laravel package that leverages PHP 8 features. It change the way you write Laravel app into something like this:
 
 ```php
 #[RoutePrefix('users')]
@@ -50,18 +56,18 @@ Also, by defining input and output type in this way, not only you and your teamm
 
 ## Features
 
-* [x] Inject request data (Header, Param, Cookie, Body, Query) into parameters using attribute.
-* [x] Applying middleware using attribute. 
-* [x] Route prefixing using attribute. 
+* [x] [Register Routes Using Attribute](#register-route).
+* [x] [Apply middleware using attribute](#applying-middleware). 
+* [x] [Route prefixing using attribute](#route-prefixing). 
+* [x] [Inject request data (Header, Param, Cookie, Body, Query) into parameters using attribute](#accessing-request-value).
 * [x] Automatic type casting.
 * [x] Automatic type validation.
-* [x] Define validation rules directly in DTO properties using attribute.
-* [x] Custom value caster.
-* [x] Generate DTO file.
-* [x] Generate Response file.
-* [x] Generate OpenAPI file.
-* [x] Display Swagger page.
-* [x] Mocking API.
+* [x] [Define validation rules directly in DTO properties using attribute](#validating-body).
+* [x] [Custom value caster](#creating-custom-type-caster).
+* [x] [Generate DTO file](#generating-dto-file).
+* [x] [Generate Response file](#generate-response-class).
+* [x] [Generate Swagger UI and OpenAPI file](#swagger-ui).
+* [x] [Mocking API](#mocking-api).
 
 
 ## Installation
@@ -80,7 +86,7 @@ composer require emsifa/evo:dev-main
 
 #### Register Route
 
-To be able to use Laravel Controller in Evo way, you have to register route with `EvoFacade::routes` method like below:
+To be able to use Laravel Controller in Evo's way, you have to register route with `EvoFacade::routes` method like below:
 
 ```php
 // routes/web.php or routes/api.php
@@ -90,7 +96,7 @@ use Emsifa\Evo\EvoFacade as Evo;
 Evo::routes(App\Http\Controllers\UserController::class);
 ```
 
-Then in your `UserController`, you can attach route attribute such as `Get`, `Post`, `Put`, `Patch`, `Delete` like example below:
+Then in your `UserController`, you can attach route attribute such as `Get`, `Post`, `Put`, `Patch`, `Delete` like an example below:
 
 ```php
 <?php
@@ -246,7 +252,7 @@ class UserController extends Controller
 
 ### Accessing Request Value
 
-In Evo, you can access request value by attaching attributes such as `Query`, `Cookie`, `Header`, `Param`, `Body`, etc to your method parameters. Then Evo will automatically inject corresponding value to your parameters. Evo will also automatically validate and cast the value according to parameter type and definition.
+In Evo, you can access request value by attaching request attributes such as `Query`, `Cookie`, `Header`, `Param`, `Body`, etc to your method parameters. Then Evo will automatically inject corresponding value to attached parameter. Evo will also automatically validate and cast the value according to parameter type and definition.
 
 Before using those attributes, make sure you have import their full class names.
 
@@ -260,7 +266,7 @@ use Emsifa\Evo\Http\Body;
 
 #### `Query` Attribute
 
-`Query` attribute used to get value from HTTP request query.
+`Query` attribute is used to get a query value from HTTP request.
 
 ```php
 #[Get]
@@ -289,7 +295,7 @@ public function index(#[Query('p')] int $page)
 
 In example above Evo will get `p` query value and inject it to `$page` parameter.
 
-If you want to make it optional, you can just give default value to it. For example:
+If you want to make it optional, you can just give default value to the parameter. For example:
 
 ```php
 #[Get]
@@ -301,7 +307,7 @@ public function index(#[Query('q')] ?string $keyword = null)
 
 #### `Param` Attribute
 
-`Param` attribute used to get URI parameter value.
+`Param` attribute is used to get URI parameter value.
 
 ```php
 #[Get('users/{id}')]
@@ -311,11 +317,11 @@ public function index(#[Param] int $id)
 } 
 ```
 
-Like `Query` attribute before, Evo will do validation, type casting, and inject it to the `$id` parameter. 
+Like `Query` attribute before, Evo will do validation, type casting, and inject the value to the `$id` parameter. 
 
 #### `Header` Attribute
 
-`Header` attribute used to get request header value.
+`Header` attribute is used to get a header value from HTTP request.
 
 ```php
 #[Get('users/{id}')]
@@ -330,7 +336,7 @@ In example above, Evo will get `user-agent` header value and inject it to the `$
 
 #### `Cookie` Attribute
 
-`Cookie` attribute used to get cookie value from HTTP request.
+`Cookie` attribute is used to get a cookie value from HTTP request.
 
 ```php
 #[Get('users/{id}')]
@@ -340,7 +346,7 @@ public function index(#[Cookie] string $token)
 } 
 ```
 
-In example above, Evo will get `token` cookie value and inject it to `$token` parameter.
+In example above, Evo will get `token` cookie value and inject it to the `$token` parameter.
 
 
 #### `Body` Attribute
@@ -375,7 +381,7 @@ class RegisterDto extends Dto
 }
 ```
 
-Now you may want to add an extra validation to each properties. You can do that by attaching rules attribute like an example below:
+Now you may want to add some extra validations to each properties. You can do that by attaching rules attribute like an example below:
 
 
 ```php
@@ -406,7 +412,7 @@ class RegisterDto extends Dto
 }
 ```
 
-Example above will do similar validation like below:
+Behind the scene, code above will do validation like Laravel code below:
 
 ```php
 $request->validate([
@@ -436,14 +442,14 @@ And there you go. Same like any other attributes. Evo will validate the values, 
 
 #### Uploaded File
 
-You can get uploaded files in two ways:
+You can get uploaded files in two ways below:
 
 1. Using DTO class and `Body` attribute.
 2. Using `File` attribute.
 
 ##### 1. Getting uploaded file using DTO and `Body` attribute
 
-To get uploaded file using DTO, you can just add property with type `Illuminate\Http\UploadedFile`.
+To get uploaded file using DTO, you can just add a property with type `Illuminate\Http\UploadedFile`.
 
 ```php
 <?php
@@ -534,7 +540,7 @@ class JwtToken implements RequestGetter
 }
 ```
 
-Now you can use it like any other request attributes like this:
+Now you can use it like any other request attributes like following code:
 
 ```php
 public function doSomething(#[JwtToken] ?string $token = null)
@@ -593,11 +599,11 @@ Now Evo will run `validateRequest` before type casting it's value and inject it 
 
 ### Using DTO
 
-DTO (Data Transfer Object) is basically an object that have some declared properties in it. DTO used to carry data between processes. In typical PHP application, we often store data as associative array or as `stdClass`. The downside of storing data as associative array or `stdClass` is we don't really know what is inside and what type it is. If we are not carefully to check it, it could cause some security problem to our application.
+DTO (Data Transfer Object) is basically an object that contains some declared properties in it. DTO used to carry data between processes. In typical PHP application, we often store data as associative array or as `stdClass`. The downside of storing data as associative array or `stdClass` is we don't really know what is inside and what type it is. If we are not carefully to check it, it could cause some security problem to our application.
 
 By replacing them with DTO, we, Text Editor, and IDE know exactly what it is, what properties in it, the type of each properties, etc.
 
-But creating DTO instance with PHP native way sometimes can be quite annoying. You have to create an instance, set its properties value one by one, also you have to cast its type properly.
+But creating DTO instance with PHP native way sometimes can be quite annoying. You have to create an instance, set the value for each properties one by one, also you have to cast its type properly.
 
 That is why Evo provide `Emsifa\Evo\Dto` class that comes with some useful utilities.
 
@@ -619,9 +625,9 @@ abstract class Dto implements Arrayable
 }
 ```
 
-In code above, `UseCaster` is used to tell your DTO what caster class to be used to cast each types.
+In code above, `UseCaster` is used to tell the DTO what caster class to be used to cast a type.
 
-In this section we will explore how to generate DTO file, how default casters behave, and how to create and overriding default caster.
+In this section we will explore how to generate DTO file, how default casters behave, and how to create and override default caster.
 
 #### Generating DTO File
 
@@ -746,6 +752,7 @@ It will generate:
 #### Default Casters
 
 Here are some examples of Evo's default casters behave:
+
 ##### `BoolCaster`
 
 | Property        | Original Value | Casted Value       |
@@ -840,7 +847,7 @@ Here are some examples of Evo's default casters behave:
 
 ##### `ArrayCaster`
 
-`ArrayCaster` basically only accept array and `Illuminate\Contracts\Support\Arrayable` value, otherwise it throws `Emsifa\Evo\Exceptions\CastErrorException`.
+`ArrayCaster` basically only accept array and `Illuminate\Contracts\Support\Arrayable` value, other than that it throws `Emsifa\Evo\Exceptions\CastErrorException`.
 
 `ArrayCaster` will check `Emsifa\Evo\Types\ArrayOf` attribute to cast its items.
 
@@ -875,26 +882,26 @@ But sometimes you may want to treat it differently. Instead of thrown an error, 
 
 You can use `ArrayOf::SKIP_ITEM`, `ArrayOf::NULL_ITEM`, `ArrayOf::KEEP_AS_IS` as second parameter of `ArrayOf` attribute.
 
-For example, if you change your property definition to this:
+For example, if you change the property in example above like this:
 
 ```php
 #[ArrayOf('int', ArrayOf::SKIP_ITEM)]
 public array $numbers;
 ```
 
-If you inject it with value:
+And if you inject it with value:
 
 ```php
 [1, "2", "lorem-ipsum", "4.2", "5"]
 ```
 
-It will give you result:
+It will give you this result:
 
 ```php
 [1, 2, 4, 5]
 ```
 
-If you change second parameter to `ArrayOf::NULL_ITEM`, it would give you result below:
+If you change second parameter to `ArrayOf::NULL_ITEM`, it would give you the result below:
 
 ```php
 [1, 2, null, 4, 5]
@@ -922,7 +929,7 @@ public DateTime $date;
 
 It would transform string `"2010-01-02"`, `"2010-01-02 12:34:56"`, etc into `DateTime` instance.
 
-Other than that, it throws `Emsifa\Evo\Exceptions\CastErrorException`.
+If `date_create()` returns `null`, it would throws `Emsifa\Evo\Exceptions\CastErrorException`.
 
 #### Creating Custom Type Caster
 
@@ -953,7 +960,7 @@ class BoolCaster implements Caster
 }
 ```
 
-Now we will put some logic to our `cast` method. For example in this custom `BoolCaster` we want to convert string "1", "true", "on", "yes" to `true` and "0", "false", "no", "off" to `false`. Also, we want to make sure if our property is nullable, and the value is `null`, we should returns `null`. Other than that we will throw `Emsifa\Evo\Exceptions\CastErrorException`.
+Now we will put some logic to our `cast` method. For example in this custom `BoolCaster` we want to convert string `"1"`, `"true"`, `"on"`, `"yes"` to `true` and `"0"`, `"false"`, `"no"`, `"off"` to `false`. Also, we want to make sure if our property is nullable, and the value is `null`, we should returns `null`. Else we will throw `Emsifa\Evo\Exceptions\CastErrorException`.
 
 ```php
 class BoolCaster implements Caster
@@ -998,7 +1005,7 @@ class LoginDto extends Dto
 
 Now, our `BoolCaster` will be applied to cast `bool $remember` property.
 
-If you want to apply it to all of your DTO classes, you can create your own abstract DTO class to be used as a parent of your DTO classes.
+If you want to apply it to all of your DTO classes, you can create your own abstract DTO class to be used as a parent to all of your DTO classes.
 
 For example, create your own `app/Dtos/Dto.php` file with code below:
 
@@ -1021,11 +1028,11 @@ Then in your DTO classes you just have to extends `App\Dtos\Dto` class instead o
 
 ### Validation
 
-Evo will automatically validate request data to every parameters that is attached with attribute that implements `Emsifa\Evo\Contracts\RequestValidator` interface. Evo's built-in `Query`, `Header`, `Cookie`, `Param`, and `Body` attributes will do validation because they are implementing that interface.
+Evo will automatically validate request data to every parameters that is attached with attribute that implements `Emsifa\Evo\Contracts\RequestValidator` interface. Evo's built-in `Query`, `Header`, `Cookie`, `Param`, and `Body` attributes is doing validation because they are implementing that interface.
 
 #### Validating Query, Header, Cookie, and Param
 
-For `Query`, `Header`, `Cookie`, and `Param` attributes, by default they are giving validation rules by looking for its parameter type. For example:
+For `Query`, `Header`, `Cookie`, and `Param` attributes, by default they choose validation rules by looking for its parameter type. For example:
 
 ```php
 #[Get]
@@ -1040,7 +1047,7 @@ public function index(
 
 Evo will apply `required|numeric` to `$limit` and `$offset`, also apply rule `nullable|string` rule to `$keyword`.
 
-But you can also use your own rules by giving `$rules` attribute. For example:
+But you can also use your own validation rules by giving `$rules` to attribute. For example:
 
 ```php
 #[Get]
@@ -1057,9 +1064,9 @@ Now `$limit` and `$offset` parameters will use your defined rules instead of usi
 
 #### Validating Body
 
-For `Body` attribute. It will scan its DTO properties, and giving rules for each properties by looking for its type and finding `Illuminate\Contracts\Validation\Rule` attributes attached to it.
+For `Body` attribute. It will scan its DTO properties, and choose rules for each properties by looking for the property type and finding `Illuminate\Contracts\Validation\Rule` attributes attached to it.
 
-For example, if you have this controller:
+For example, if you have controller like this:
 
 ```php
 #[Post('checkout')]
@@ -1141,11 +1148,13 @@ Validator::make($data, [
 
 ##### Create Your Own Validation Rule
 
-Evo's validation rule is basically Laravel validation rule class that has `Attribute` attribute on it.
+Evo's validation rule is basically a class implementing `Illuminate\Contracts\Validation\Rule` interface and has `Attribute` attribute attached on it.
 
 For example, we will create `Bit` rule that only accepts string with "0" and "1" characters.
 
-First, create `app/Rules/Bit.php` file, with this code:
+First, create `app/Rules/Bit.php` file.
+
+Then write following code below:
 
 ```php
 <?php
@@ -1198,16 +1207,16 @@ class MyDto extends Dto
 Evo provide custom response class `Emsifa\Evo\Http\Response\JsonResponse` and `Emsifa\Evo\Http\Response\ViewResponse` that is inherit from `Emsifa\Evo\Dto` class.
 They are all implements `Illuminate\Contracts\Support\Responsable`, so that they can be transformed to HTTP response.
 
-You can extend them to your response classes then use your response classes as return type of your controller action to get these benefits:
+You can extend them to your response classes then use your response classes as return type of your controller action to get these benefits below:
 
 * Easier to identify how the response data should be.
 * It prevents you to send wrong data types. Eg: integer as string, null to non-nullable property, etc.
-* It makes your endpoint can be generated to OpenAPI.
-* It also makes your endpoint mockable.
+* It makes Evo knows how to generate your endpoint into OpenAPI.
+* It makes Evo knows how to mock the response.
 
 #### Generate Response Class
 
-Evo provide `evo:make-response` command to generate response class. Here is the command signature:
+Evo provide `evo:make-response` command to generate response class. Here is its command signature:
 
 ```bash
 php artisan evo:make-response {classname} {...properties} {--view} {--json-template=} 
@@ -1224,7 +1233,7 @@ For example, we will generate `StoreTodoResponse` with command below:
 php artisan evo:make-response StoreTodoResponse id:int title:string completed:bool
 ```
 
-It will generate `app/Http/Responses/StoreTodoResponse` class with following code:
+It will generate `app/Http/Responses/StoreTodoResponse` class with following code below:
 
 ```php
 <?php
@@ -1256,6 +1265,7 @@ public function store(#[Body] StoreTodoDto $dto): StoreTodoResponse
 ```
 
 `StoreTodoResponse::fromArray` method will create `StoreTodoResponse` instance by mapping `StoreTodoResponse` public properties with `$todo` array values. It also apply type casting for each properties.
+
 #### Using View Response
 
 In this example we will create view response in Evo's way.
@@ -1300,6 +1310,26 @@ Since you put `TodoDto` type there, it will generate 2 files below:
 
 `UseView` attribute above is used to identify what view file should be rendered, and the data passed to the view is its properties, in this case `$todo` that is `TodoDto` instance.
 
+Now, let's edit `TodoDTO` with following properties:
+
+```php
+<?php
+
+namespace App\Http\Responses;
+
+use DateTime;
+use Emsifa\Evo\Http\Response\ResponseDTO;
+
+class TodoDTO extends ResponseDTO
+{
+    public int $id;
+    public string $title;
+    public bool $is_completed;
+    public DateTime $created_at;
+    public ?DateTime $updated_at;
+}
+```
+
 And here is the example on how to use `EditTodoResponse` view:
 
 ```php
@@ -1316,7 +1346,7 @@ Yes, Evo will automatically transform your `Todo` model into `TodoDto` instance.
 
 #### Define Response Status
 
-To define response status in your response class, you can attach `Emsifa\Evo\Http\Response\ResponseStatus` attribute in your response class like this:
+To define response status in your response class, you can attach `Emsifa\Evo\Http\Response\ResponseStatus` attribute in your response class like following code below:
 
 ```php
 <?php
@@ -1420,11 +1450,11 @@ Now whenever you return `StoreTodoResponse` in your controller, it will be wrapp
 
 ### Swagger UI
 
-Swagger UI is a web based app to visualize and interacts with API's resources without having any of the implementation logic in place. It uses OpenAPI specification to display and interact with API endpoints.
+Swagger UI is a web based application to visualize and interacts with API's resources without having any of the implementation logic in place. It reads OpenAPI schema to display and interact with API endpoints.
 
-Evo can reflect your code and generate OpenAPI specification on-the-fly, so you can display Swagger UI with minimal configuration.
+Evo can reflect your code and generate OpenAPI schema on-the-fly, so you can display Swagger UI with minimal configuration.
 
-In this section we will guide you how to use Swagger UI with Evo.
+In this section we will guide you on how to use Swagger UI with Evo.
 
 #### Publishing Assets Files
 
@@ -1438,7 +1468,7 @@ php artisan vendor:publish --tag=evo-assets
 
 Then, you have to register two routes. First route is for displaying Swagger UI and second route is for rendering OpenAPI specification as JSON.
 
-You can add this line to your `routes/web.php`:
+To do that, you can simply add this line to your `routes/web.php`:
 
 ```php
 Evo::swagger('/docs');
@@ -1448,7 +1478,7 @@ Now if you run `php artisan route:list`, you should see `GET /docs` and `GET /do
 
 You can check it by running your app with `php artisan serve`, then in your browser, open URL `http://localhost:8000/docs`.
 
-You should see Swagger UI page with no endpoints.
+You should see Swagger UI page with no endpoints yet.
 
 #### Add an Example Endpoint
 
@@ -1524,7 +1554,7 @@ class ExampleController extends Controller
 }
 ```
 
-Save it. Now if you back to your browser `http://localhost:8000/docs`, you will see there is `POST /examples/post-something` endpoint.
+Save it. Now if you back to your browser `http://localhost:8000/docs`, you will see there is `POST /api/examples/post-something` operation a.k.a endpoint.
 
 #### Configuring OpenAPI
 
@@ -1536,15 +1566,22 @@ To configure info with configuration file. First you have to publish configurati
 php artisan vendor:publish --tag=evo-config
 ```
 
-It will generate `config/evo.php` in your project directory. Take a look, and modify it as you want.
+It will create `config/evo.php` in your project directory. Take a look, and modify it as you want.
 
 ##### `Example` Attribute
 
 `Emsifa\Evo\Swagger\OpenAPI\Example` attribute is used to define example value to response or DTO's property.
 
-If you expand your endpoint in Swagger UI, you will see in response that Swagger will display default value for string is `"string"`, and integer is `0`.
+For example, if you expand our `POST /api/examples/post-something` in Swagger UI, you will see our response example value like this:
 
-If we want to modify them with more informative example, we can modify `PostSomethingResponse` into something like this:
+```json
+{
+    "number": 0,
+    "message": "string"
+}
+```
+
+If you want to modify it with more realistic example, we can modify `PostSomethingResponse` into something like this:
 
 ```php
 <?php
@@ -1564,7 +1601,7 @@ class PostSomethingResponse extends JsonResponse
 }
 ```
 
-Now if you refresh Swagger UI page, you will see that the example value will use our defined example.
+Now if you refresh Swagger UI page, you will see that it shows our defined example value.
 
 ##### `Summary` Attribute
 
@@ -1587,13 +1624,13 @@ class ExampleController extends Controller
 }
 ```
 
-Now if you refresh Swagger UI, you will see "Post Something" in `POST /examples/post-something` endpoint.
+Now if you refresh Swagger UI, you will see "Post Something" in `POST /api/examples/post-something` endpoint.
 
 ##### `Description` Attribute
 
-`Emsifa\Evo\Swagger\OpenApi\Description` attribute is used to define description operation, schema (properties), response class, or DTO class.
+`Emsifa\Evo\Swagger\OpenApi\Description` attribute is used to define description for operation, schema (properties), response class, or DTO class.
 
-For example we will add description to `PostSomethingResponse` and its properties like this:
+For example we will add description to `PostSomethingResponse` and its properties like following code below:
 
 ```php
 <?php
@@ -1617,7 +1654,7 @@ class PostSomethingResponse extends JsonResponse
 }
 ```
 
-Now if you refresh Swagger UI, you will see those description there.
+Now if you refresh Swagger UI, you will see those description shows there.
 
 ##### Create Custom OpenAPI Modifiers
 
@@ -1690,7 +1727,7 @@ When developing REST API with a team consisting of Back-end and Front-end Develo
 
 To make development time more efficient. We can use Mocking API so Front-end Developer can consume our API without waiting for real implementation to be done.
 
-To do that, in Evo you can simply attach `Emsifa\Evo\Http\Response\Mock` attribute to your controller method. So when you call that endpoint, Evo will prevent your method to be executed, instead Evo will read your return type, create its instance with fake data in it, and respond that fake instance.
+To do that, in Evo you can simply attach `Emsifa\Evo\Http\Response\Mock` attribute to your controller method. So when user call that endpoint, Evo will prevent its controller to be executed, instead Evo will read its return type, create return type instance and fill its properties with fake data, finally Evo will respond that fake instance.
 
 #### Using `Mock` Attribute
 
@@ -1726,7 +1763,7 @@ class ExampleController extends Controller
 
 That's it!
 
-Now to try this, open your Swagger UI page. Expand `POST /examples/post-something` endpoint, click `Try it out`, then click execute.
+Now to try this, open your Swagger UI page. Expand `POST /api/examples/post-something` endpoint, click `Try it out`, then click execute.
 
 You should see it responded with random data.
 
@@ -1734,7 +1771,7 @@ You should see it responded with random data.
 
 Behind the scene Evo uses Faker to generate mock data. By default Evo choosing faker to be used is by looking the data type and the name of each property.
 
-For example, if you have `$name` property, Evo will use `$faker->name()`. For `$title` property, Evo will use `$faker->title()`. For `float $latitude`, Evo will use `$faker->latitude()`. If property name doesn't have related faker formatter available, Evo will choose faker formatter by it's data type.
+For example, if you have `$name` property, Evo will use `$faker->name()`. For `$title` property, Evo will use `$faker->title()`. For `float $latitude`, Evo will use `$faker->latitude()`. If the property name doesn't have related faker formatter available, Evo will choose faker formatter by it's data type.
 
 If you want to use another faker instead of default choosed faker. You can use `Emsifa\Evo\Dtos\UseFaker` to define what formatter you want to use.
 
