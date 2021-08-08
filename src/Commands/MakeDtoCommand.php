@@ -11,7 +11,7 @@ class MakeDtoCommand extends Command
 {
     public $signature = 'evo:make-dto {file} {properties?*}';
 
-    public $description = 'Generate Dto file';
+    public $description = 'Generate DTO file';
 
     /**
      * Create a new controller creator command instance.
@@ -52,7 +52,7 @@ class MakeDtoCommand extends Command
         $this->makeDirectory($path);
         $this->files->put($path, $content);
         $filepath = str_replace(app_path(), "", $path);
-        $this->info("Created Dto: {$filepath}");
+        $this->info("Created DTO: {$filepath}");
     }
 
     protected function makeDirectory($path)
@@ -162,7 +162,7 @@ class MakeDtoCommand extends Command
 
     protected function getOutputPath(string $file)
     {
-        $path = "Dto/{$file}.php";
+        $path = "Dtos/{$file}.php";
         $path = str_replace("/", DIRECTORY_SEPARATOR, $path);
 
         return app_path($path);
@@ -205,7 +205,7 @@ class MakeDtoCommand extends Command
 
     protected function getDtoClassName(string $type): string
     {
-        return "App\\Dto\\" . str_replace("/", "\\", $type);
+        return "App\\Dtos\\" . str_replace("/", "\\", $type);
     }
 
     protected function parseProperty(string $prop)

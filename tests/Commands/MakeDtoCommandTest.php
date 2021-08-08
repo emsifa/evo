@@ -32,10 +32,10 @@ class MakeDtoCommandTest extends TestCase
 
         $command->run($input, $output);
 
-        $this->assertFileExists($outputPath."/Dto/MyDto/UserDto.php");
-        $this->assertFileExists($outputPath."/Dto/MyDto/RoleDto.php");
+        $this->assertFileExists($outputPath."/Dtos/MyDto/UserDto.php");
+        $this->assertFileExists($outputPath."/Dtos/MyDto/RoleDto.php");
 
-        unlink($outputPath."/Dto/MyDto/UserDto.php");
-        unlink($outputPath."/Dto/MyDto/RoleDto.php");
+        unlink($outputPath."/Dtos/MyDto/UserDto.php");
+        unlink($outputPath."/Dtos/MyDto/RoleDto.php");
     }
 }
