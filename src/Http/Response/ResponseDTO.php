@@ -2,8 +2,8 @@
 
 namespace Emsifa\Evo\Http\Response;
 
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 
-abstract class ResponseDTO extends DTO
+abstract class ResponseDto extends Dto
 {
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Emsifa\Evo\Tests\Samples\DTO;
+namespace Emsifa\Evo\Tests\Samples\Dto;
 
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 
-class PostStuffDTO extends DTO
+class PostStuffDto extends Dto
 {
     public int $age;
     public string $name;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Emsifa\Evo\DTO;
+namespace Emsifa\Evo\Dto;
 
 use Attribute;
 

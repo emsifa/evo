@@ -1,12 +1,12 @@
 <?php
 
-namespace Emsifa\Evo\Tests\Samples\DTO;
+namespace Emsifa\Evo\Tests\Samples\Dto;
 
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 use Emsifa\Evo\Swagger\OpenApi\Example;
 use Emsifa\Evo\Types\ArrayOf;
 
-class ChildStuffDTO extends DTO
+class ChildStuffDto extends Dto
 {
     #[Example('A thing')]
     public string $thing;

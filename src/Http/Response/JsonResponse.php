@@ -4,13 +4,13 @@ namespace Emsifa\Evo\Http\Response;
 
 use Emsifa\Evo\Contracts\JsonData;
 use Emsifa\Evo\Contracts\JsonTemplate;
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 use Emsifa\Evo\Helpers\ObjectHelper;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Illuminate\Contracts\Support\Responsable;
 use ReflectionAttribute;
 
-abstract class JsonResponse extends DTO implements JsonData, Responsable
+abstract class JsonResponse extends Dto implements JsonData, Responsable
 {
     /**
      * {@inheritdoc}

@@ -6,7 +6,7 @@ use Attribute;
 use Emsifa\Evo\Contracts\OpenApiRequestBody;
 use Emsifa\Evo\Contracts\RequestGetter;
 use Emsifa\Evo\Contracts\RequestValidator;
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 use Emsifa\Evo\Helpers\ValidatorHelper;
 use Emsifa\Evo\Http\Concerns\OpenApiRequestBodyMaker;
 use Emsifa\Evo\ObjectFiller;
@@ -48,7 +48,7 @@ class Body implements RequestGetter, RequestValidator, OpenApiRequestBody
             return $this->getMergedInputsAndFiles($request);
         }
 
-        if ($typeName && class_exists($typeName) && is_subclass_of($typeName, DTO::class)) {
+        if ($typeName && class_exists($typeName) && is_subclass_of($typeName, Dto::class)) {
             return $typeName::fromRequest($request);
         }
 

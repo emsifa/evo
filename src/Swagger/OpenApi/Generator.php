@@ -8,7 +8,7 @@ use Emsifa\Evo\Contracts\OpenApiParameterModifier;
 use Emsifa\Evo\Contracts\OpenApiRequestBody;
 use Emsifa\Evo\Contracts\OpenApiRequestBodyModifier;
 use Emsifa\Evo\Contracts\OpenApiResponseModifier;
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 use Emsifa\Evo\Helpers\OpenApiHelper;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Emsifa\Evo\Http\Response\JsonResponse;
@@ -395,7 +395,7 @@ class Generator
     public function getSchemaName(string $className): string
     {
         $className = Str::after("App\\Http\\Responses\\", $className);
-        $className = Str::after("App\\DTO\\", $className);
+        $className = Str::after("App\\Dto\\", $className);
 
         return str_replace("\\", "", $className);
     }
@@ -415,7 +415,7 @@ class Generator
             if (is_string($typeName) && is_a($typeName, UploadedFile::class, true)) {
                 return true;
             }
-            if (is_string($typeName) && is_subclass_of($typeName, DTO::class)) {
+            if (is_string($typeName) && is_subclass_of($typeName, Dto::class)) {
                 $hasUploadedFile = $this->containsUploadedFile(new ReflectionClass($typeName));
                 if ($hasUploadedFile) {
                     return true;

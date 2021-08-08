@@ -3,8 +3,8 @@
 namespace Emsifa\Evo\Tests\Samples;
 
 use Emsifa\Evo\Casters\IntCaster;
-use Emsifa\Evo\DTO\CastWith;
-use Emsifa\Evo\DTO\UseCaster;
+use Emsifa\Evo\Dto\CastWith;
+use Emsifa\Evo\Dto\UseCaster;
 use Emsifa\Evo\Tests\Samples\Casters\HalfIntCaster;
 
 #[UseCaster('int', IntCaster::class)]

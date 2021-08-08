@@ -2,7 +2,7 @@
 
 namespace Emsifa\Evo\Commands;
 
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 use Emsifa\Evo\Types\ArrayOf;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
@@ -11,7 +11,7 @@ class MakeDtoCommand extends Command
 {
     public $signature = 'evo:make-dto {file} {properties?*}';
 
-    public $description = 'Generate DTO file';
+    public $description = 'Generate Dto file';
 
     /**
      * Create a new controller creator command instance.
@@ -31,7 +31,7 @@ class MakeDtoCommand extends Command
 
         $path = $this->getOutputPath($file);
         if (file_exists($path)) {
-            return $this->error("DTO '{$file}' already exists.");
+            return $this->error("Dto '{$file}' already exists.");
         }
 
         $className = $this->getDtoClassName($file);
@@ -52,7 +52,7 @@ class MakeDtoCommand extends Command
         $this->makeDirectory($path);
         $this->files->put($path, $content);
         $filepath = str_replace(app_path(), "", $path);
-        $this->info("Created DTO: {$filepath}");
+        $this->info("Created Dto: {$filepath}");
     }
 
     protected function makeDirectory($path)
@@ -67,7 +67,7 @@ class MakeDtoCommand extends Command
     protected function generateFileContent(string $fullClassName, array $properties): string
     {
         [$namespace, $className] = $this->splitNamespace($fullClassName);
-        $parentClassName = DTO::class;
+        $parentClassName = Dto::class;
         $extends = $this->getClassName($parentClassName);
 
         $uses = [$parentClassName, ...$this->getUses($properties, $fullClassName)];
@@ -162,7 +162,7 @@ class MakeDtoCommand extends Command
 
     protected function getOutputPath(string $file)
     {
-        $path = "DTO/{$file}.php";
+        $path = "Dto/{$file}.php";
         $path = str_replace("/", DIRECTORY_SEPARATOR, $path);
 
         return app_path($path);
@@ -205,7 +205,7 @@ class MakeDtoCommand extends Command
 
     protected function getDtoClassName(string $type): string
     {
-        return "App\\DTO\\" . str_replace("/", "\\", $type);
+        return "App\\Dto\\" . str_replace("/", "\\", $type);
     }
 
     protected function parseProperty(string $prop)

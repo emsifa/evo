@@ -7,7 +7,7 @@ use Emsifa\Evo\Contracts\OpenApiSchemaModifier;
 use Emsifa\Evo\Helpers\OpenApiHelper;
 use Emsifa\Evo\Helpers\TypeHelper;
 use Emsifa\Evo\Http\Response\JsonResponse;
-use Emsifa\Evo\Http\Response\ResponseDTO;
+use Emsifa\Evo\Http\Response\ResponseDto;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Schema;
 use ReflectionClass;
 
@@ -39,7 +39,7 @@ class ArrayOf implements OpenApiSchemaModifier
     public function modifyOpenApiSchema(Schema $schema)
     {
         $isResponse = ! TypeHelper::isBuiltInType($this->type)
-            && (is_subclass_of($this->type, JsonResponse::class) || is_subclass_of($this->type, ResponseDTO::class));
+            && (is_subclass_of($this->type, JsonResponse::class) || is_subclass_of($this->type, ResponseDto::class));
 
         $itemsSchema = TypeHelper::isBuiltInType($this->type)
             ? new Schema(type: OpenApiHelper::getType($this->type))

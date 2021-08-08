@@ -2,8 +2,8 @@
 
 namespace Emsifa\Evo\Tests\Samples\Responses;
 
-use Emsifa\Evo\DTO\FakesCount;
-use Emsifa\Evo\DTO\UseFaker;
+use Emsifa\Evo\Dto\FakesCount;
+use Emsifa\Evo\Dto\UseFaker;
 use Emsifa\Evo\Http\Response\JsonResponse;
 use Emsifa\Evo\Tests\Samples\CategoryFaker;
 use Emsifa\Evo\Types\ArrayOf;

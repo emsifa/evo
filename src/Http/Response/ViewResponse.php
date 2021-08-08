@@ -2,13 +2,13 @@
 
 namespace Emsifa\Evo\Http\Response;
 
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 use Emsifa\Evo\Helpers\ObjectHelper;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Illuminate\Contracts\Support\Responsable;
 use ReflectionClass;
 
-abstract class ViewResponse extends DTO implements Responsable
+abstract class ViewResponse extends Dto implements Responsable
 {
     protected string $viewName = "";
 
