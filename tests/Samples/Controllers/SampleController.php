@@ -10,7 +10,7 @@ use Emsifa\Evo\Route\Patch;
 use Emsifa\Evo\Route\Post;
 use Emsifa\Evo\Route\Put;
 use Emsifa\Evo\Route\RoutePrefix;
-use Emsifa\Evo\Tests\Samples\DTO\PostStuffDTO;
+use Emsifa\Evo\Tests\Samples\Dto\PostStuffDto;
 use Illuminate\Routing\Controller;
 
 #[RoutePrefix('sample')]
@@ -29,7 +29,7 @@ class SampleController extends Controller
     #[Post('stuff')]
     public function postStuff(
         #[Query('x')] string $stuff,
-        #[Body()] PostStuffDTO $data,
+        #[Body()] PostStuffDto $data,
     ) {
     }
 

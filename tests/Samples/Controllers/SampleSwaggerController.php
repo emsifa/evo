@@ -17,7 +17,7 @@ use Emsifa\Evo\Route\UseGuards;
 use Emsifa\Evo\Swagger\OpenApi\Description;
 use Emsifa\Evo\Swagger\OpenApi\Example;
 use Emsifa\Evo\Swagger\OpenApi\Summary;
-use Emsifa\Evo\Tests\Samples\DTO\SwaggerPostStuffDTO;
+use Emsifa\Evo\Tests\Samples\Dto\SwaggerPostStuffDto;
 use Emsifa\Evo\Tests\Samples\Responses\PostStuffResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleCustomErrorResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleInvalidResponse;
@@ -43,7 +43,7 @@ class SampleSwaggerController extends Controller
         Description('Parameter from path')] float $param,
         #[Query('query_param'),
         Example('query value')] int $query,
-        #[Body] SwaggerPostStuffDTO $dto,
+        #[Body] SwaggerPostStuffDto $dto,
         #[File] UploadedFile $file,
         #[Header('header_param'),
         Example('header value')] string $header = "foo",

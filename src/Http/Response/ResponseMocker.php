@@ -4,8 +4,8 @@ namespace Emsifa\Evo\Http\Response;
 
 use Emsifa\Evo\Contracts\Mockable;
 use Emsifa\Evo\Contracts\ValueFaker;
-use Emsifa\Evo\DTO\FakesCount;
-use Emsifa\Evo\DTO\UseFaker;
+use Emsifa\Evo\Dto\FakesCount;
+use Emsifa\Evo\Dto\UseFaker;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Emsifa\Evo\Helpers\TypeHelper;
 use Emsifa\Evo\ObjectFiller;
@@ -74,8 +74,8 @@ class ResponseMocker
         }
 
         // Resolve object type
-        // For example we got property: public PostDTO $post
-        // This should return mock for PostDTO values
+        // For example we got property: public PostDto $post
+        // This should return mock for PostDto values
         if ($isObject) {
             return $this->generateObjectValue($typeName, $faker, $request, $key);
         }

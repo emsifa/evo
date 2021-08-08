@@ -10,7 +10,7 @@ use Emsifa\Evo\Casters\DateTimeCaster;
 use Emsifa\Evo\Casters\FloatCaster;
 use Emsifa\Evo\Casters\IntCaster;
 use Emsifa\Evo\Casters\StringCaster;
-use Emsifa\Evo\DTO\UseCaster;
+use Emsifa\Evo\Dto\UseCaster;
 use Emsifa\Evo\Helpers\ObjectHelper;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -24,7 +24,7 @@ use Illuminate\Support\Collection;
 #[UseCaster('array', ArrayCaster::class)]
 #[UseCaster(DateTime::class, DateTimeCaster::class)]
 #[UseCaster(Collection::class, CollectionCaster::class)]
-abstract class DTO implements Arrayable
+abstract class Dto implements Arrayable
 {
     public function toArray(): array
     {

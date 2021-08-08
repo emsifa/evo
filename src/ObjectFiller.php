@@ -3,9 +3,9 @@
 namespace Emsifa\Evo;
 
 use Emsifa\Evo\Contracts\Caster;
-use Emsifa\Evo\DTO\CacheCasters;
-use Emsifa\Evo\DTO\CastWith;
-use Emsifa\Evo\DTO\UseCaster;
+use Emsifa\Evo\Dto\CacheCasters;
+use Emsifa\Evo\Dto\CastWith;
+use Emsifa\Evo\Dto\UseCaster;
 use Emsifa\Evo\Exceptions\UndefinedCasterException;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Illuminate\Support\Arr;

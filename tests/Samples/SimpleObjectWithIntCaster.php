@@ -4,7 +4,7 @@ namespace Emsifa\Evo\Tests\Samples;
 
 use DateTime;
 use Emsifa\Evo\Casters\IntCaster;
-use Emsifa\Evo\DTO\UseCaster;
+use Emsifa\Evo\Dto\UseCaster;
 
 #[UseCaster('int', IntCaster::class)]
 class SimpleObjectWithIntCaster

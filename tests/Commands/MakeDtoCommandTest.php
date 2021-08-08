@@ -18,11 +18,11 @@ class MakeDtoCommandTest extends TestCase
 
         $input = new ArgvInput([
             'evo:make-dto',
-            'MyDTO/UserDTO',
+            'MyDto/UserDto',
             'id:int',
             'name:string',
             'email:string',
-            'roles:MyDTO/RoleDTO[]',
+            'roles:MyDto/RoleDto[]',
             'activatedBy:?int',
         ]);
         $output = new BufferedOutput();
@@ -32,10 +32,10 @@ class MakeDtoCommandTest extends TestCase
 
         $command->run($input, $output);
 
-        $this->assertFileExists($outputPath."/DTO/MyDTO/UserDTO.php");
-        $this->assertFileExists($outputPath."/DTO/MyDTO/RoleDTO.php");
+        $this->assertFileExists($outputPath."/Dtos/MyDto/UserDto.php");
+        $this->assertFileExists($outputPath."/Dtos/MyDto/RoleDto.php");
 
-        unlink($outputPath."/DTO/MyDTO/UserDTO.php");
-        unlink($outputPath."/DTO/MyDTO/RoleDTO.php");
+        unlink($outputPath."/Dtos/MyDto/UserDto.php");
+        unlink($outputPath."/Dtos/MyDto/RoleDto.php");
     }
 }

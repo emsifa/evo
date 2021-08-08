@@ -1,13 +1,13 @@
 <?php
 
-namespace Emsifa\Evo\Tests\Samples\DTO;
+namespace Emsifa\Evo\Tests\Samples\Dto;
 
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 use Emsifa\Evo\Swagger\OpenApi\Description;
 use Emsifa\Evo\Swagger\OpenApi\Example;
 
 #[Description("Post stuff data")]
-class SwaggerPostStuffDTO extends DTO
+class SwaggerPostStuffDto extends Dto
 {
     #[Example(18)]
     public int $age;
@@ -18,5 +18,5 @@ class SwaggerPostStuffDTO extends DTO
     #[Example('johndoe@mail.com')]
     public string $email;
 
-    public ChildStuffDTO $child;
+    public ChildStuffDto $child;
 }

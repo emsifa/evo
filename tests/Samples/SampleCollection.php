@@ -3,7 +3,7 @@
 namespace Emsifa\Evo\Tests\Samples;
 
 use Emsifa\Evo\Casters\IntCaster;
-use Emsifa\Evo\DTO\UseCaster;
+use Emsifa\Evo\Dto\UseCaster;
 use Emsifa\Evo\Types\CollectionOf;
 use Illuminate\Support\Collection;
 

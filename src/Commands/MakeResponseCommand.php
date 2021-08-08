@@ -3,7 +3,7 @@
 namespace Emsifa\Evo\Commands;
 
 use Emsifa\Evo\Http\Response\JsonResponse;
-use Emsifa\Evo\Http\Response\ResponseDTO;
+use Emsifa\Evo\Http\Response\ResponseDto;
 use Emsifa\Evo\Http\Response\UseJsonTemplate;
 use Emsifa\Evo\Http\Response\ViewResponse;
 use Emsifa\Evo\Types\ArrayOf;
@@ -58,7 +58,7 @@ class MakeResponseCommand extends Command
         $this->makeDirectory($path);
         $this->files->put($path, $content);
         $filepath = str_replace(app_path(), "", $path);
-        $this->info("Created DTO: {$filepath}");
+        $this->info("Created Dto: {$filepath}");
     }
 
     protected function makeDirectory($path)
@@ -109,7 +109,7 @@ class MakeResponseCommand extends Command
     protected function generateDtoFileContent(string $fullClassName, array $properties): string
     {
         [$namespace, $className] = $this->splitNamespace($fullClassName);
-        $parentClassName = ResponseDTO::class;
+        $parentClassName = ResponseDto::class;
         $extends = $this->getClassName($parentClassName);
 
         $uses = [$parentClassName, ...$this->getUses($properties, $fullClassName)];

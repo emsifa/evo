@@ -6,7 +6,7 @@ use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Emsifa\Evo\ControllerDispatcher;
 use Emsifa\Evo\Tests\Samples\Controllers\SampleController;
 use Emsifa\Evo\Tests\Samples\Controllers\SampleDispatchedController;
-use Emsifa\Evo\Tests\Samples\DTO\PostStuffDTO;
+use Emsifa\Evo\Tests\Samples\Dto\PostStuffDto;
 use Emsifa\Evo\Tests\Samples\Exceptions\CustomException;
 use Emsifa\Evo\Tests\Samples\Responses\SampleCustomErrorResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleErrorResponse;
@@ -53,7 +53,7 @@ class ControllerDispatcherTest extends TestCase
 
         $this->assertEquals('lorem ipsum', $result['stuff']);
 
-        $this->assertInstanceOf(PostStuffDTO::class, $result['data']);
+        $this->assertInstanceOf(PostStuffDto::class, $result['data']);
         $this->assertEquals(20, $result['data']->age);
         $this->assertEquals('John Doe', $result['data']->name);
         $this->assertEquals('johndoe@mail.com', $result['data']->email);

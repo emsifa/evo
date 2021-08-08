@@ -31,7 +31,7 @@ class UserController extends Controller
 
     #[Post]
     public function store(
-        #[Body] CreateUserDTO $data
+        #[Body] CreateUserDto $data
     ): StoreUserResponse
     {
         // your logic goes here
@@ -40,7 +40,7 @@ class UserController extends Controller
     #[Put('{id}')]
     public function update(
         #[Param] int $id,
-        #[Body] UpdateUserDTO $data,
+        #[Body] UpdateUserDto $data,
     ): UpdateUserResponse
     {
         // your logic goes here
@@ -355,24 +355,24 @@ In example above, Evo will get `token` cookie value and inject it to the `$token
 To use `Body` attribute you have to use `DTO` class as the type of your parameter.
 You can create `DTO` class by using `evo:make-dto` command.
 
-In this example, we will inject request body value as `RegisterDTO` instance into `register` method.
+In this example, we will inject request body value as `RegisterDto` instance into `register` method.
 
-First, we have to generate `RegisterDTO` class with following command:
+First, we have to generate `RegisterDto` class with command:
 
 ```bash
-php artisan evo:make-dto RegisterDTO name:string email:string password:string password_confirmation:string
+php artisan evo:make-dto RegisterDto name:string email:string password:string password_confirmation:string
 ```
 
-Then you will get `app/DTO/RegisterDTO.php` file contains code below:
+Then you will get `app/Dtos/RegisterDto.php` file with code like this:
 
 ```php
 <?php
 
-namespace App\DTO;
+namespace App\Dto;
 
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 
-class RegisterDTO extends DTO
+class RegisterDto extends Dto
 {
     public string $name;
     public string $email;
@@ -387,12 +387,12 @@ Now you may want to add some extra validations to each properties. You can do th
 ```php
 <?php
 
-namespace App\DTO;
+namespace App\Dto;
 
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 use Emsifa\Evo\Rules;
 
-class RegisterDTO extends DTO
+class RegisterDto extends Dto
 {
     #[Rules\Required]
     public string $name;
@@ -428,17 +428,17 @@ $request->validate([
 ]);
 ```
 
-After defining validation rules to each properties, you can inject `RegisterDTO` instance to your method like any other attributes before, but with `Body` attribute.
+After defining validation rules to properties, you can inject `RegisterDto` instance to your method like any other attributes before, but with `Body` attribute.
 
 ```php
 #[Post('register')]
-public function register(#[Body] RegisterDTO $dto)
+public function register(#[Body] RegisterDto $dto)
 {
     // ...
 }
 ```
 
-And there you go. Same like any other attributes. Evo will validate each properties, resolving `RegisterDTO` instance, and inject it to `$dto` parameter.
+And there you go. Same like any other attributes. Evo will validate the values, resolving `RegisterDto` instance, and inject it to `$dto` parameter.
 
 #### Uploaded File
 
@@ -454,13 +454,13 @@ To get uploaded file using DTO, you can just add a property with type `Illuminat
 ```php
 <?php
 
-namespace App\DTO;
+namespace App\Dto;
 
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 use Emsifa\Evo\Rules;
 use Illuminate\Http\UploadedFile;
 
-class UpdateProfileDTO extends DTO
+class UpdateProfileDto extends Dto
 {
     #[Rules\Required]
     public string $name;
@@ -480,7 +480,7 @@ If you want directly inject uploaded file instance to your controller method, yo
 ```php
 #[Post('register')]
 public function register(
-    #[Body] RegisterDTO $dto,
+    #[Body] RegisterDto $dto,
     #[File(rules: 'required|mimes:jpeg,png|image')] UploadedFile $avatar,
 )
 {
@@ -605,11 +605,11 @@ By replacing them with DTO, we, Text Editor, and IDE know exactly what it is, wh
 
 But creating DTO instance with PHP native way sometimes can be quite annoying. You have to create an instance, set the value for each properties one by one, also you have to cast its type properly.
 
-That is why Evo provide `Emsifa\Evo\DTO` class that comes with some useful utilities.
+That is why Evo provide `Emsifa\Evo\Dto` class that comes with some useful utilities.
 
-In the [`Body` Attribute](#body-attribute) section, we are creating `RegisterDTO` class that will be injected using `Body` attribute. Yes, the validation process does comes from `Body` attribute, but the ability to create `RegisterDTO` instance with the correct types for its properties is comes from its parent class: `Emsifa\Evo\DTO`.
+In the [`Body` Attribute](#body-attribute) section, we are creating `RegisterDto` class that will be injected using `Body` attribute. Yes, the validation process does comes from `Body` attribute, but the ability to create `RegisterDto` instance with the correct types for its properties is comes from its parent class: `Emsifa\Evo\Dto`.
 
-`Emsifa\Evo\DTO` doing type casting by looking for type casters attached to it. If you look at the source of `Emsifa\Evo\DTO`, you will see something like this:
+`Emsifa\Evo\Dto` doing type casting by looking for type casters attached to it. If you look at the source of `Emsifa\Evo\Dto`, you will see something like this:
 
 ```php
 #[UseCaster('int', IntCaster::class)]
@@ -619,7 +619,7 @@ In the [`Body` Attribute](#body-attribute) section, we are creating `RegisterDTO
 #[UseCaster('array', ArrayCaster::class)]
 #[UseCaster(DateTime::class, DateTimeCaster::class)]
 #[UseCaster(Collection::class, CollectionCaster::class)]
-abstract class DTO implements Arrayable
+abstract class Dto implements Arrayable
 {
     ...
 }
@@ -639,22 +639,22 @@ php artisan evo:make-dto {classname} {...properties}
 
 Argument `classname` is required and `properties` are optional.
 
-For example, to create `LoginDTO` that have `string $email` and `string $password` properties. We should run:
+For example, to create `LoginDto` that have `string $email` and `string $password` properties. We should run:
 
 ```bash
-php artisan evo:make-dto LoginDTO email:string password:string
+php artisan evo:make-dto LoginDto email:string password:string
 ```
 
-It will generate `app/DTO/LoginDTO.php` with following code below:
+It will generate `app/Dtos/LoginDto.php` with code:
 
 ```php
 <?php
 
-namespace App\DTO;
+namespace App\Dto;
 
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 
-class LoginDTO extends DTO
+class LoginDto extends Dto
 {
     public string $email;
     public string $password;
@@ -665,48 +665,48 @@ class LoginDTO extends DTO
 You can also generate nested object by giving the name of the object for the type. For example:
 
 ```bash
-php artisan evo:make-dto SaveProfileDTO name:string contact:ContactDTO address:AddressDTO
+php artisan evo:make-dto SaveProfileDto name:string contact:ContactDto address:AddressDto
 ```
 
 It will generate 3 files below: 
 
-1. `app/DTO/SaveProfileDTO.php`:
+1. `app/Dtos/SaveProfileDto.php`:
     ```php
     <?php
 
-    namespace App\DTO;
+    namespace App\Dto;
 
-    use Emsifa\Evo\DTO;
+    use Emsifa\Evo\Dto;
 
-    class SaveProfileDTO extends DTO
+    class SaveProfileDto extends Dto
     {
         public string $name;
-        public ContactDTO $contact;
-        public AddressDTO $contact;
+        public ContactDto $contact;
+        public AddressDto $contact;
     }
     ```
-2. `app/DTO/ContactDTO.php` (if not exists):
+2. `app/Dtos/ContactDto.php` (if not exists):
     ```php
     <?php
 
-    namespace App\DTO;
+    namespace App\Dto;
 
-    use Emsifa\Evo\DTO;
+    use Emsifa\Evo\Dto;
 
-    class ContactDTO extends DTO
+    class ContactDto extends Dto
     {
     }
     ```
 
-3. `app/DTO/AddressDTO.php` (if not exists):
+3. `app/Dtos/AddressDto.php` (if not exists):
     ```php
     <?php
 
-    namespace App\DTO;
+    namespace App\Dto;
 
-    use Emsifa\Evo\DTO;
+    use Emsifa\Evo\Dto;
 
-    class AddressDTO extends DTO
+    class AddressDto extends Dto
     {
     }
     ```
@@ -714,37 +714,37 @@ It will generate 3 files below:
 You can also generate typed array by adding `[]` sign after type name. For example:
 
 ```bash
-php artisan evo:make-dto CheckoutOrderDTO items:CheckoutItemDTO[]
+php artisan evo:make-dto CheckoutOrderDto items:CheckoutItemDto[]
 ```
 
 It will generate:
 
-1. `app/DTO/CheckoutOrderDTO.php`:
+1. `app/Dtos/CheckoutOrderDto.php`:
 
     ```php
     <?php
 
-    namespace App\DTO;
+    namespace App\Dto;
 
-    use Emsifa\Evo\DTO;
+    use Emsifa\Evo\Dto;
     use Emsifa\Evo\Types\ArrayOf;
 
-    class CheckoutOrderDTO extends DTO
+    class CheckoutOrderDto extends Dto
     {
-        #[ArrayOf(CheckoutItemDTO::class)]
+        #[ArrayOf(CheckoutItemDto::class)]
         public array $items;
     }
     ```
-2. `app/DTO/CheckoutItemDTO.php` (if not exists):
+2. `app/Dtos/CheckoutItemDto.php` (if not exists):
 
     ```php
     <?php
 
-    namespace App\DTO;
+    namespace App\Dto;
 
-    use Emsifa\Evo\DTO;
+    use Emsifa\Evo\Dto;
 
-    class CheckoutItemDTO extends DTO
+    class CheckoutItemDto extends Dto
     {
     }
     ```
@@ -981,21 +981,21 @@ class BoolCaster implements Caster
 }
 ```
 
-Now our `BoolCaster` is done. To use our `BoolCaster`, we can attach `Emsifa\Evo\DTO\UseCaster` attribute to every DTO classes wa want to apply.
+Now our `BoolCaster` is done. To use our `BoolCaster`, we can attach `Emsifa\Evo\Dtos\UseCaster` attribute to our DTO class.
 
-In this example we will attach it to `LoginDTO` class.
+In this example we will attach it to `LoginDto` class.
 
 ```php
 <?php
 
-namespace App\DTO;
+namespace App\Dto;
 
-use Emsifa\Evo\DTO;
-use Emsifa\Evo\DTO\UseCaster;
+use Emsifa\Evo\Dto;
+use Emsifa\Evo\Dtos\UseCaster;
 use App\Casters\BoolCaster;
 
 #[UseCaster('bool', BoolCaster::class)]
-class LoginDTO extends DTO
+class LoginDto extends Dto
 {
     public string $email;
     public string $password;
@@ -1007,24 +1007,24 @@ Now, our `BoolCaster` will be applied to cast `bool $remember` property.
 
 If you want to apply it to all of your DTO classes, you can create your own abstract DTO class to be used as a parent to all of your DTO classes.
 
-For example, create your own `app/DTO/DTO.php` file with code below:
+For example, create your own `app/Dtos/Dto.php` file with code below:
 
 ```php
 <?php
 
-namespace App\DTO;
+namespace App\Dto;
 
-use Emsifa\Evo\DTO as EvoBaseDTO;
-use Emsifa\Evo\DTO\UseCaster;
+use Emsifa\Evo\Dto as EvoBaseDto;
+use Emsifa\Evo\Dtos\UseCaster;
 use App\Casters\BoolCaster;
 
 #[UseCaster('bool', BoolCaster::class)]
-abstract class DTO extends EvoBaseDTO
+abstract class Dto extends EvoBaseDto
 {
 }
 ```
 
-Then in your DTO classes you just have to extends `App\DTO\DTO` class instead of `Emsifa\Evo\DTO`.
+Then in your DTO classes you just have to extends `App\Dtos\Dto` class instead of `Emsifa\Evo\Dto`.
 
 ### Validation
 
@@ -1070,23 +1070,23 @@ For example, if you have controller like this:
 
 ```php
 #[Post('checkout')]
-public function checkout(#[Body] CheckoutOrderDTO $dto)
+public function checkout(#[Body] CheckoutOrderDto $dto)
 {
     // ...
 }
 ```
 
-Where `CheckoutOrderDTO` has properties like this:
+Where `CheckoutOrderDto` has properties like this:
 
 ```php
 <?php
 
-namespace App\DTO;
+namespace App\Dto;
 
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 use Emsifa\Evo\Rules;
 
-class CheckoutOrderDTO extends DTO
+class CheckoutOrderDto extends Dto
 {
     #[Rules\Required]
     #[Rules\Numeric]
@@ -1105,22 +1105,22 @@ class CheckoutOrderDTO extends DTO
     #[Rules\Size(5)]
     public string $postal_code;
 
-    #[ArrayOf(CheckoutOrderItemDTO::class)]
+    #[ArrayOf(CheckoutOrderItemDto::class)]
     public array $items;
 }
 ```
 
-And `CheckoutOrderItemDTO` like this:
+And `CheckoutOrderItemDto` like this:
 
 ```php
 <?php
 
-namespace App\DTO;
+namespace App\Dto;
 
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 use Emsifa\Evo\Rules;
 
-class CheckoutOrderItemDTO extends DTO
+class CheckoutOrderItemDto extends Dto
 {
     #[Rules\Required]
     #[Rules\Exists('products', 'id')]
@@ -1188,13 +1188,13 @@ That's it! now you can attach it to your DTO's property like this:
 ```php
 <?php
 
-namespace App\DTO;
+namespace App\Dto;
 
-use Emsifa\Evo\DTO;
+use Emsifa\Evo\Dto;
 use Emsifa\Evo\Rules;
 use App\Rules\Bit;
 
-class MyDTO extends DTO
+class MyDto extends Dto
 {
     #[Rules\Required]
     #[Bit]
@@ -1204,7 +1204,7 @@ class MyDTO extends DTO
 
 ### Using Response
 
-Evo provide custom response class `Emsifa\Evo\Http\Response\JsonResponse` and `Emsifa\Evo\Http\Response\ViewResponse` that is inherit from `Emsifa\Evo\DTO` class.
+Evo provide custom response class `Emsifa\Evo\Http\Response\JsonResponse` and `Emsifa\Evo\Http\Response\ViewResponse` that is inherit from `Emsifa\Evo\Dto` class.
 They are all implements `Illuminate\Contracts\Support\Responsable`, so that they can be transformed to HTTP response.
 
 You can extend them to your response classes then use your response classes as return type of your controller action to get these benefits below:
@@ -1256,7 +1256,7 @@ To use `StoreTodoResponse` you need to put it as return type, then in your contr
 
 ```php
 #[Post]
-public function store(#[Body] StoreTodoDTO $dto): StoreTodoResponse
+public function store(#[Body] StoreTodoDto $dto): StoreTodoResponse
 {
     $todo = Todo::create($dto);
 
@@ -1273,10 +1273,10 @@ In this example we will create view response in Evo's way.
 First let's generate our response view with following command:
 
 ```bash
-php artisan evo:make-response EditTodoResponse todo:TodoDTO --view
+php artisan evo:make-response EditTodoResponse todo:TodoDto --view
 ```
 
-Since you put `TodoDTO` type there, it will generate 2 files below:
+Since you put `TodoDto` type there, it will generate 2 files below:
 
 1. `app/Http/Responses/EditTodoResponse`:
 
@@ -1291,24 +1291,24 @@ Since you put `TodoDTO` type there, it will generate 2 files below:
     #[UseView('edit-todo')]
     class EditTodoResponse extends ViewResponse
     {
-        public TodoDTO $todo;
+        public TodoDto $todo;
     }
     ```
-2. `app/Http/Responses/TodoDTO`:
+2. `app/Http/Responses/TodoDto`:
 
     ```php
     <?php
 
     namespace App\Http\Responses;
 
-    use Emsifa\Evo\Http\Response\ResponseDTO;
+    use Emsifa\Evo\Http\Response\ResponseDto;
 
-    class TodoDTO extends ResponseDTO
+    class TodoDto extends ResponseDto
     {
     }
     ```
 
-`UseView` attribute above is used to identify what view file should be rendered, and the data passed to the view is its properties, in this case `$todo` that is `TodoDTO` instance.
+`UseView` attribute above is used to identify what view file should be rendered, and the data passed to the view is its properties, in this case `$todo` that is `TodoDto` instance.
 
 Now, let's edit `TodoDTO` with following properties:
 
@@ -1342,7 +1342,7 @@ public function edit(#[Param] int $id): EditTodoResponse
 }
 ```
 
-Yes, Evo will automatically transform your `Todo` model into `TodoDTO` instance. Means it will map `id`, `title`, `is_completed`, `created_at`, and `updated_at` value from database into `TodoDTO` instance properties. 
+Yes, Evo will automatically transform your `Todo` model into `TodoDto` instance.
 
 #### Define Response Status
 
@@ -1524,7 +1524,7 @@ This time Evo will not render any endpoint to Swagger UI because Evo will only r
 Let's create DTO and JsonResponse class for our `postSomething` method by running following commands.
 
 ```php
-php artisan evo:make-dto PostSomethingDTO number:int message:string
+php artisan evo:make-dto PostSomethingDto number:int message:string
 php artisan evo:make-response PostSomethingResponse number:int message:string
 ```
 
@@ -1538,7 +1538,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Emsifa\Evo\Route\Post;
 use Emsifa\Evo\Route\RoutePrefix;
-use App\DTO\PostSomethingDTO;
+use App\Dtos\PostSomethingDto;
 use App\Http\Responses\PostSomethingResponse;
 
 #[RoutePrefix('examples')]
@@ -1546,7 +1546,7 @@ class ExampleController extends Controller
 {
     #[Post('post-something')]
     public function postSomething(
-        #[Body] PostSomethingDTO $dto
+        #[Body] PostSomethingDto $dto
     ): PostSomethingResponse
     {
         return PostSomethingResponse::fromArray($dto);
@@ -1616,7 +1616,7 @@ class ExampleController extends Controller
     #[Post('post-something')]
     #[Summary('Post Something')]
     public function postSomething(
-        #[Body] PostSomethingDTO $dto
+        #[Body] PostSomethingDto $dto
     ): PostSomethingResponse
     {
         return PostSomethingResponse::fromArray($dto);
@@ -1744,7 +1744,7 @@ use Illuminate\Http\Request;
 use Emsifa\Evo\Route\Post;
 use Emsifa\Evo\Route\RoutePrefix;
 use Emsifa\Evo\Http\Response\Mock;
-use App\DTO\PostSomethingDTO;
+use App\Dtos\PostSomethingDto;
 use App\Http\Responses\PostSomethingResponse;
 
 #[RoutePrefix('examples')]
@@ -1753,7 +1753,7 @@ class ExampleController extends Controller
     #[Post('post-something')]
     #[Mock]
     public function postSomething(
-        #[Body] PostSomethingDTO $dto
+        #[Body] PostSomethingDto $dto
     ): PostSomethingResponse
     {
         return PostSomethingResponse::fromArray($dto);
@@ -1773,7 +1773,7 @@ Behind the scene Evo uses Faker to generate mock data. By default Evo choosing f
 
 For example, if you have `$name` property, Evo will use `$faker->name()`. For `$title` property, Evo will use `$faker->title()`. For `float $latitude`, Evo will use `$faker->latitude()`. If the property name doesn't have related faker formatter available, Evo will choose faker formatter by it's data type.
 
-If you want to use another faker instead of default choosed faker. You can use `Emsifa\Evo\DTO\UseFaker` to define what formatter you want to use.
+If you want to use another faker instead of default choosed faker. You can use `Emsifa\Evo\Dtos\UseFaker` to define what formatter you want to use.
 
 For example, we will use `paragraph(5)` formatter to `$message` property.
 
@@ -1784,7 +1784,7 @@ Here is the code:
 
 namespace App\Http\Responses;
 
-use Emsifa\Evo\DTO\UseFaker;
+use Emsifa\Evo\Dtos\UseFaker;
 use Emsifa\Evo\Http\Response\JsonResponse;
 
 #[Description("Post something succeed")]
@@ -1841,7 +1841,7 @@ Now to use it, we will add new `$meal` property to our `PostSomethingResponse`, 
 
 namespace App\Http\Responses;
 
-use Emsifa\Evo\DTO\UseFaker;
+use Emsifa\Evo\Dtos\UseFaker;
 use Emsifa\Evo\Http\Response\JsonResponse;
 use Emsifa\Fakers\MealsFaker;
 
@@ -1872,8 +1872,8 @@ For example, we will add `$numbers` property to `PostSomethingResponse` that is 
 
 namespace App\Http\Responses;
 
-use Emsifa\Evo\DTO\UseFaker;
-use Emsifa\Evo\DTO\FakesCount;
+use Emsifa\Evo\Dtos\UseFaker;
+use Emsifa\Evo\Dtos\FakesCount;
 use Emsifa\Evo\Types\ArrayOf;
 use Emsifa\Evo\Http\Response\JsonResponse;
 use Emsifa\Fakers\MealsFaker;
