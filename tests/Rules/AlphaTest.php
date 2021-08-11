@@ -6,7 +6,6 @@ use Emsifa\Evo\Rules\Alpha;
 
 class AlphaTest extends TestCase
 {
-
     public function validateProvider()
     {
         return [
