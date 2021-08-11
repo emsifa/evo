@@ -6,7 +6,6 @@ use Emsifa\Evo\Rules\Accepted;
 
 class AcceptedTest extends TestCase
 {
-
     public function validateProvider()
     {
         return [
