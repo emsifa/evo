@@ -6,7 +6,6 @@ use Emsifa\Evo\Rules\ActiveUrl;
 
 class ActiveUrlTest extends TestCase
 {
-
     public function validateProvider()
     {
         return [
