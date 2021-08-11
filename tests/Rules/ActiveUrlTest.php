@@ -28,7 +28,7 @@ class ActiveUrlTest extends TestCase
 
     public function testOverrideMessage()
     {
-        $message = 'opps value must be accepted';
+        $message = 'oppss invalid value';
         $accepted = new ActiveUrl($message);
 
         $this->assertEquals($message, $accepted->message());
