@@ -11,7 +11,7 @@ class ActiveUrlTest extends TestCase
         return [
             ['https://www.google.com', true],
             ['https://www.facebook.com', true],
-            ['http://just.a.random.url.co', true],
+            ['http://just.a.random.url.co', false],
         ];
     }
 
