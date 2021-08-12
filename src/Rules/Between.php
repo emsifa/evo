@@ -3,17 +3,13 @@
 namespace Emsifa\Evo\Rules;
 
 use Attribute;
-use Emsifa\Evo\Rules\Concerns\GetSizeType;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Between implements Rule
+class Between extends SizeRule implements Rule
 {
     use ValidatesAttributes;
-    use GetSizeType;
-
-    protected ?string $type = null;
 
     public function __construct(
         protected int $min,
@@ -31,6 +27,9 @@ class Between implements Rule
 
     public function message()
     {
-        return __($this->message) ?: __("validation.between.{$this->type}", ['max' => $this->max]);
+        $params = ['min' => $this->min, 'max' => $this->max];
+
+        return __($this->message, $params)
+            ?: __("validation.between.{$this->type}", $params);
     }
 }

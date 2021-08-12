@@ -24,8 +24,8 @@ class ArrayWith implements Rule
 
     public function message()
     {
-        return __($this->message)
-            ?: __('validation.array_with', ['keys' => implode(", ", $this->keys)])
-            ?: __('validation.array');
+        $fallback = trans()->has('validation.array_with') ? 'validation.array_with' : 'validation.array';
+
+        return __($this->message) ?: __($fallback, ['keys' => implode(", ", $this->keys)]);
     }
 }
