@@ -3,17 +3,13 @@
 namespace Emsifa\Evo\Rules;
 
 use Attribute;
-use Emsifa\Evo\Rules\Concerns\GetSizeType;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Size implements Rule
+class Size extends SizeRule implements Rule
 {
     use ValidatesAttributes;
-    use GetSizeType;
-
-    protected string $type;
 
     public function __construct(
         protected int | float $size,
