@@ -33,7 +33,7 @@ class EmailTest extends TestCase
     public function testOverrideMessage()
     {
         $message = 'oppss invalid value';
-        $accepted = new Email(10, message: $message);
+        $accepted = new Email(message: $message);
 
         $this->assertEquals($message, $accepted->message());
     }
