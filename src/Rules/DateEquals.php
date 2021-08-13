@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class DateEquals implements Rule
+class DateEquals extends DateRule implements Rule
 {
     use ValidatesAttributes;
 
