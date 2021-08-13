@@ -11,8 +11,6 @@ class Max extends SizeRule implements Rule
 {
     use ValidatesAttributes;
 
-    protected ?string $type = null;
-
     public function __construct(
         protected int $max,
         protected string $message = '',
