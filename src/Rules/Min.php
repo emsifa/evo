@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Min implements Rule
+class Min extends SizeRule implements Rule
 {
     use ValidatesAttributes;
     use GetSizeType;
@@ -30,6 +30,6 @@ class Min implements Rule
 
     public function message()
     {
-        return __($this->message) ?: __("validation.between.{$this->type}", ['min' => $this->min]);
+        return __($this->message) ?: __("validation.min.{$this->type}", ['min' => $this->min]);
     }
 }
