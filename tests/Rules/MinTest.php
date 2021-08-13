@@ -12,10 +12,12 @@ class MinTest extends TestCase
             [10, true],
             [11, true],
             [100, true],
+            ["abcdefghij", true],
+            [range(1, 10), true],
             [9.9, false],
             [9, false],
-            [0, false],
-            ["string", false],
+            ["abcdefghi", false],
+            [range(1, 9), false],
         ];
     }
 
