@@ -3,7 +3,6 @@
 namespace Emsifa\Evo\Rules;
 
 use Attribute;
-use Emsifa\Evo\Rules\Concerns\GetSizeType;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
@@ -11,7 +10,6 @@ use Illuminate\Validation\Concerns\ValidatesAttributes;
 class Max extends SizeRule implements Rule
 {
     use ValidatesAttributes;
-    use GetSizeType;
 
     protected ?string $type = null;
 
