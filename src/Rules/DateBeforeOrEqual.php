@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class DateBeforeOrEqual implements Rule
+class DateBeforeOrEqual extends DateRule implements Rule
 {
     use ValidatesAttributes;
 
@@ -19,7 +19,7 @@ class DateBeforeOrEqual implements Rule
 
     public function passes($attribute, $value)
     {
-        return $this->validateBeforeOrEqual($attribute, $value, $this->date);
+        return $this->validateBeforeOrEqual($attribute, $value, [$this->date]);
     }
 
     public function message()
