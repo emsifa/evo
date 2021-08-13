@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Max implements Rule
+class Max extends SizeRule implements Rule
 {
     use ValidatesAttributes;
     use GetSizeType;
@@ -30,6 +30,6 @@ class Max implements Rule
 
     public function message()
     {
-        return __($this->message) ?: __("validation.between.{$this->type}", ['max' => $this->max]);
+        return __($this->message) ?: __("validation.max.{$this->type}", ['max' => $this->max]);
     }
 }
