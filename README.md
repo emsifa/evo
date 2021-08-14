@@ -56,7 +56,7 @@ Also, by defining input and output type in this way, not only you and your teamm
 
 ## Features
 
-* [x] [Register Routes Using Attribute](#register-route).
+* [x] [Register routes using attributes](#register-route).
 * [x] [Apply middleware using attribute](#applying-middleware). 
 * [x] [Route prefixing using attribute](#route-prefixing). 
 * [x] [Inject request data (Header, Param, Cookie, Body, Query) into parameters using attribute](#accessing-request-value).
