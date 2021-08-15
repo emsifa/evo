@@ -86,7 +86,6 @@ class Body implements RequestGetter, RequestValidator, OpenApiRequestBody
         $rules = ValidatorHelper::getRulesFromClass(new ReflectionClass($typeName), data: new ValidationData($data));
 
         if (! empty($rules)) {
-
             Validator::make($data, $rules)->validate();
         }
     }
