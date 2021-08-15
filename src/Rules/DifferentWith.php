@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Different extends RuleWithData implements Rule
+class DifferentWith extends RuleWithData implements Rule
 {
     use ValidatesAttributes;
 

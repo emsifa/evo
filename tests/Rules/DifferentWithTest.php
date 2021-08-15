@@ -2,11 +2,11 @@
 
 namespace Emsifa\Evo\Tests;
 
-use Emsifa\Evo\Rules\Different;
+use Emsifa\Evo\Rules\DifferentWith;
 use Emsifa\Evo\ValidationData;
 use Illuminate\Support\Facades\Validator;
 
-class DifferentTest extends TestCase
+class DifferentWithTest extends TestCase
 {
     public function testItShouldBeInvalidWhenOtherValueIsSame()
     {
@@ -15,7 +15,7 @@ class DifferentTest extends TestCase
             'b' => 'lorem',
         ];
 
-        $rule = new Different('a');
+        $rule = new DifferentWith('a');
         $rule->setData(new ValidationData($data));
 
         $validator = Validator::make($data, [
@@ -32,7 +32,7 @@ class DifferentTest extends TestCase
             'b' => 'different',
         ];
 
-        $rule = new Different('a');
+        $rule = new DifferentWith('a');
         $rule->setData(new ValidationData($data));
 
         $validator = Validator::make($data, [
@@ -45,14 +45,14 @@ class DifferentTest extends TestCase
     public function testOverrideMessage()
     {
         $message = 'oppss invalid value';
-        $accepted = new Different('a', $message);
+        $accepted = new DifferentWith('a', $message);
 
         $this->assertEquals($message, $accepted->message());
     }
 
     public function testFallbackMessage()
     {
-        $accepted = new Different('a');
+        $accepted = new DifferentWith('a');
 
         $this->assertEquals(__('validation.different', ['other' => 'a']), $accepted->message());
     }
