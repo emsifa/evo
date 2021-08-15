@@ -25,6 +25,23 @@ class ConfirmedTest extends TestCase
         $this->assertFalse($validator->fails());
     }
 
+    public function testItShouldBeInvalidWhenConfirmedValueIsDifferent()
+    {
+        $data = [
+            'password' => 'lorem',
+            'password_confirmation' => 'different',
+        ];
+
+        $confirmedRule = new Confirmed;
+        $confirmedRule->setData(new ValidationData($data));
+
+        $validator = Validator::make($data, [
+            'password' => [$confirmedRule],
+        ]);
+
+        $this->assertTrue($validator->fails());
+    }
+
     public function testOverrideMessage()
     {
         $message = 'opps value must be accepted';
