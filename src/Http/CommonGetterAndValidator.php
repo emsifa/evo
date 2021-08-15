@@ -3,6 +3,7 @@
 namespace Emsifa\Evo\Http;
 
 use Emsifa\Evo\Helpers\ValidatorHelper;
+use Emsifa\Evo\ValidationData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use ReflectionParameter;
@@ -55,12 +56,12 @@ abstract class CommonGetterAndValidator
     public function validateRequest(Request $request, ReflectionProperty | ReflectionParameter $reflection)
     {
         $key = $this->getKey($reflection);
+        $data = [$key => $this->getValue($request, $key)];
         $rules = $this->rules
             ? [$key => $this->rules]
-            : ValidatorHelper::getRulesFromReflection($reflection, $key);
+            : ValidatorHelper::getRulesFromReflection($reflection, $key, new ValidationData($data));
 
         if (! empty($rules)) {
-            $data = [$key => $this->getValue($request, $key)];
             Validator::make($data, $rules)->validate();
         }
     }

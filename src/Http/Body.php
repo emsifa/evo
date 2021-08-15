@@ -10,6 +10,7 @@ use Emsifa\Evo\Dto;
 use Emsifa\Evo\Helpers\ValidatorHelper;
 use Emsifa\Evo\Http\Concerns\OpenApiRequestBodyMaker;
 use Emsifa\Evo\ObjectFiller;
+use Emsifa\Evo\ValidationData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
@@ -81,10 +82,11 @@ class Body implements RequestGetter, RequestValidator, OpenApiRequestBody
             return;
         }
 
-        $rules = ValidatorHelper::getRulesFromClass(new ReflectionClass($typeName));
+        $data = $this->getMergedInputsAndFiles($request);
+        $rules = ValidatorHelper::getRulesFromClass(new ReflectionClass($typeName), data: new ValidationData($data));
 
         if (! empty($rules)) {
-            $data = $this->getMergedInputsAndFiles($request);
+
             Validator::make($data, $rules)->validate();
         }
     }
