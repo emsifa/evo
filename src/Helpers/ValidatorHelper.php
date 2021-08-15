@@ -3,7 +3,9 @@
 namespace Emsifa\Evo\Helpers;
 
 use DateTime;
+use Emsifa\Evo\Rules\RuleWithData;
 use Emsifa\Evo\Types\ArrayOf;
+use Emsifa\Evo\ValidationData;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Collection;
 use ReflectionAttribute;
@@ -13,16 +15,16 @@ use ReflectionProperty;
 
 class ValidatorHelper
 {
-    public static function getRulesFromReflection(ReflectionClass | ReflectionProperty | ReflectionParameter $reflection, string $keyAlias = ''): array
+    public static function getRulesFromReflection(ReflectionClass | ReflectionProperty | ReflectionParameter $reflection, string $keyAlias = '', ?ValidationData $data = null): array
     {
         if ($reflection instanceof ReflectionClass) {
-            return static::getRulesFromClass($reflection);
+            return static::getRulesFromClass($reflection, $data);
         }
 
-        return static::getRulesFromParameterOrProperty($reflection, $keyAlias);
+        return static::getRulesFromParameterOrProperty($reflection, $keyAlias, $data);
     }
 
-    public static function getRulesFromParameterOrProperty(ReflectionProperty | ReflectionParameter $reflection, string $keyAlias = '')
+    public static function getRulesFromParameterOrProperty(ReflectionProperty | ReflectionParameter $reflection, string $keyAlias = '', ?ValidationData $data = null)
     {
         $keyName = $keyAlias ?: $reflection->getName();
         $rules = [];
@@ -37,19 +39,24 @@ class ValidatorHelper
 
         $rulesFromAttributes = ReflectionHelper::getAttributesInstances($reflection, Rule::class, ReflectionAttribute::IS_INSTANCEOF);
         if ($rulesFromAttributes) {
+            foreach ($rulesFromAttributes as $rule) {
+                if ($data && $rule instanceof RuleWithData) {
+                    $rule->setData($data);
+                }
+            }
             $rules = array_merge($rules, $rulesFromAttributes);
         }
 
         return static::resolveRules($rules, $keyName);
     }
 
-    public static function getRulesFromClass(ReflectionClass $class): array
+    public static function getRulesFromClass(ReflectionClass $class, ?ValidationData $data = null): array
     {
         $rules = [];
         $props = $class->getProperties(ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
             $key = $prop->getName();
-            $propRules = static::getRulesFromReflection($prop);
+            $propRules = static::getRulesFromReflection($prop, data: $data);
             $rules = array_merge($rules, $propRules);
         }
 
