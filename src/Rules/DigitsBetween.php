@@ -20,11 +20,11 @@ class DigitsBetween implements Rule
 
     public function passes($attribute, $value)
     {
-        return $this->validateDigits($attribute, $value, [$this->min, $this->max]);
+        return $this->validateDigitsBetween($attribute, $value, [$this->min, $this->max]);
     }
 
     public function message()
     {
-        return __($this->message) ?: __('validation.digits', ['min' => $this->min, 'max' => $this->max]);
+        return __($this->message) ?: __('validation.digits_between', ['min' => $this->min, 'max' => $this->max]);
     }
 }

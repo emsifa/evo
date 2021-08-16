@@ -2,41 +2,41 @@
 
 namespace Emsifa\Evo\Tests;
 
-use Emsifa\Evo\Rules\Confirmed;
+use Emsifa\Evo\Rules\InArray;
 use Emsifa\Evo\ValidationData;
 use Illuminate\Support\Facades\Validator;
 
-class ConfirmedTest extends TestCase
+class InArrayTest extends TestCase
 {
-    public function testItShouldBeValidWhenConfirmedValueIsSame()
+    public function testItShouldBeValidWhenValueExists()
     {
         $data = [
-            'password' => 'lorem',
-            'password_confirmation' => 'lorem',
+            'x' => 'lorem',
+            'arr' => ['lorem', 'ipsum', 'dolor'],
         ];
 
-        $rule = new Confirmed;
+        $rule = new InArray('arr.*');
         $rule->setData(new ValidationData($data));
 
         $validator = Validator::make($data, [
-            'password' => [$rule],
+            'x' => [$rule],
         ]);
 
         $this->assertFalse($validator->fails());
     }
 
-    public function testItShouldBeInvalidWhenConfirmedValueIsDifferent()
+    public function testItShouldBeInvalidWhenValueIsNotExists()
     {
         $data = [
-            'password' => 'lorem',
-            'password_confirmation' => 'different',
+            'x' => 'lorem',
+            'arr' => ['foo', 'bar', 'baz'],
         ];
 
-        $rule = new Confirmed;
+        $rule = new InArray('arr.*');
         $rule->setData(new ValidationData($data));
 
         $validator = Validator::make($data, [
-            'password' => [$rule],
+            'x' => [$rule],
         ]);
 
         $this->assertTrue($validator->fails());
@@ -45,15 +45,15 @@ class ConfirmedTest extends TestCase
     public function testOverrideMessage()
     {
         $message = 'opps invalid value';
-        $rule = new Confirmed($message);
+        $rule = new InArray('foo', $message);
 
         $this->assertEquals($message, $rule->message());
     }
 
     public function testFallbackMessage()
     {
-        $rule = new Confirmed();
+        $rule = new InArray('foo');
 
-        $this->assertEquals(__('validation.confirmed'), $rule->message());
+        $this->assertEquals(__('validation.in_array', ['other' => 'foo']), $rule->message());
     }
 }
