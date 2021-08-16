@@ -2,7 +2,6 @@
 
 namespace Emsifa\Evo\Tests;
 
-use Emsifa\Evo\Rules\In;
 use Emsifa\Evo\Rules\InArray;
 use Emsifa\Evo\ValidationData;
 use Illuminate\Support\Facades\Validator;
@@ -13,7 +12,7 @@ class InArrayTest extends TestCase
     {
         $data = [
             'x' => 'lorem',
-            'arr' => ['lorem', 'ipsum', 'dolor']
+            'arr' => ['lorem', 'ipsum', 'dolor'],
         ];
 
         $rule = new InArray('arr.*');

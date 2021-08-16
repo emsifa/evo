@@ -3,7 +3,6 @@
 namespace Emsifa\Evo\Tests;
 
 use Emsifa\Evo\Rules\NotIn;
-use Emsifa\Evo\ValidationData;
 use Illuminate\Support\Facades\Validator;
 
 class NotInTest extends TestCase

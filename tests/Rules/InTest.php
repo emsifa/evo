@@ -3,7 +3,6 @@
 namespace Emsifa\Evo\Tests;
 
 use Emsifa\Evo\Rules\In;
-use Emsifa\Evo\ValidationData;
 use Illuminate\Support\Facades\Validator;
 
 class InTest extends TestCase
