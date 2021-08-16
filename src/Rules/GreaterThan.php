@@ -25,7 +25,10 @@ class GreaterThan extends RuleWithData implements Rule
 
         $other = $this->getValue($this->field);
 
-        return $this->getSize($value) > $this->getSize($other);
+        $valueSize = $this->getSize($value);
+        $otherSize = $this->getSize($other);
+
+        return $valueSize > $otherSize;
     }
 
     public function message()
