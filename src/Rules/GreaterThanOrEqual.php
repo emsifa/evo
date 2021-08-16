@@ -3,15 +3,13 @@
 namespace Emsifa\Evo\Rules;
 
 use Attribute;
-use Emsifa\Evo\Rules\Concerns\GetSizeType;
+use Emsifa\Evo\Rules\Concerns\SizeUtilities;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class GreaterThanOrEqual implements Rule
+class GreaterThanOrEqual extends RuleWithData implements Rule
 {
-    use ValidatesAttributes;
-    use GetSizeType;
+    use SizeUtilities;
 
     protected string $type;
 
@@ -25,7 +23,12 @@ class GreaterThanOrEqual implements Rule
     {
         $this->type = $this->getSizeType($value);
 
-        return $this->validateGte($attribute, $value, [$this->field]);
+        $other = $this->getValue($this->field);
+
+        $valueSize = $this->getSize($value);
+        $otherSize = $this->getSize($other);
+
+        return $valueSize >= $otherSize;
     }
 
     public function message()
