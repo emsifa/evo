@@ -8,7 +8,7 @@ trait SizeUtilities
 {
     public function getSize($value)
     {
-        return match($this->getSizeType($value)) {
+        return match ($this->getSizeType($value)) {
             "numeric" => $value,
             "string" => strlen($value),
             "array" => count($value),
