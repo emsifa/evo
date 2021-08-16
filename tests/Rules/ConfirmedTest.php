@@ -15,11 +15,11 @@ class ConfirmedTest extends TestCase
             'password_confirmation' => 'lorem',
         ];
 
-        $confirmedRule = new Confirmed;
-        $confirmedRule->setData(new ValidationData($data));
+        $rule = new Confirmed;
+        $rule->setData(new ValidationData($data));
 
         $validator = Validator::make($data, [
-            'password' => [$confirmedRule],
+            'password' => [$rule],
         ]);
 
         $this->assertFalse($validator->fails());
@@ -32,11 +32,11 @@ class ConfirmedTest extends TestCase
             'password_confirmation' => 'different',
         ];
 
-        $confirmedRule = new Confirmed;
-        $confirmedRule->setData(new ValidationData($data));
+        $rule = new Confirmed;
+        $rule->setData(new ValidationData($data));
 
         $validator = Validator::make($data, [
-            'password' => [$confirmedRule],
+            'password' => [$rule],
         ]);
 
         $this->assertTrue($validator->fails());
@@ -44,16 +44,16 @@ class ConfirmedTest extends TestCase
 
     public function testOverrideMessage()
     {
-        $message = 'opps value must be accepted';
-        $accepted = new Confirmed($message);
+        $message = 'opps invalid value';
+        $rule = new Confirmed($message);
 
-        $this->assertEquals($message, $accepted->message());
+        $this->assertEquals($message, $rule->message());
     }
 
     public function testFallbackMessage()
     {
-        $accepted = new Confirmed();
+        $rule = new Confirmed();
 
-        $this->assertEquals(__('validation.confirmed'), $accepted->message());
+        $this->assertEquals(__('validation.confirmed'), $rule->message());
     }
 }
