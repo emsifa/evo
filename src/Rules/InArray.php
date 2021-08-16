@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class InArray implements Rule
+class InArray extends RuleWithData implements Rule
 {
     use ValidatesAttributes;
 
