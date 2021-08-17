@@ -29,11 +29,14 @@ class RequiredIfTest extends TestCase
     {
         $data = [
             'foo' => '',
-            'bar' => '10'
+            'bar' => '12'
         ];
 
+        $rule = new RequiredIf('bar', '10');
+        $rule->setData(new ValidationData($data));
+
         $validator = Validator::make($data, [
-            'foo' => [new RequiredIf('bar', '10')],
+            'foo' => [$rule],
         ]);
 
         $this->assertFalse($validator->fails());
