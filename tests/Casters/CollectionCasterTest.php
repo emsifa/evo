@@ -92,4 +92,14 @@ class CollectionCasterTest extends TestCase
         $output = $caster->cast($input, $prop);
         $this->assertEquals(collect([1,2,"three",4]), $output);
     }
+
+    public function testCastNullablePropertyWithNullValueShouldReturnsNull()
+    {
+        $prop = new ReflectionProperty(SampleCollection::class, 'nullableCollection');
+        $input = null;
+        $caster = new CollectionCaster;
+        $result = $caster->cast($input, $prop);
+
+        $this->assertNull($result);
+    }
 }
