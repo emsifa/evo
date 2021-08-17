@@ -30,6 +30,6 @@ class RequiredWith extends RuleWithData implements Rule, ImplicitRule
 
     public function message()
     {
-        return __($this->message) ?: __("validation.required_with", ['other' => $this->field, 'values' => implode(", ", $this->getParameters())]);
+        return __($this->message) ?: __("validation.required_with", ['values' => implode(", ", $this->getParameters())]);
     }
 }

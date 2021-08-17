@@ -25,6 +25,24 @@ class RequiredWithTest extends TestCase
         $this->assertTrue($validator->fails(), "Validation should be fails because foo is empty while bar is not empty.");
     }
 
+    public function testItShouldBeRequiredIfOneOfOtherValueIsNotEmpty()
+    {
+        $data = [
+            'foo' => '',
+            'bar' => '',
+            'baz' => '13'
+        ];
+
+        $rule = new RequiredWith(['bar', 'baz']);
+        $rule->setData(new ValidationData($data));
+
+        $validator = Validator::make($data, [
+            'foo' => [$rule],
+        ]);
+
+        $this->assertTrue($validator->fails(), "Validation should be fails because foo is empty while bar is not empty.");
+    }
+
     public function testItShouldNotRequiredIfOtherValueIsExists()
     {
         $data = [
