@@ -4,13 +4,7 @@ namespace Emsifa\Evo\Tests;
 
 use Emsifa\Evo\Rules\Exists;
 use Emsifa\Evo\Tests\Samples\MockPresenceVerifier;
-use Illuminate\Database\Connection;
-use Illuminate\Http\File;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\PresenceVerifierInterface;
-use Mockery;
 
 class ExistsTest extends TestCase
 {

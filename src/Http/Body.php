@@ -15,7 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\DatabasePresenceVerifier;
-use Illuminate\Validation\DatabasePresenceVerifierInterface;
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionProperty;

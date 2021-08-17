@@ -22,8 +22,7 @@ class ValidatorHelper
         string $keyAlias = '',
         ?ValidationData $data = null,
         ?PresenceVerifierInterface $presenceVerifier = null,
-    ): array
-    {
+    ): array {
         if ($reflection instanceof ReflectionClass) {
             return static::getRulesFromClass($reflection, $data);
         }
@@ -36,8 +35,7 @@ class ValidatorHelper
         string $keyAlias = '',
         ?ValidationData $data = null,
         ?PresenceVerifierInterface $presenceVerifier = null,
-    )
-    {
+    ) {
         $keyName = $keyAlias ?: $reflection->getName();
         $rules = [];
 
@@ -69,8 +67,7 @@ class ValidatorHelper
         ReflectionClass $class,
         ?ValidationData $data = null,
         ?PresenceVerifierInterface $presenceVerifier = null,
-    ): array
-    {
+    ): array {
         $rules = [];
         $props = $class->getProperties(ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
