@@ -29,7 +29,7 @@ class RequiredIfTest extends TestCase
     {
         $data = [
             'foo' => '',
-            'bar' => '12'
+            'bar' => '12',
         ];
 
         $rule = new RequiredIf('bar', '10');
