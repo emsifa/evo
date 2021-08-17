@@ -12,7 +12,7 @@ class RequiredUnlessTest extends TestCase
     {
         $data = [
             'foo' => '',
-            'bar' => '12'
+            'bar' => '12',
         ];
 
         $rule = new RequiredUnless('bar', '10');
@@ -29,7 +29,7 @@ class RequiredUnlessTest extends TestCase
     {
         $data = [
             'foo' => '',
-            'bar' => '10'
+            'bar' => '10',
         ];
 
         $rule = new RequiredUnless('bar', '10');
