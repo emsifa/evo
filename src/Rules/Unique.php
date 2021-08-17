@@ -3,13 +3,19 @@
 namespace Emsifa\Evo\Rules;
 
 use Attribute;
+use Emsifa\Evo\Contracts\HasPresenceVerifier;
+use Emsifa\Evo\Rules\Concerns\PresenceVerifier;
+use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Unique implements Rule
+class Unique implements Rule, ImplicitRule, HasPresenceVerifier
 {
     use ValidatesAttributes;
+    use PresenceVerifier;
+
+    protected $currentRule = '';
 
     public function __construct(
         protected string $table,
@@ -22,7 +28,7 @@ class Unique implements Rule
 
     public function passes($attribute, $value)
     {
-        return $this->validateUnique($attribute, $value, [$this->table, $this->colum, $this->except, $this->idColumn]);
+        return $this->validateUnique($attribute, $value, [$this->table, $this->column, $this->except, $this->idColumn]);
     }
 
     public function message()
