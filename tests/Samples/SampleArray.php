@@ -37,4 +37,7 @@ class SampleArray
 
     #[ArrayOf(SampleArrayChildObject::class)]
     public array $childs;
+
+    #[ArrayOf('int')]
+    public ?array $nullableArr;
 }

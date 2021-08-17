@@ -19,6 +19,16 @@ class ArrayCasterTest extends TestCase
         $this->assertEquals($input, $output);
     }
 
+    public function testCastToNullablePropertyWithNullValueShouldReturnsNull()
+    {
+        $prop = new ReflectionProperty(SampleArray::class, 'nullableArr');
+        $input = null;
+        $caster = new ArrayCaster;
+        $result = $caster->cast($input, $prop);
+
+        $this->assertNull($result);
+    }
+
     public function testCastMixedArrayWithNonArrayShouldError()
     {
         $this->expectException(CastErrorException::class);
