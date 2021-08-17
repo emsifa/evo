@@ -120,4 +120,13 @@ class ArrayCasterTest extends TestCase
             new SampleArrayChildObject(id: 3, name: 'baz'),
         ], $output);
     }
+
+    public function testCastValueWithUndefinedCasterShouldError()
+    {
+        $this->expectException(CastErrorException::class);
+
+        $prop = new ReflectionProperty(SampleArray::class, 'arrayOfInt');
+        $caster = new ArrayCaster;
+        $caster->castValue("foo", "hulululu", $prop);
+    }
 }
