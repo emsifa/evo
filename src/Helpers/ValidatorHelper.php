@@ -3,11 +3,13 @@
 namespace Emsifa\Evo\Helpers;
 
 use DateTime;
+use Emsifa\Evo\Contracts\HasPresenceVerifier;
 use Emsifa\Evo\Rules\RuleWithData;
 use Emsifa\Evo\Types\ArrayOf;
 use Emsifa\Evo\ValidationData;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\PresenceVerifierInterface;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionParameter;
@@ -15,17 +17,25 @@ use ReflectionProperty;
 
 class ValidatorHelper
 {
-    public static function getRulesFromReflection(ReflectionClass | ReflectionProperty | ReflectionParameter $reflection, string $keyAlias = '', ?ValidationData $data = null): array
-    {
+    public static function getRulesFromReflection(
+        ReflectionClass | ReflectionProperty | ReflectionParameter $reflection,
+        string $keyAlias = '',
+        ?ValidationData $data = null,
+        ?PresenceVerifierInterface $presenceVerifier = null,
+    ): array {
         if ($reflection instanceof ReflectionClass) {
             return static::getRulesFromClass($reflection, $data);
         }
 
-        return static::getRulesFromParameterOrProperty($reflection, $keyAlias, $data);
+        return static::getRulesFromParameterOrProperty($reflection, $keyAlias, $data, $presenceVerifier);
     }
 
-    public static function getRulesFromParameterOrProperty(ReflectionProperty | ReflectionParameter $reflection, string $keyAlias = '', ?ValidationData $data = null)
-    {
+    public static function getRulesFromParameterOrProperty(
+        ReflectionProperty | ReflectionParameter $reflection,
+        string $keyAlias = '',
+        ?ValidationData $data = null,
+        ?PresenceVerifierInterface $presenceVerifier = null,
+    ) {
         $keyName = $keyAlias ?: $reflection->getName();
         $rules = [];
 
@@ -40,8 +50,11 @@ class ValidatorHelper
         $rulesFromAttributes = ReflectionHelper::getAttributesInstances($reflection, Rule::class, ReflectionAttribute::IS_INSTANCEOF);
         if ($rulesFromAttributes) {
             foreach ($rulesFromAttributes as $rule) {
-                if ($data && $rule instanceof RuleWithData) {
+                if ($rule instanceof RuleWithData && $data) {
                     $rule->setData($data);
+                }
+                if ($rule instanceof HasPresenceVerifier && $presenceVerifier) {
+                    $rule->setPresenceVerifier($presenceVerifier);
                 }
             }
             $rules = array_merge($rules, $rulesFromAttributes);
@@ -50,13 +63,19 @@ class ValidatorHelper
         return static::resolveRules($rules, $keyName);
     }
 
-    public static function getRulesFromClass(ReflectionClass $class, ?ValidationData $data = null): array
-    {
+    public static function getRulesFromClass(
+        ReflectionClass $class,
+        ?ValidationData $data = null,
+        ?PresenceVerifierInterface $presenceVerifier = null,
+    ): array {
         $rules = [];
         $props = $class->getProperties(ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
-            $key = $prop->getName();
-            $propRules = static::getRulesFromReflection($prop, data: $data);
+            $propRules = static::getRulesFromReflection(
+                $prop,
+                data: $data,
+                presenceVerifier: $presenceVerifier,
+            );
             $rules = array_merge($rules, $propRules);
         }
 

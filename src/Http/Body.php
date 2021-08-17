@@ -14,6 +14,7 @@ use Emsifa\Evo\ValidationData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\DatabasePresenceVerifier;
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionProperty;
@@ -83,7 +84,13 @@ class Body implements RequestGetter, RequestValidator, OpenApiRequestBody
         }
 
         $data = $this->getMergedInputsAndFiles($request);
-        $rules = ValidatorHelper::getRulesFromClass(new ReflectionClass($typeName), data: new ValidationData($data));
+        $presenceVerifier = app()->make(DatabasePresenceVerifier::class);
+
+        $rules = ValidatorHelper::getRulesFromClass(
+            new ReflectionClass($typeName),
+            data: new ValidationData($data),
+            presenceVerifier: $presenceVerifier,
+        );
 
         if (! empty($rules)) {
             Validator::make($data, $rules)->validate();
