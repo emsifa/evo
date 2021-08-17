@@ -12,7 +12,7 @@ class MultipleOf implements Rule
     use ValidatesAttributes;
 
     public function __construct(
-        protected float|int $value,
+        protected float | int $value,
         protected string $message = '',
     ) {
     }
