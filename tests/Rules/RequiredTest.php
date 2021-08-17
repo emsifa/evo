@@ -28,7 +28,7 @@ class RequiredTest extends TestCase
             'foo' => [new Required],
         ]);
 
-        $this->assertFalse($validator->fails());
+        $this->assertTrue($validator->fails());
     }
 
     public function testItShouldBeInvalidWhenValueIsEmpty()
