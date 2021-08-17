@@ -129,4 +129,13 @@ class ArrayCasterTest extends TestCase
         $caster = new ArrayCaster;
         $caster->castValue("foo", "hulululu", $prop);
     }
+
+    public function testCastWithCollectionShouldBeFine()
+    {
+        $prop = new ReflectionProperty(SampleArray::class, 'arrayOfInt');
+        $input = ["1", 2, 3, "4.5"];
+        $caster = new ArrayCaster;
+        $output = $caster->cast(collect($input), $prop);
+        $this->assertEquals([1,2,3,4], $output);
+    }
 }
