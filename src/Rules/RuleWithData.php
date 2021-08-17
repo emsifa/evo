@@ -7,7 +7,7 @@ use Illuminate\Support\Arr;
 
 abstract class RuleWithData
 {
-    protected ValidationData $data;
+    protected ValidationData|array $data = [];
 
     public function setData(ValidationData $data)
     {
