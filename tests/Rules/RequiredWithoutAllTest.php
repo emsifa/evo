@@ -31,7 +31,7 @@ class RequiredWithoutAllTest extends TestCase
         $data = [
             'foo' => '',
             'bar' => '',
-            'baz' => '13'
+            'baz' => '13',
         ];
 
         $rule = new RequiredWithoutAll(['bar', 'baz']);
