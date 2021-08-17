@@ -26,4 +26,7 @@ class SampleCollection
 
     #[CollectionOf('int', ifCastError: CollectionOf::KEEP_AS_IS)]
     public Collection $collectionOfIntKeepAsIs;
+
+    #[CollectionOf('int')]
+    public ?Collection $nullableCollection;
 }
