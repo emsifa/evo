@@ -3,11 +3,12 @@
 namespace Emsifa\Evo\Rules;
 
 use Attribute;
+use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class RequiredWith implements Rule
+class RequiredWith extends RuleWithData implements Rule, ImplicitRule
 {
     use ValidatesAttributes;
 
