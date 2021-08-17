@@ -40,7 +40,7 @@ class RequiredWithTest extends TestCase
             'foo' => [$rule],
         ]);
 
-        $this->assertTrue($validator->fails(), "Validation should be fails because foo is empty while bar is not empty.");
+        $this->assertTrue($validator->fails(), "Validation should be fails because foo is empty while baz is not empty.");
     }
 
     public function testItShouldNotRequiredIfOtherValueIsExists()
