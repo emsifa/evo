@@ -3,11 +3,12 @@
 namespace Emsifa\Evo\Rules;
 
 use Attribute;
+use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class RequiredWithout implements Rule
+class RequiredWithout extends RuleWithData implements Rule, ImplicitRule
 {
     use ValidatesAttributes;
 
@@ -29,6 +30,6 @@ class RequiredWithout implements Rule
 
     public function message()
     {
-        return __($this->message) ?: __("validation.required_without", ['other' => $this->field, 'values' => implode(", ", $this->getParameters())]);
+        return __($this->message) ?: __("validation.required_without", ['values' => implode(", ", $this->getParameters())]);
     }
 }

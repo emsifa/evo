@@ -3,13 +3,16 @@
 namespace Emsifa\Evo\Rules;
 
 use Attribute;
+use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Validation\Concerns\ValidatesAttributes;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class RequiredUnless implements Rule
+class RequiredUnless extends RuleWithData implements Rule, ImplicitRule
 {
     use ValidatesAttributes;
+
+    protected $rules = [];
 
     public function __construct(
         protected string $field,
