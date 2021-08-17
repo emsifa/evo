@@ -195,7 +195,7 @@ class UserController extends Controller
 
 #### Applying Middleware
 
-Every route attributes has `$middleware` parameter that you can set to apply middleware. Here is some examples:
+Every route attributes have `$middleware` parameter that you can set to apply middleware. Here is some examples:
 
 ```php
 <?php
