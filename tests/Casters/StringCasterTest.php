@@ -28,6 +28,7 @@ class StringCasterTest extends TestCase
             [false, $nullableStringProp, "false"],
             [null, $stringProp, ""],
             [null, $nullableStringProp, ""],
+            [collect([1, 2, 3]), $stringProp, "[1,2,3]"],
         ];
     }
 

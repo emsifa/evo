@@ -2,10 +2,17 @@
 
 namespace Emsifa\Evo\Tests\Helpers;
 
+use DateTime;
 use Emsifa\Evo\Helpers\ValidatorHelper;
+use Emsifa\Evo\Rules\Exists;
+use Emsifa\Evo\Rules\Required;
+use Emsifa\Evo\Rules\SameWith;
+use Emsifa\Evo\Tests\Samples\MockPresenceVerifier;
 use Emsifa\Evo\Tests\Samples\ObjectToValidate;
 use Emsifa\Evo\Tests\TestCase;
+use Emsifa\Evo\ValidationData;
 use ReflectionClass;
+use ReflectionProperty;
 
 class ValidatorHelperTest extends TestCase
 {
@@ -52,5 +59,32 @@ class ValidatorHelperTest extends TestCase
             'x.*.id' => ['numeric'],
             'x.*.name' => ['string'],
         ], ValidatorHelper::getRulesFromParameterOrProperty($childs, 'x'));
+    }
+
+    public function testGetRulesFromPropertyToPropertyWithAttributeRulesShouldReturnRulesFromAttributes()
+    {
+        $property = new ReflectionProperty(ObjectToValidate::class, 'attrRules');
+
+        $data = new ValidationData([]);
+        $presenceVerifier = new MockPresenceVerifier(collect([]));
+        $rules = ValidatorHelper::getRulesFromParameterOrProperty(
+            $property,
+            data: $data,
+            presenceVerifier: $presenceVerifier,
+        );
+
+        $this->assertInstanceOf(Required::class, $rules['attrRules'][1]);
+        $this->assertInstanceOf(SameWith::class, $rules['attrRules'][2]);
+        $this->assertInstanceOf(Exists::class, $rules['attrRules'][3]);
+    }
+
+    public function testGetRulesFromTypeNameShouldReturnExpectedRule()
+    {
+        $this->assertEquals(["numeric"], ValidatorHelper::getRulesFromTypeName('int'));
+        $this->assertEquals(["numeric"], ValidatorHelper::getRulesFromTypeName('float'));
+        $this->assertEquals(["string"], ValidatorHelper::getRulesFromTypeName('string'));
+        $this->assertEquals(["boolean"], ValidatorHelper::getRulesFromTypeName('bool'));
+        $this->assertEquals(["date"], ValidatorHelper::getRulesFromTypeName(DateTime::class));
+        $this->assertEquals([], ValidatorHelper::getRulesFromTypeName('qwertyfoobar'));
     }
 }
