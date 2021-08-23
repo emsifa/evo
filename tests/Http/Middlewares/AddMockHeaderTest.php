@@ -12,9 +12,10 @@ class AddMockHeaderTest extends TestCase
 {
     public function testItShouldAddEvoMockHeaderToResponse()
     {
-        $this->app->bind(Mock::class, function() {
+        $this->app->bind(Mock::class, function () {
             $mock = new Mock();
             $mock->setClassName("FooBar");
+
             return $mock;
         });
 
@@ -22,7 +23,7 @@ class AddMockHeaderTest extends TestCase
         /**
          * @var Response
          */
-        $response = $middleware->handle(new Request(), function() {
+        $response = $middleware->handle(new Request(), function () {
             return new Response();
         });
 
