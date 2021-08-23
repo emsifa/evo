@@ -30,4 +30,14 @@ class ReflectionHelperTest extends TestCase
 
         $this->assertEquals(false, $result);
     }
+
+    public function testUnionHasTypeShouldReturnFalseIfTypeDoesNotExists()
+    {
+        $property = new ReflectionProperty(ReflectionHelperDto::class, 'number');
+
+        $union = $property->getType();
+        $result = ReflectionHelper::unionHasType($union, 'string');
+
+        $this->assertEquals(false, $result);
+    }
 }
