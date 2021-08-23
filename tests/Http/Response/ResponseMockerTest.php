@@ -92,4 +92,18 @@ class ResponseMockerTest extends TestCase
         $this->assertTrue($canFill->invoke($responseMocker, $prop, [1,2,3]));
         $this->assertTrue($canFill->invoke($responseMocker, $prop, date_create()));
     }
+
+    public function testCanFillFromVariousTypes()
+    {
+        $responseMocker = new ResponseMocker($this->app);
+        $canFill = new ReflectionMethod($responseMocker, 'canFill');
+        $canFill->setAccessible(true);
+
+        $arrayProp = new ReflectionProperty(SampleMockResponse::class, 'numbers');
+        $boolProp = new ReflectionProperty(SampleMockResponse::class, 'bool');
+
+        $this->assertTrue($canFill->invoke($responseMocker, $arrayProp, [1, 2, 3]));
+        $this->assertTrue($canFill->invoke($responseMocker, $boolProp, true));
+        $this->assertTrue($canFill->invoke($responseMocker, $boolProp, false));
+    }
 }

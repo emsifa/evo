@@ -140,8 +140,8 @@ class ResponseMocker
         return (
             (is_numeric($value) && in_array($typeName, ["int", "float"]))
             || (is_string($value) && $typeName === "string")
-            || (is_array($value) && $type === "array")
-            || (is_bool($value) && $type === "bool")
+            || (is_array($value) && $typeName === "array")
+            || (is_bool($value) && $typeName === "bool")
             || ($type->allowsNull() && is_null($value))
         );
     }
