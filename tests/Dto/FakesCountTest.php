@@ -1,8 +1,9 @@
 <?php
 
-namespace Emsifa\Evo\Tests;
+namespace Emsifa\Evo\Tests\Dto;
 
 use Emsifa\Evo\Dto\FakesCount;
+use Emsifa\Evo\Tests\TestCase;
 
 class FakesCountTest extends TestCase
 {
