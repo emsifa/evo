@@ -47,4 +47,6 @@ class SampleMockResponse extends JsonResponse
 
     #[UseFaker(CategoryFaker::class, type: "framework")]
     public string $category;
+
+    public $mixed;
 }

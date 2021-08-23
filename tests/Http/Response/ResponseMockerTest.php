@@ -11,6 +11,7 @@ use Faker\Factory;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 use ReflectionClass;
+use ReflectionMethod;
 use ReflectionProperty;
 
 class ResponseMockerTest extends TestCase
@@ -77,5 +78,18 @@ class ResponseMockerTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $responseMocker->getFakeValue($prop, $faker, $request);
+    }
+
+    public function testCanFillFromMixedTypeShouldReturnTrue()
+    {
+        $prop = new ReflectionProperty(SampleMockResponse::class, 'mixed');
+        $responseMocker = new ResponseMocker($this->app);
+        $canFill = new ReflectionMethod($responseMocker, 'canFill');
+        $canFill->setAccessible(true);
+
+        $this->assertTrue($canFill->invoke($responseMocker, $prop, 'string'));
+        $this->assertTrue($canFill->invoke($responseMocker, $prop, 123));
+        $this->assertTrue($canFill->invoke($responseMocker, $prop, [1,2,3]));
+        $this->assertTrue($canFill->invoke($responseMocker, $prop, date_create()));
     }
 }
