@@ -38,4 +38,14 @@ class DateTimeCasterTest extends TestCase
         $caster = new DateTimeCaster;
         $caster->cast($str, $prop);
     }
+
+    public function testCastDateTimeFromIntegerShouldError()
+    {
+        $this->expectException(CastErrorException::class);
+
+        $value = 12345;
+        $prop = new ReflectionProperty(SampleDateTime::class, 'date');
+        $caster = new DateTimeCaster;
+        $caster->cast($value, $prop);
+    }
 }
