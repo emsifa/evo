@@ -9,5 +9,5 @@ class ReflectionHelperDto
     #[Required]
     public string $thing;
 
-    public int|float $number;
+    public int | float $number;
 }
