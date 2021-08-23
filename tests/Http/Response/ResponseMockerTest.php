@@ -5,9 +5,14 @@ namespace Emsifa\Evo\Tests\Http\Response;
 use Emsifa\Evo\Http\Response\ResponseMocker;
 use Emsifa\Evo\Tests\Samples\Responses\SampleMockableResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleMockResponse;
+use Emsifa\Evo\Tests\Samples\Responses\SampleWrongMockResponse;
 use Emsifa\Evo\Tests\TestCase;
+use Faker\Factory;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 use ReflectionClass;
+use ReflectionMethod;
+use ReflectionProperty;
 
 class ResponseMockerTest extends TestCase
 {
@@ -62,5 +67,43 @@ class ResponseMockerTest extends TestCase
         $this->assertTrue($response->float === 1.23);
         $this->assertTrue(in_array($response->string, ["foo", "bar", "baz"]));
         $this->assertTrue($response->bool);
+    }
+
+    public function testGetFakeValueFromNonValueFakerInstanceShouldThrownError()
+    {
+        $faker = Factory::create();
+        $prop = new ReflectionProperty(SampleWrongMockResponse::class, 'str');
+        $request = new Request();
+        $responseMocker = new ResponseMocker($this->app);
+
+        $this->expectException(InvalidArgumentException::class);
+        $responseMocker->getFakeValue($prop, $faker, $request);
+    }
+
+    public function testCanFillFromMixedTypeShouldReturnTrue()
+    {
+        $prop = new ReflectionProperty(SampleMockResponse::class, 'mixed');
+        $responseMocker = new ResponseMocker($this->app);
+        $canFill = new ReflectionMethod($responseMocker, 'canFill');
+        $canFill->setAccessible(true);
+
+        $this->assertTrue($canFill->invoke($responseMocker, $prop, 'string'));
+        $this->assertTrue($canFill->invoke($responseMocker, $prop, 123));
+        $this->assertTrue($canFill->invoke($responseMocker, $prop, [1,2,3]));
+        $this->assertTrue($canFill->invoke($responseMocker, $prop, date_create()));
+    }
+
+    public function testCanFillFromVariousTypes()
+    {
+        $responseMocker = new ResponseMocker($this->app);
+        $canFill = new ReflectionMethod($responseMocker, 'canFill');
+        $canFill->setAccessible(true);
+
+        $arrayProp = new ReflectionProperty(SampleMockResponse::class, 'numbers');
+        $boolProp = new ReflectionProperty(SampleMockResponse::class, 'bool');
+
+        $this->assertTrue($canFill->invoke($responseMocker, $arrayProp, [1, 2, 3]));
+        $this->assertTrue($canFill->invoke($responseMocker, $boolProp, true));
+        $this->assertTrue($canFill->invoke($responseMocker, $boolProp, false));
     }
 }

@@ -35,6 +35,11 @@ class Mock implements OpenApiOperationModifier, RouteModifier
         return $this->optional;
     }
 
+    public function setClassName(string $className)
+    {
+        $this->className = $className;
+    }
+
     public function getClassName(): string
     {
         return $this->className;
@@ -77,7 +82,8 @@ class Mock implements OpenApiOperationModifier, RouteModifier
             throw new UnexpectedValueException("Cannot create mock response from class: '{$className}'");
         }
 
-        $this->className = $className;
+        $this->setClassName($className);
+
         $container->bind(Mock::class, function () {
             return $this;
         });
