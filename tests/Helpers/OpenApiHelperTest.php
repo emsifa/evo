@@ -30,6 +30,5 @@ class OpenApiHelperTest extends TestCase
 
         $this->assertEquals('object', $result->type);
         $this->assertEquals('string', $result->properties['str']->type);
-
     }
 }
