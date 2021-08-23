@@ -145,7 +145,7 @@ class UserController extends Controller
 
 #### Route Prefixing
 
-If you want to apply route prefix into your controller, you can attach `RoutePrefix` attribute to  your controller class.
+If you want to apply route prefix to every routes in a controller, you can attach `RoutePrefix` attribute to  your controller class.
 
 ```php
 <?php
@@ -195,7 +195,7 @@ class UserController extends Controller
 
 #### Applying Middleware
 
-Every route attribute has `$middleware` parameter that you can set to apply middleware. Here is some examples:
+Every route attributes have `$middleware` parameter that you can set to apply middleware. Here is some examples:
 
 ```php
 <?php
