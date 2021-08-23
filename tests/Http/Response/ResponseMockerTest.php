@@ -5,9 +5,13 @@ namespace Emsifa\Evo\Tests\Http\Response;
 use Emsifa\Evo\Http\Response\ResponseMocker;
 use Emsifa\Evo\Tests\Samples\Responses\SampleMockableResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleMockResponse;
+use Emsifa\Evo\Tests\Samples\Responses\SampleWrongMockResponse;
 use Emsifa\Evo\Tests\TestCase;
+use Faker\Factory;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 use ReflectionClass;
+use ReflectionProperty;
 
 class ResponseMockerTest extends TestCase
 {
@@ -62,5 +66,16 @@ class ResponseMockerTest extends TestCase
         $this->assertTrue($response->float === 1.23);
         $this->assertTrue(in_array($response->string, ["foo", "bar", "baz"]));
         $this->assertTrue($response->bool);
+    }
+
+    public function testGetFakeValueFromNonValueFakerInstanceShouldThrownError()
+    {
+        $faker = Factory::create();
+        $prop = new ReflectionProperty(SampleWrongMockResponse::class, 'str');
+        $request = new Request();
+        $responseMocker = new ResponseMocker($this->app);
+
+        $this->expectException(InvalidArgumentException::class);
+        $responseMocker->getFakeValue($prop, $faker, $request);
     }
 }
