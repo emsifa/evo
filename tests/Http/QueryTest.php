@@ -77,13 +77,30 @@ class QueryTest extends TestCase
         $param->validateRequest($request, $reflection);
     }
 
+    public function testGetAssignedDefaultValue()
+    {
+        /**
+         * @var \ReflectionParameter
+         */
+        $reflection = $this->getMockReflectionParam('id', 'int', false, 123);
+        $request = $this->makeRequestWithRouteQueries([]);
+        $param = new Query('id');
+        $result = $param->getRequestValue($request, $reflection);
+
+        $this->assertEquals(123, $result);
+    }
+
     private function makeRequestWithRouteQueries(array $queries): Request
     {
         return new Request($queries);
     }
 
-    private function getMockReflectionParam($name, string $typeName = '', $allowsNull = false)
-    {
+    private function getMockReflectionParam(
+        $name,
+        string $typeName = '',
+        $allowsNull = false,
+        $defaultValue = null,
+    ) {
         if ($typeName) {
             $type = $this->createStub(ReflectionNamedType::class);
             $type->method('getName')->willReturn($typeName);
@@ -93,6 +110,8 @@ class QueryTest extends TestCase
         $reflection = $this->createStub(ReflectionParameter::class);
         $reflection->method('getName')->willReturn($name);
         $reflection->method('getType')->willReturn($typeName ? $type : null);
+        $reflection->method('isDefaultValueAvailable')->willReturn($defaultValue !== null);
+        $reflection->method('getDefaultValue')->willReturn($defaultValue);
 
         return $reflection;
     }
