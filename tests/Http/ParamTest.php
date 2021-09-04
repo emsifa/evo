@@ -78,7 +78,6 @@ class ParamTest extends TestCase
         $param->validateRequest($request, $reflection);
     }
 
-
     public function testGetAssignedDefaultValue()
     {
         /**
