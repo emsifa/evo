@@ -9,8 +9,6 @@ use Emsifa\Evo\Tests\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Validation\ValidationException;
-use ReflectionNamedType;
-use ReflectionParameter;
 use Symfony\Component\Mime\FileinfoMimeTypeGuesser;
 
 class FileTest extends TestCase

@@ -26,6 +26,7 @@ abstract class CommonGetterAndValidator
     }
 
     abstract public function getValue(Request $request, string $key): mixed;
+
     abstract public function hasValue(Request $request, string $key): mixed;
 
     public function getKey(ReflectionParameter | ReflectionProperty $reflection): string
@@ -38,7 +39,7 @@ abstract class CommonGetterAndValidator
         $key = $this->getKey($reflection);
 
         $hasDefaultValue = ReflectionHelper::hasDefaultValue($reflection);
-        if (!$this->hasValue($request, $key) && $hasDefaultValue) {
+        if (! $this->hasValue($request, $key) && $hasDefaultValue) {
             return ReflectionHelper::getDefaultValue($reflection);
         }
 
