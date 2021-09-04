@@ -78,6 +78,20 @@ class ParamTest extends TestCase
         $param->validateRequest($request, $reflection);
     }
 
+
+    public function testGetAssignedDefaultValue()
+    {
+        /**
+         * @var \ReflectionParameter
+         */
+        $reflection = $this->getMockReflectionParam('id', 'int', false, 123);
+        $request = $this->makeRequestWithRouteParams([]);
+        $param = new Param('id');
+        $result = $param->getRequestValue($request, $reflection);
+
+        $this->assertEquals(123, $result);
+    }
+
     private function makeRequestWithRouteParams(array $params): Request
     {
         $request = new Request();
