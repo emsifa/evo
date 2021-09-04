@@ -10,4 +10,11 @@ class ReflectionHelperDto
     public string $thing;
 
     public int | float $number;
+
+    public string $noDefaultValue;
+    public string $withDefaultValue = "lorem ipsum";
+
+    public function method(int $noDefaultValue, int $withDefaultValue = 10)
+    {
+    }
 }

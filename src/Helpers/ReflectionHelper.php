@@ -4,6 +4,8 @@ namespace Emsifa\Evo\Helpers;
 
 use ReflectionAttribute;
 use ReflectionClass;
+use ReflectionParameter;
+use ReflectionProperty;
 use ReflectionUnionType;
 
 class ReflectionHelper
@@ -107,6 +109,18 @@ class ReflectionHelper
         }
 
         return false;
+    }
+
+    public static function hasDefaultValue(ReflectionProperty | ReflectionParameter $reflection): bool
+    {
+        return $reflection instanceof ReflectionProperty
+            ? $reflection->hasDefaultValue()
+            : $reflection->isDefaultValueAvailable();
+    }
+
+    public static function getDefaultValue(ReflectionProperty | ReflectionParameter $reflection): mixed
+    {
+        return $reflection->getDefaultValue();
     }
 
     private static function getParents($class): array
