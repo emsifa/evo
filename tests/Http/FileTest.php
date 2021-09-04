@@ -104,19 +104,4 @@ class FileTest extends TestCase
 
         return $request;
     }
-
-    private function getMockReflectionParam($name, string $typeName = '', $allowsNull = false)
-    {
-        if ($typeName) {
-            $type = $this->createStub(ReflectionNamedType::class);
-            $type->method('getName')->willReturn($typeName);
-            $type->method('allowsNull')->willReturn($allowsNull);
-        }
-
-        $reflection = $this->createStub(ReflectionParameter::class);
-        $reflection->method('getName')->willReturn($name);
-        $reflection->method('getType')->willReturn($typeName ? $type : null);
-
-        return $reflection;
-    }
 }
