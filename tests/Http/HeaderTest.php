@@ -77,6 +77,19 @@ class HeaderTest extends TestCase
         $param->validateRequest($request, $reflection);
     }
 
+    public function testGetAssignedDefaultValue()
+    {
+        /**
+         * @var \ReflectionParameter
+         */
+        $reflection = $this->getMockReflectionParam('id', 'int', false, 123);
+        $request = $this->makeRequestWithRouteHeaders([]);
+        $param = new Header('id');
+        $result = $param->getRequestValue($request, $reflection);
+
+        $this->assertEquals(123, $result);
+    }
+
     private function makeRequestWithRouteHeaders(array $headers): Request
     {
         $request = new Request();

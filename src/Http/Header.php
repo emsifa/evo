@@ -16,6 +16,11 @@ use ReflectionProperty;
 #[Attribute(Attribute::TARGET_PROPERTY + Attribute::TARGET_PARAMETER)]
 class Header extends CommonGetterAndValidator implements RequestGetter, RequestValidator, OpenApiParameter
 {
+    public function hasValue(Request $request, string $key): mixed
+    {
+        return $request->headers->has($key);
+    }
+
     public function getValue(Request $request, string $key): mixed
     {
         return $request->header(Str::snake($key, '-'));
