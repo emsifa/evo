@@ -8,8 +8,6 @@ use Emsifa\Evo\Tests\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Validation\ValidationException;
-use ReflectionNamedType;
-use ReflectionParameter;
 
 class ParamTest extends TestCase
 {
@@ -78,6 +76,19 @@ class ParamTest extends TestCase
         $param->validateRequest($request, $reflection);
     }
 
+    public function testGetAssignedDefaultValue()
+    {
+        /**
+         * @var \ReflectionParameter
+         */
+        $reflection = $this->getMockReflectionParam('id', 'int', false, 123);
+        $request = $this->makeRequestWithRouteParams([]);
+        $param = new Param('id');
+        $result = $param->getRequestValue($request, $reflection);
+
+        $this->assertEquals(123, $result);
+    }
+
     private function makeRequestWithRouteParams(array $params): Request
     {
         $request = new Request();
@@ -89,20 +100,5 @@ class ParamTest extends TestCase
         });
 
         return $request;
-    }
-
-    private function getMockReflectionParam($name, string $typeName = '', $allowsNull = false)
-    {
-        if ($typeName) {
-            $type = $this->createStub(ReflectionNamedType::class);
-            $type->method('getName')->willReturn($typeName);
-            $type->method('allowsNull')->willReturn($allowsNull);
-        }
-
-        $reflection = $this->createStub(ReflectionParameter::class);
-        $reflection->method('getName')->willReturn($name);
-        $reflection->method('getType')->willReturn($typeName ? $type : null);
-
-        return $reflection;
     }
 }

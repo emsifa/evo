@@ -16,6 +16,11 @@ use ReflectionParameter;
 #[Attribute(Attribute::TARGET_PROPERTY + Attribute::TARGET_PARAMETER)]
 class File extends CommonGetterAndValidator implements RequestGetter, RequestValidator, OpenApiRequestBodyModifier
 {
+    public function hasValue(Request $request, string $key): mixed
+    {
+        return $request->files->has($key);
+    }
+
     public function getValue(Request $request, string $key): mixed
     {
         return $request->file($key);

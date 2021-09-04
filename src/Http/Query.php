@@ -15,6 +15,11 @@ use ReflectionProperty;
 #[Attribute(Attribute::TARGET_PROPERTY + Attribute::TARGET_PARAMETER)]
 class Query extends CommonGetterAndValidator implements RequestGetter, RequestValidator, OpenApiParameter
 {
+    public function hasValue(Request $request, string $key): mixed
+    {
+        return $request->query->has($key);
+    }
+
     public function getValue(Request $request, string $key): mixed
     {
         return $request->query($key);

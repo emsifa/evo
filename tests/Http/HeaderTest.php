@@ -7,8 +7,6 @@ use Emsifa\Evo\Tests\Samples\Casters\HalfIntCaster;
 use Emsifa\Evo\Tests\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use ReflectionNamedType;
-use ReflectionParameter;
 
 class HeaderTest extends TestCase
 {
@@ -77,6 +75,19 @@ class HeaderTest extends TestCase
         $param->validateRequest($request, $reflection);
     }
 
+    public function testGetAssignedDefaultValue()
+    {
+        /**
+         * @var \ReflectionParameter
+         */
+        $reflection = $this->getMockReflectionParam('id', 'int', false, 123);
+        $request = $this->makeRequestWithRouteHeaders([]);
+        $param = new Header('id');
+        $result = $param->getRequestValue($request, $reflection);
+
+        $this->assertEquals(123, $result);
+    }
+
     private function makeRequestWithRouteHeaders(array $headers): Request
     {
         $request = new Request();
@@ -85,20 +96,5 @@ class HeaderTest extends TestCase
         }
 
         return $request;
-    }
-
-    private function getMockReflectionParam($name, string $typeName = '', $allowsNull = false)
-    {
-        if ($typeName) {
-            $type = $this->createStub(ReflectionNamedType::class);
-            $type->method('getName')->willReturn($typeName);
-            $type->method('allowsNull')->willReturn($allowsNull);
-        }
-
-        $reflection = $this->createStub(ReflectionParameter::class);
-        $reflection->method('getName')->willReturn($name);
-        $reflection->method('getType')->willReturn($typeName ? $type : null);
-
-        return $reflection;
     }
 }

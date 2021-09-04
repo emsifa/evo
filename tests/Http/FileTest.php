@@ -9,8 +9,6 @@ use Emsifa\Evo\Tests\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Validation\ValidationException;
-use ReflectionNamedType;
-use ReflectionParameter;
 use Symfony\Component\Mime\FileinfoMimeTypeGuesser;
 
 class FileTest extends TestCase
@@ -87,6 +85,19 @@ class FileTest extends TestCase
         $param->validateRequest($request, $reflection);
     }
 
+    public function testGetAssignedDefaultValue()
+    {
+        /**
+         * @var \ReflectionParameter
+         */
+        $reflection = $this->getMockReflectionParam('id', UploadedFile::class, null, null);
+        $request = $this->makeRequestWithRouteFiles([]);
+        $param = new File('id');
+        $result = $param->getRequestValue($request, $reflection);
+
+        $this->assertEquals(null, $result);
+    }
+
     private function makeRequestWithRouteFiles(array $files): Request
     {
         $request = new Request();
@@ -103,20 +114,5 @@ class FileTest extends TestCase
         $request->files->add($uploadedFiles);
 
         return $request;
-    }
-
-    private function getMockReflectionParam($name, string $typeName = '', $allowsNull = false)
-    {
-        if ($typeName) {
-            $type = $this->createStub(ReflectionNamedType::class);
-            $type->method('getName')->willReturn($typeName);
-            $type->method('allowsNull')->willReturn($allowsNull);
-        }
-
-        $reflection = $this->createStub(ReflectionParameter::class);
-        $reflection->method('getName')->willReturn($name);
-        $reflection->method('getType')->willReturn($typeName ? $type : null);
-
-        return $reflection;
     }
 }
