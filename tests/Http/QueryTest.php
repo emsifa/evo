@@ -7,7 +7,6 @@ use Emsifa\Evo\Tests\Samples\Casters\HalfIntCaster;
 use Emsifa\Evo\Tests\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use ReflectionNamedType;
 use ReflectionParameter;
 
 class QueryTest extends TestCase
@@ -93,26 +92,5 @@ class QueryTest extends TestCase
     private function makeRequestWithRouteQueries(array $queries): Request
     {
         return new Request($queries);
-    }
-
-    private function getMockReflectionParam(
-        $name,
-        string $typeName = '',
-        $allowsNull = false,
-        $defaultValue = null,
-    ) {
-        if ($typeName) {
-            $type = $this->createStub(ReflectionNamedType::class);
-            $type->method('getName')->willReturn($typeName);
-            $type->method('allowsNull')->willReturn($allowsNull);
-        }
-
-        $reflection = $this->createStub(ReflectionParameter::class);
-        $reflection->method('getName')->willReturn($name);
-        $reflection->method('getType')->willReturn($typeName ? $type : null);
-        $reflection->method('isDefaultValueAvailable')->willReturn($defaultValue !== null);
-        $reflection->method('getDefaultValue')->willReturn($defaultValue);
-
-        return $reflection;
     }
 }
