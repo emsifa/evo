@@ -300,10 +300,20 @@ If you want to make it optional, you can just give default value to the paramete
 
 ```php
 #[Get]
-public function index(#[Query('q')] ?string $keyword = null)
+public function index(#[Query('q')] int $page = 1)
 {
     // ...
 } 
+```
+
+Or you can also make it nullable, for example:
+
+```php
+#[Get]
+public function index(#[Query('q')] ?int $page)
+{
+    // ...
+}
 ```
 
 #### `Param` Attribute
