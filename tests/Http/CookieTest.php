@@ -77,6 +77,19 @@ class CookieTest extends TestCase
         $param->validateRequest($request, $reflection);
     }
 
+    public function testGetAssignedDefaultValue()
+    {
+        /**
+         * @var \ReflectionParameter
+         */
+        $reflection = $this->getMockReflectionParam('id', 'int', false, 123);
+        $request = $this->makeRequestWithCookies([]);
+        $param = new Cookie('id');
+        $result = $param->getRequestValue($request, $reflection);
+
+        $this->assertEquals(123, $result);
+    }
+
     private function makeRequestWithCookies(array $cookies): Request
     {
         return new Request(cookies: $cookies);
