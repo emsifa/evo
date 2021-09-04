@@ -87,6 +87,19 @@ class FileTest extends TestCase
         $param->validateRequest($request, $reflection);
     }
 
+    public function testGetAssignedDefaultValue()
+    {
+        /**
+         * @var \ReflectionParameter
+         */
+        $reflection = $this->getMockReflectionParam('id', UploadedFile::class, null, null);
+        $request = $this->makeRequestWithRouteFiles([]);
+        $param = new File('id');
+        $result = $param->getRequestValue($request, $reflection);
+
+        $this->assertEquals(null, $result);
+    }
+
     private function makeRequestWithRouteFiles(array $files): Request
     {
         $request = new Request();
