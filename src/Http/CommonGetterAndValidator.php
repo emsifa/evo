@@ -2,6 +2,7 @@
 
 namespace Emsifa\Evo\Http;
 
+use Emsifa\Evo\Helpers\ReflectionHelper;
 use Emsifa\Evo\Helpers\ValidatorHelper;
 use Emsifa\Evo\ValidationData;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ abstract class CommonGetterAndValidator
     }
 
     abstract public function getValue(Request $request, string $key): mixed;
+    abstract public function hasValue(Request $request, string $key): mixed;
 
     public function getKey(ReflectionParameter | ReflectionProperty $reflection): string
     {
@@ -33,10 +35,15 @@ abstract class CommonGetterAndValidator
 
     public function getRequestValue(Request $request, ReflectionParameter | ReflectionProperty $reflection): mixed
     {
-        $nullable = optional($reflection->getType())->allowsNull();
         $key = $this->getKey($reflection);
-        $value = $this->getValue($request, $key);
 
+        $hasDefaultValue = ReflectionHelper::hasDefaultValue($reflection);
+        if (!$this->hasValue($request, $key) && $hasDefaultValue) {
+            return ReflectionHelper::getDefaultValue($reflection);
+        }
+
+        $value = $this->getValue($request, $key);
+        $nullable = optional($reflection->getType())->allowsNull();
         if (is_null($value) && $nullable) {
             return null;
         }
