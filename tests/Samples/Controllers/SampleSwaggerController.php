@@ -42,7 +42,7 @@ class SampleSwaggerController extends Controller
         #[Param('path_param'),
         Description('Parameter from path')] float $param,
         #[Query('query_param'),
-        Example('query value')] int $query,
+        Example(12)] int $query,
         #[Body] SwaggerPostStuffDto $dto,
         #[File] UploadedFile $file,
         #[Header('header_param'),
