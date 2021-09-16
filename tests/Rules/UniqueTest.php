@@ -7,7 +7,6 @@ use Emsifa\Evo\Tests\Samples\MockPresenceVerifier;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Validator;
-use InvalidArgumentException;
 use ReflectionMethod;
 
 class UniqueTest extends TestCase
@@ -112,6 +111,7 @@ class UniqueTest extends TestCase
         $request->setRouteResolver(function () {
             $route = new Route('GET', '/', 'any@thing');
             $route->parameters = ['id' => 123];
+
             return $route;
         });
 

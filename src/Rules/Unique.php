@@ -33,7 +33,7 @@ class Unique implements Rule, ImplicitRule, HasPresenceVerifier
             $this->table,
             $this->column,
             $this->getIgnoreValue(),
-            $this->idColumn
+            $this->idColumn,
         ]);
     }
 
