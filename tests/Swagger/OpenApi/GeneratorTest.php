@@ -121,9 +121,9 @@ class GeneratorTest extends TestCase
                                 'schema' => [
                                     'type' => 'boolean',
                                     'default' => false,
-                                    'example' => 'klepon',
+                                    'example' => false,
                                 ],
-                                'example' => 'klepon'
+                                'example' => false
                             ],
                             [
                                 'name' => '_mock',
