@@ -1,6 +1,6 @@
 <?php
 
-namespace Emsifa\Evo\Tests\OpenApi;
+namespace Emsifa\Evo\Tests\Swagger\OpenApi;
 
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Emsifa\Evo\Swagger\OpenApi\Generator;
@@ -88,11 +88,51 @@ class GeneratorTest extends TestCase
                         'summary' => 'Post Stuff',
                         'description' => 'Post stuff endpoint',
                         'parameters' => [
-                            ['name' => 'path_param', 'in' => 'path', 'description' => 'Parameter from path'],
-                            ['name' => 'query_param', 'in' => 'query', 'example' => 'query value'],
-                            ['name' => 'header_param', 'in' => 'header', 'example' => 'header value'],
-                            ['name' => 'cookie_param', 'in' => 'cookie', 'example' => 'klepon'],
-                            ['name' => '_mock', 'in' => 'query', 'schema' => ['default' => 0, 'example' => 1]],
+                            [
+                                'name' => 'path_param',
+                                'in' => 'path',
+                                'schema' => [
+                                    'type' => 'number',
+                                ],
+                                'description' => 'Parameter from path',
+                            ],
+                            [
+                                'name' => 'query_param',
+                                'in' => 'query',
+                                'schema' => [
+                                    'type' => 'integer',
+                                    'example' => 12,
+                                ],
+                                'example' => 12,
+                            ],
+                            [
+                                'name' => 'header_param',
+                                'in' => 'header',
+                                'schema' => [
+                                    'type' => 'string',
+                                    'default' => 'foo',
+                                    'example' => 'header value',
+                                ],
+                                'example' => 'header value',
+                            ],
+                            [
+                                'name' => 'cookie_param',
+                                'in' => 'cookie',
+                                'schema' => [
+                                    'type' => 'boolean',
+                                    'default' => false,
+                                    'example' => false,
+                                ],
+                                'example' => false,
+                            ],
+                            [
+                                'name' => '_mock',
+                                'in' => 'query',
+                                'schema' => [
+                                    'default' => 0,
+                                    'example' => 1,
+                                ],
+                            ],
                         ],
                         'requestBody' => [
                             'required' => true,
