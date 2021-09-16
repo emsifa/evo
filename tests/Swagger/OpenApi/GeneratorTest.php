@@ -123,7 +123,7 @@ class GeneratorTest extends TestCase
                                     'default' => false,
                                     'example' => false,
                                 ],
-                                'example' => false
+                                'example' => false,
                             ],
                             [
                                 'name' => '_mock',
