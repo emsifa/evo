@@ -94,7 +94,7 @@ class GeneratorTest extends TestCase
                                 'schema' => [
                                     'type' => 'number',
                                 ],
-                                'description' => 'Parameter from path'
+                                'description' => 'Parameter from path',
                             ],
                             [
                                 'name' => 'query_param',
@@ -103,7 +103,7 @@ class GeneratorTest extends TestCase
                                     'type' => 'integer',
                                     'example' => 12,
                                 ],
-                                'example' => 12
+                                'example' => 12,
                             ],
                             [
                                 'name' => 'header_param',
@@ -113,7 +113,7 @@ class GeneratorTest extends TestCase
                                     'default' => 'foo',
                                     'example' => 'header value',
                                 ],
-                                'example' => 'header value'
+                                'example' => 'header value',
                             ],
                             [
                                 'name' => 'cookie_param',
@@ -130,7 +130,7 @@ class GeneratorTest extends TestCase
                                 'in' => 'query',
                                 'schema' => [
                                     'default' => 0,
-                                    'example' => 1
+                                    'example' => 1,
                                 ],
                             ],
                         ],
