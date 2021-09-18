@@ -17,6 +17,7 @@ use Emsifa\Evo\Route\UseGuards;
 use Emsifa\Evo\Swagger\OpenApi\Description;
 use Emsifa\Evo\Swagger\OpenApi\Example;
 use Emsifa\Evo\Swagger\OpenApi\Summary;
+use Emsifa\Evo\Swagger\OpenApi\Tags;
 use Emsifa\Evo\Tests\Samples\Dto\SwaggerPostStuffDto;
 use Emsifa\Evo\Tests\Samples\Responses\PostStuffResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleCustomErrorResponse;
@@ -34,6 +35,7 @@ use Illuminate\Validation\ValidationException;
 class SampleSwaggerController extends Controller
 {
     #[Post('stuff')]
+    #[Tags('stuff', 'example')]
     #[UseGuards('jwt')]
     #[Mock(optional: true)]
     #[Summary('Post Stuff')]
