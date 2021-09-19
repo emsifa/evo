@@ -17,6 +17,10 @@ jobs:
         laravel: [8.*]
         stability: [prefer-lowest, prefer-stable]
         include:
+          - os: ubuntu-latest
+            php: 8.0
+            laravel: 8.*
+            coverage: true
           - laravel: 8.*
             testbench: ^6.6
 
@@ -47,7 +51,7 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover coverage.xml
 
       - name: Upload coverage results to Codecov
-        if: matrix.os == "ubuntu-latest"
+        if: matrix.coverage
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
