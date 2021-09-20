@@ -9,9 +9,11 @@ use Emsifa\Evo\Tests\Samples\Responses\SampleCustomErrorResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleErrorResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleInvalidResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleSuccessResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Validation\ValidationException;
 use InvalidArgumentException;
+use RuntimeException;
 
 #[UseErrorResponse(SampleErrorResponse::class)]
 #[UseErrorResponse(SampleErrorResponse::class, [InvalidArgumentException::class])]
@@ -43,6 +45,14 @@ class SampleDispatchedController extends Controller
     }
 
     public function methodThrownValidationException(#[Query] int $number)
+    {
+    }
+
+    public function methodWithObjectInjection(Request $request)
+    {
+    }
+
+    public function methodWithParameterDefaultValue(int $number = 10)
     {
     }
 }
