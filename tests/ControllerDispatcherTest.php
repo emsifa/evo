@@ -12,7 +12,6 @@ use Emsifa\Evo\Tests\Samples\Exceptions\CustomException;
 use Emsifa\Evo\Tests\Samples\Responses\SampleCustomErrorResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleErrorResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleInvalidResponse;
-use Emsifa\Evo\Tests\Samples\Responses\SampleJsonResponse;
 use Emsifa\Evo\Tests\Samples\Responses\SampleSuccessResponse;
 use Exception;
 use Illuminate\Container\Container;
@@ -232,7 +231,7 @@ class ControllerDispatcherTest extends TestCase
     {
         $controller = SampleDispatchedController::class;
         $method = new ReflectionMethod($controller, "methodWithObjectInjection");
-        $parameter =  $method->getParameters()[0];
+        $parameter = $method->getParameters()[0];
 
         $dispatcher = new ControllerDispatcher($this->app);
         $getParameterValue = new ReflectionMethod($dispatcher, "getParameterValue");
@@ -250,7 +249,7 @@ class ControllerDispatcherTest extends TestCase
     {
         $controller = SampleDispatchedController::class;
         $method = new ReflectionMethod($controller, "methodWithParameterDefaultValue");
-        $parameter =  $method->getParameters()[0];
+        $parameter = $method->getParameters()[0];
 
         $dispatcher = new ControllerDispatcher($this->app);
         $getParameterValue = new ReflectionMethod($dispatcher, "getParameterValue");

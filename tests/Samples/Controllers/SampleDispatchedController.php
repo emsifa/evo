@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Validation\ValidationException;
 use InvalidArgumentException;
-use RuntimeException;
 
 #[UseErrorResponse(SampleErrorResponse::class)]
 #[UseErrorResponse(SampleErrorResponse::class, [InvalidArgumentException::class])]
