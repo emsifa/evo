@@ -18,6 +18,6 @@ class Tags implements OpenApiOperationModifier
 
     public function modifyOpenApiOperation(Operation $operation)
     {
-        $operation->tags = $this->tags;
+        $operation->tags = [...($operation->tags ?? []), ...$this->tags];
     }
 }
