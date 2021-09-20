@@ -28,6 +28,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller;
 use Illuminate\Validation\ValidationException;
 
+#[Tags('foo')]
 #[RoutePrefix('sample')]
 #[UseGuards('web')]
 #[UseErrorResponse(SampleCustomErrorResponse::class)]
@@ -35,7 +36,7 @@ use Illuminate\Validation\ValidationException;
 class SampleSwaggerController extends Controller
 {
     #[Post('stuff')]
-    #[Tags('stuff', 'example')]
+    #[Tags('bar', 'baz')]
     #[UseGuards('jwt')]
     #[Mock(optional: true)]
     #[Summary('Post Stuff')]
