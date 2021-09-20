@@ -3,7 +3,9 @@
 namespace Emsifa\Evo\Tests;
 
 use Emsifa\Evo\Evo;
+use Emsifa\Evo\Swagger\SwaggerController;
 use Emsifa\Evo\Tests\Samples\Controllers\SampleController;
+use Emsifa\Evo\Tests\Samples\Controllers\SampleSwaggerController;
 use Illuminate\Container\Container;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Routing\Route;
@@ -46,5 +48,49 @@ class EvoTest extends TestCase
 
         $this->assertEquals('sample/stuff', $routes[5]->uri);
         $this->assertEquals(['DELETE'], $routes[5]->methods());
+    }
+
+    public function testGetControllers()
+    {
+        $evo = new Evo($this->app->make(Router::class), $this->app);
+
+        $evo->routes(SampleController::class);
+        $evo->routes(SampleSwaggerController::class);
+
+        $controllers = $evo->getControllers();
+
+        $this->assertEquals([SampleController::class, SampleSwaggerController::class], $controllers);
+    }
+
+    public function testGetContainer()
+    {
+        $evo = new Evo($this->app->make(Router::class), $this->app);
+
+        $this->assertEquals($this->app, $evo->getContainer());
+    }
+
+    public function testGetRouter()
+    {
+        $router = $this->app->make(Router::class);
+        $evo = new Evo($router, $this->app);
+
+        $this->assertEquals($router, $evo->getRouter());
+    }
+
+    public function testSwagger()
+    {
+        /**
+         * @var Router
+         */
+        $router = $this->app->make(Router::class);
+        $evo = new Evo($router, $this->app);
+
+        $this->assertNull($router->getRoutes()->getByAction(SwaggerController::class.'@showUi'));
+        $this->assertNull($router->getRoutes()->getByAction(SwaggerController::class.'@openApi'));
+
+        $evo->swagger('/api/docs', middleware: 'auth');
+
+        $this->assertNotNull($router->getRoutes()->getByAction(SwaggerController::class.'@showUi'));
+        $this->assertNotNull($router->getRoutes()->getByAction(SwaggerController::class.'@openApi'));
     }
 }

@@ -68,7 +68,7 @@ class Evo
      */
     public function swagger(string $path = 'swagger', $middleware = null)
     {
-        $showUi = $this->router->get($path, [SwaggerController::class, 'showUi']);
+        $showUi = $this->router->get($path, [SwaggerController::class, 'showUi'])->name('evo:swagger-ui');
         $openApi = $this->router->get("{$path}/openapi", [SwaggerController::class, 'openApi'])->name('evo:openapi');
 
         if ($middleware) {
