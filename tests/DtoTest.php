@@ -14,7 +14,7 @@ class DtoTest extends TestCase
             query: [
                 'int' => "12",
                 'string' => "text",
-                'bool' => "true"
+                'bool' => "true",
             ],
             files: [
                 'file' => UploadedFile::fake()->image('lorem.jpg'),
