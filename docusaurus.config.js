@@ -14,6 +14,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/oceanicNext");
     favicon: "img/favicon.ico",
     organizationName: "emsifa", // Usually your GitHub org/user name.
     projectName: "evo", // Usually your repo name.
+    trailingSlash: true,
 
     presets: [
       [
