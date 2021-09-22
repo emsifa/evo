@@ -4,25 +4,24 @@ sidebar_position: 7
 
 # Swagger UI
 
-
-
 Swagger UI is a web based application to visualize and interacts with API's resources without having any of the implementation logic in place. It reads OpenAPI schema to display and interact with API endpoints.
 
-Evo can reflect your code and generate OpenAPI schema on-the-fly, so you can display Swagger UI with minimal configuration.
+Evo generate OpenAPI schema _on-the-fly_ by reflecting your code, so you can display Swagger UI with minimal configuration.
 
-In this section we will guide you on how to use Swagger UI with Evo.
+## Setup Swagger UI
 
-## Publishing Assets Files
+In this section we will guide you on how to setup Swagger UI with Evo.
+### 1. Publish Assets Files
 
-First, you have to publish assets files that will be used by Swagger UI page.
+First, you need to publish assets files that will be used by Swagger UI page.
 
 ```php
 php artisan vendor:publish --tag=evo-assets
 ```
 
-## Register Swagger Routes
+### 2. Register Swagger Routes
 
-Then, you have to register two routes. First route is for displaying Swagger UI and second route is for rendering OpenAPI specification as JSON.
+Then, you have to register two routes. First route is to display Swagger UI and second route is to render OpenAPI specification as JSON.
 
 To do that, you can simply add this line to your `routes/web.php`:
 
@@ -30,13 +29,13 @@ To do that, you can simply add this line to your `routes/web.php`:
 Evo::swagger('/docs');
 ```
 
-Now if you run `php artisan route:list`, you should see `GET /docs` and `GET /docs/openapi` routes there.
+Now when you run `php artisan route:list`, you should see `GET /docs` and `GET /docs/openapi` routes there.
 
 You can check it by running your app with `php artisan serve`, then in your browser, open URL `http://localhost:8000/docs`.
 
 You should see Swagger UI page with no endpoints yet.
 
-## Add an Example Endpoint
+### 3. Add an Example Endpoint
 
 Now we will create an example endpoint to be displayed in our Swagger UI.
 
@@ -54,7 +53,7 @@ Evo::routes(ExampleController::class);
 
 Now, let's add a route in our `ExampleController`:
 
-```php
+```php {6,7,9,,12}
 <?php
 
 namespace App\Http\Controllers;
@@ -77,16 +76,16 @@ class ExampleController extends Controller
 
 This time Evo will not render any endpoint to Swagger UI because Evo will only register endpoints that returns `Emsifa\Evo\Http\Response\JsonResponse` instance.
 
-Let's create DTO and JsonResponse class for our `postSomething` method by running following commands.
+Let's create DTO and JsonResponse class for our `postSomething` method by running commands below:
 
 ```php
 php artisan evo:make-dto PostSomethingDto number:int message:string
 php artisan evo:make-response PostSomethingResponse number:int message:string
 ```
 
-Now we can use it in `postSomething` method like this:
+Now we are gonna use those generated files in `postSomething` method like this:
 
-```php
+```php {8,9,16,17,19}
 <?php
 
 namespace App\Http\Controllers;
@@ -110,13 +109,14 @@ class ExampleController extends Controller
 }
 ```
 
-Save it. Now if you back to your browser `http://localhost:8000/docs`, you will see there is `POST /api/examples/post-something` operation a.k.a endpoint.
+Save it. Let's back to the browser, open `http://localhost:8000/docs`, you will see there is `POST /api/examples/post-something` operation/endpoint.
 
 ## Configuring OpenAPI
 
-To configure OpenAPI, Evo provides some attributes modifier that modify OpenAPI schema. Also Evo have configuration file to modify some information in OpenAPI.
+To configure OpenAPI schema, Evo provides some modifier attributes that will modify OpenAPI schema.
+Also, Evo provide configuration file to modify some general informations in OpenAPI schema.
 
-To configure info with configuration file. First you have to publish configuration file by running following command:
+To configure info with configuration file. First you need to publish configuration file by running following command:
 
 ```bash
 php artisan vendor:publish --tag=evo-config
@@ -139,7 +139,7 @@ For example, if you expand our `POST /api/examples/post-something` in Swagger UI
 
 If you want to modify it with more realistic example, we can modify `PostSomethingResponse` into something like this:
 
-```php
+```php {6,10,13}
 <?php
 
 namespace App\Http\Responses;
@@ -157,7 +157,7 @@ class PostSomethingResponse extends JsonResponse
 }
 ```
 
-Now if you refresh Swagger UI page, you will see that it shows our defined example value.
+Now if you refresh Swagger UI page, you will see your defined example values there.
 
 ### `Summary` Attribute
 
@@ -165,7 +165,9 @@ Now if you refresh Swagger UI page, you will see that it shows our defined examp
 
 You can attach it to your controller method like this:
 
-```php
+```php {1,7}
+use Emsifa\Evo\Swagger\OpenApi\Summary;
+
 #[RoutePrefix('examples')]
 class ExampleController extends Controller
 {
@@ -188,7 +190,7 @@ Now if you refresh Swagger UI, you will see "Post Something" in `POST /api/examp
 
 For example we will add description to `PostSomethingResponse` and its properties like following code below:
 
-```php
+```php {7,9,12,16}
 <?php
 
 namespace App\Http\Responses;
