@@ -12,16 +12,18 @@ class Get extends Route
      *
      * @param  string       $uri
      * @param  string|array $middleware
-     * @param  string       $domain
+     * @param  string|null  $name
+     * @param  string|null  $domain
      * @param  array        $where
      * @return void
      */
     public function __construct(
         string $uri = '',
         $middleware = '',
-        string $domain = '',
+        ?string $name = null,
+        ?string $domain = null,
         array $where = [],
     ) {
-        parent::__construct(['GET'], $uri, $middleware, $domain, $where);
+        parent::__construct(['GET'], $uri, $middleware, $name, $domain, $where);
     }
 }

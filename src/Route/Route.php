@@ -14,6 +14,7 @@ class Route extends BaseRoute
      *
      * @param  string|string[]      $methods
      * @param  string               $uri
+     * @param  string               $name
      * @param  string|array|null    $middleware
      * @param  string|null          $domain
      * @param  array                $where
@@ -23,11 +24,16 @@ class Route extends BaseRoute
         $methods,
         string $uri,
         $middleware = null,
+        ?string $name = null,
         ?string $domain = null,
         array $where = [],
     ) {
         $this->uri = $uri;
         $this->methods = (array) $methods;
+
+        if (in_array('GET', $this->methods) && ! in_array('HEAD', $this->methods)) {
+            $this->methods[] = 'HEAD';
+        }
 
         if ($middleware) {
             $this->action['middleware'] = $middleware;
@@ -37,8 +43,8 @@ class Route extends BaseRoute
             $this->action['domain'] = $domain;
         }
 
-        if (in_array('GET', $this->methods) && ! in_array('HEAD', $this->methods)) {
-            $this->methods[] = 'HEAD';
+        if ($name) {
+            $this->name($name);
         }
 
         foreach ($where as $key => $cond) {
