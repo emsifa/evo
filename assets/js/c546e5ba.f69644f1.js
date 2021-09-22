@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkevo=self.webpackChunkevo||[]).push([[289],{3740:function(e){e.exports=JSON.parse('{"allTagsPath":"/evo/blog/tags","slug":"/evo/blog/tags/hello","name":"hello","count":2,"permalink":"/evo/blog/tags/hello"}')}}]);
