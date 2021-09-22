@@ -74,7 +74,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/oceanicNext");
               items: [
                 {
                   label: "Introduction",
-                  to: "/docs/intro",
+                  to: "/docs/getting-started/intro",
                 },
                 {
                   label: "Getting Started",
