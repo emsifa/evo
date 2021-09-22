@@ -14,11 +14,11 @@ To do that, in Evo you can simply attach `Emsifa\Evo\Http\Response\Mock` attribu
 
 ## Using `Mock` Attribute
 
-For example, we will use `ExampleController` in Swagger UI section before.
+For example, we will use `ExampleController` in [Swagger UI](/docs/swagger-ui#setup-swagger-ui) section before.
 
 To respond mock on `postSomething` method, we need to attach `Emsifa\Evo\Http\Response\Mock` like an example below:
 
-```php
+```php {8,16}
 <?php
 
 namespace App\Http\Controllers;
@@ -46,7 +46,7 @@ class ExampleController extends Controller
 
 That's it!
 
-Now to try this, open your Swagger UI page. Expand `POST /api/examples/post-something` endpoint, click `Try it out`, then click execute.
+To try this, open your Swagger UI page. Expand `POST /api/examples/post-something` endpoint, click `Try it out`, then click execute.
 
 You should see it responded with random data.
 
@@ -58,11 +58,11 @@ For example, if you have `$name` property, Evo will use `$faker->name()`. For `$
 
 If you want to use another faker instead of default choosed faker. You can use `Emsifa\Evo\Dtos\UseFaker` to define what formatter you want to use.
 
-For example, we will use `paragraph(5)` formatter to `$message` property.
+For example, we will use `paragraphs(5, true)` formatter to `$message` property.
 
 Here is the code:
 
-```php
+```php {5,13}
 <?php
 
 namespace App\Http\Responses;
@@ -75,9 +75,69 @@ class PostSomethingResponse extends JsonResponse
 {
     public int $number;
 
-    #[UseFaker("paragraph", 5)]
+    #[UseFaker("paragraph", 5, true)]
     public string $message;
 }
 ```
 
 Now when you execute your endpoint again, it will respond `message` with paragraph contains 5 sentences.
+
+> For complete formatter available, see [Faker Documentation](https://fakerphp.github.io/).
+
+## Create Custom Faker
+
+You can also create your own faker generator by creating a class that implement `Emsifa\Evo\Contracts\ValueFaker` interface. Then, write your generator logic in `generateFakeValue` method. After that, you can just put its class name in `UseFaker` attribute before.
+
+For example, we will create `CategoryFaker` that receive `string $type`, if `$type` is framework, it will return value either "Laravel", "Express.js", or "Next.js". Else, it will return either "Dessert", "Appetizer", or "Cocktail".
+
+Create `app/Fakers/CategoryFaker.php` file with following code below:
+
+```php
+<?php
+
+namespace App\Fakers;
+
+use Emsifa\Evo\Contracts\ValueFaker;
+use Faker\Generator;
+use ReflectionProperty;
+
+class CategoryFaker implements ValueFaker
+{
+    public function __construct(protected string $type)
+    {
+    }
+
+    public function generateFakeValue(Generator $faker, ReflectionProperty $property): mixed
+    {
+        if ($this->type == "framework") {
+            return $faker->randomElement(["Laravel", "Express.js", "Nest.js"]);
+        } else {
+            return $faker->randomElement(["Dessert", "Appetizer", "Cocktail"]);
+        }
+    }
+}
+```
+
+To use this, we can simply put `"App\Fakers\CategoryFaker"` in `UseFaker` attribute like following code below:
+
+```php {7,14,17}
+<?php
+
+namespace App\Http\Responses;
+
+use Emsifa\Evo\Dtos\UseFaker;
+use Emsifa\Evo\Http\Response\JsonResponse;
+use App\Fakers\CategoryFaker;
+
+#[Description("Post something succeed")]
+class PostSomethingResponse extends JsonResponse
+{
+    public int $number;
+    
+    #[UseFaker(CategoryFaker::class)]
+    public string $meal;
+
+    #[UseFaker(CategoryFaker::class, "framework")]
+    public string $framework;
+}
+```
