@@ -7,7 +7,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/oceanicNext");
   module.exports = {
     title: "Laravel Evo",
     tagline: "Evolutionize your Laravel code",
-    url: "https://emsifa.github.io",
+    url: "https://emsifa.github.io/evo",
     baseUrl: "/evo/",
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
