@@ -7,7 +7,7 @@ sidebar_position: 6
 Evo provide custom response class `Emsifa\Evo\Http\Response\JsonResponse` and `Emsifa\Evo\Http\Response\ViewResponse` that is inherit from `Emsifa\Evo\Dto` class.
 They are all implements `Illuminate\Contracts\Support\Responsable`, so that they can be transformed to HTTP response.
 
-You can extend them to your response classes then use your response classes as return type of your controller action to get these benefits below:
+You can extend them to your response classes then use your response classes as return type of your controller action to get these benefits:
 
 * Easier to identify how the response data should be.
 * It prevents you to send wrong data types. Eg: integer as string, null to non-nullable property, etc.
@@ -52,7 +52,7 @@ class StoreTodoResponse extends JsonResponse
 
 ## Using Response Class
 
-To use `StoreTodoResponse` you need to put it as return type, then in your controller you can use `fromArray` method like an example below:
+To use `StoreTodoResponse` you need to put it as return type, then in your controller logic you can use `fromArray` method like an example below:
 
 ```php
 #[Post]
