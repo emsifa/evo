@@ -105,7 +105,7 @@ class EvoTest extends TestCase
         $router->group([
             'prefix' => '/foo',
             'middleware' => 'auth',
-        ], function() use ($evo) {
+        ], function () use ($evo) {
             $evo->routes(SampleController::class);
         });
 
