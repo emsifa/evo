@@ -8,7 +8,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/oceanicNext");
     title: "Laravel Evo",
     tagline: "Evolutionize your Laravel code",
     url: "https://emsifa.github.io",
-    baseUrl: "/evo-documentation/",
+    baseUrl: "/evo/",
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
     favicon: "img/favicon.ico",
