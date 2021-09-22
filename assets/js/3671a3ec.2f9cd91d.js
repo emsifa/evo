@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkevo=self.webpackChunkevo||[]).push([[806],{5426:function(s){s.exports=JSON.parse('{"allTagsPath":"/evo/blog/tags","slug":"/evo/blog/tags/docusaurus","name":"docusaurus","count":4,"permalink":"/evo/blog/tags/docusaurus"}')}}]);
