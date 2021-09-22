@@ -55,8 +55,18 @@ class Evo
     public function routes(string $controller)
     {
         $this->controllers[] = $controller;
+
         $routes = $this->getRoutesFromController($controller);
+        $hasGroupStack = $this->router->hasGroupStack();
+        $lastGroupPrefix = $this->router->getLastGroupPrefix();
+
         foreach ($routes as $route) {
+            if ($hasGroupStack) {
+                $uri = rtrim($lastGroupPrefix, "/") . "/" . ltrim($route->uri(), "/");
+                $route->setUri($uri);
+                $route->setAction($this->router->mergeWithLastGroup($route->getAction()));
+            }
+
             $this->router->getRoutes()->add($route);
         }
     }
