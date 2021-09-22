@@ -1,0 +1,54 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #607d8b;
+  --ifm-color-primary-dark: rgb(33, 175, 144);
+  --ifm-color-primary-darker: rgb(31, 165, 136);
+  --ifm-color-primary-darkest: rgb(26, 136, 112);
+  --ifm-color-primary-light: rgb(70, 203, 174);
+  --ifm-color-primary-lighter: rgb(102, 212, 189);
+  --ifm-color-primary-lightest: rgb(146, 224, 208);
+  --ifm-code-font-size: 95%;
+  --ifm-color-gray-1000: #121419;
+  --ifm-color-gray-900: #263238;
+  --ifm-color-gray-800: #37474f;
+  --ifm-color-gray-700: #455a64;
+  --ifm-color-gray-600: #546e7a;
+  --ifm-color-gray-500: #607d8b;
+  --ifm-color-gray-400: #78909c;
+  --ifm-color-gray-300: #90a4ae;
+  --ifm-color-gray-200: #b0bec5;
+  --ifm-color-gray-100: #cfd8dc;
+  --ifm-color-gray-0: #eceff1;
+  --ifm-toc-border-color: white;
+  --ifm-navbar-background-color: #fff;
+  --ifm-hero-background-color: transparent;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.2);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+html[data-theme='dark'] .docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+html[data-theme='dark'] {
+  --ifm-background-color: var(--ifm-color-gray-1000);
+  --ifm-toc-border-color: var(--ifm-color-gray-1000);
+  --ifm-navbar-background-color: var(--ifm-color-gray-1000);
+  --ifm-background-surface-color: #242526;
+}
+
+@media (min-width: 997px)
+.docSidebarContainer_node_modules-\@docusaurus-theme-classic-lib-next-theme-DocPage-styles-module {
+  box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.15);
+}
