@@ -71,20 +71,4 @@ class Route extends BaseRoute
 
         return new ControllerDispatcher($this->container);
     }
-
-    public function toArray()
-    {
-        $array = [];
-        if ($this->domain) {
-            $array['domain'] = $this->domain;
-        }
-        if ($this->where) {
-            $array['where'] = $this->where;
-        }
-        if ($this->name) {
-            $array['as'] = $this->name;
-        }
-
-        return $array;
-    }
 }
