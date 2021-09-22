@@ -93,4 +93,34 @@ class EvoTest extends TestCase
         $this->assertNotNull($router->getRoutes()->getByAction(SwaggerController::class.'@showUi'));
         $this->assertNotNull($router->getRoutes()->getByAction(SwaggerController::class.'@openApi'));
     }
+
+    public function testRegisterRoutesInAGroup()
+    {
+        /**
+         * @var Router
+         */
+        $router = $this->app->make(Router::class);
+        $evo = new Evo($router, $this->app);
+
+        $router->group([
+            'prefix' => '/foo',
+            'middleware' => 'auth',
+        ], function() use ($evo) {
+            $evo->routes(SampleController::class);
+        });
+
+        $routes = $router->getRoutes()->getRoutes();
+
+        $this->assertEquals("/foo/sample", $routes[0]->uri());
+        $this->assertEquals(["GET", "HEAD"], $routes[0]->methods());
+        $this->assertEquals(["auth"], $routes[0]->middleware());
+
+        $this->assertEquals("/foo/sample/stuff", $routes[1]->uri());
+        $this->assertEquals(["GET", "HEAD"], $routes[1]->methods());
+        $this->assertEquals(["auth"], $routes[1]->middleware());
+
+        $this->assertEquals("/foo/sample/stuff", $routes[2]->uri());
+        $this->assertEquals(["POST"], $routes[2]->methods());
+        $this->assertEquals(["auth"], $routes[2]->middleware());
+    }
 }
