@@ -26,11 +26,11 @@ const darkCodeTheme = require("prism-react-renderer/themes/oceanicNext");
             // Please change this to your repo.
             editUrl: "https://github.com/emsifa/evo/edit/main/website/",
           },
-          blog: {
-            showReadingTime: true,
-            // Please change this to your repo.
-            editUrl: "https://github.com/emsifa/evo/edit/main/website/blog/",
-          },
+          // blog: {
+          //   showReadingTime: true,
+          //   // Please change this to your repo.
+          //   editUrl: "https://github.com/emsifa/evo/edit/main/website/blog/",
+          // },
           theme: {
             customCss: require.resolve("./src/css/custom.css"),
           },
@@ -58,7 +58,6 @@ const darkCodeTheme = require("prism-react-renderer/themes/oceanicNext");
               position: "left",
               label: "Documentation",
             },
-            { to: "/blog", label: "Blog", position: "left" },
             {
               href: "https://github.com/emsifa/evo",
               label: "GitHub",
