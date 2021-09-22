@@ -124,7 +124,7 @@ Validator::make($data, [
 
 ## Create Your Own Validation Rule
 
-Evo's validation rule is basically a class implementing `Illuminate\Contracts\Validation\Rule` interface and has `Attribute` attribute attached on it.
+Evo's validation rules is basically class implementing `Illuminate\Contracts\Validation\Rule` interface and has `Attribute` attribute attached on it.
 
 For example, we will create `Bit` rule that only accepts string with "0" and "1" characters.
 
@@ -159,9 +159,9 @@ class Bit implements Rule
 }
 ```
 
-That's it! now you can attach it to your DTO's property like this:
+Now you can attach it to your DTO's property like this:
 
-```php
+```php {7,12}
 <?php
 
 namespace App\Dto;
