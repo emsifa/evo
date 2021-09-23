@@ -3,6 +3,9 @@
  * bundles Infima by default. Infima is a CSS framework designed to
  * work well for content-centric websites.
  */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* You can override the default Infima variables here. */
 :root {
@@ -51,4 +54,30 @@ html[data-theme='dark'] {
 @media (min-width: 997px)
 .docSidebarContainer_node_modules-\@docusaurus-theme-classic-lib-next-theme-DocPage-styles-module {
   box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.15);
+}
+
+img, svg {
+  @apply inline-block;
+}
+
+.navbar__item.navbar__link span,
+.footer__link-item span,
+.menu__link span {
+  @apply inline-flex items-center;
+}
+
+.theme-doc-markdown h1 {
+  @apply text-5xl font-bold;
+}
+
+.theme-doc-markdown h2 {
+  @apply text-4xl font-bold;
+}
+
+.theme-doc-markdown h3 {
+  @apply text-3xl font-bold;
+}
+
+.theme-doc-markdown h4 {
+  @apply text-2xl font-bold;
 }

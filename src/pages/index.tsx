@@ -9,17 +9,13 @@ import HomepageFeatures from "../components/HomepageFeatures";
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
   return (
-    <header className={clsx("hero hero--primary", styles.heroBanner)}>
-      <div className="container">
-        <h1 className="hero__title">{siteConfig.title}</h1>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/getting-started/installation"
-          >
-            Getting Started
-          </Link>
+    <header className={clsx("bg-gray-900", styles.heroBanner)}>
+      <div className="container max-w-screen-lg ">
+        <div className="flex">
+          <div className="text-left">
+            <h1 className="text-6xl font-bold">{siteConfig.title}</h1>
+            <p className="text-4xl">{siteConfig.tagline}</p>
+          </div>
         </div>
       </div>
     </header>
