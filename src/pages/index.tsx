@@ -9,12 +9,27 @@ import HomepageFeatures from "../components/HomepageFeatures";
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
   return (
-    <header className={clsx("bg-gray-900", styles.heroBanner)}>
-      <div className="container max-w-screen-lg ">
-        <div className="flex">
-          <div className="text-left">
-            <h1 className="text-6xl font-bold">{siteConfig.title}</h1>
-            <p className="text-4xl">{siteConfig.tagline}</p>
+    <header className={clsx(styles.heroBanner)}>
+      <div className="container py-6 max-w-screen-lg ">
+        <div className="flex items-center leading-10 flex-wrap">
+          <div className="text-center md:text-left flex-1">
+            <h1 className="text-3xl md:text-6xl font-bold">
+              {siteConfig.title}
+            </h1>
+            <p className="text-xl md:text-3xl mb-10">{siteConfig.tagline}</p>
+            <Link
+              className="bg-gray-200 text-lg px-3 py-2 rounded md:px-4 md:py-3md:text-xl md:rounded-lg hover:no-underline text-gray-600"
+              href="/docs/getting-started/intro"
+            >
+              Get Started
+            </Link>
+          </div>
+          <div className="w-full mt-12 md:w-[400px] md:mt-0">
+            <img
+              className="w-full rounded-xl overflow-hidden shadow-2xl"
+              src="img/hero-image.svg"
+              alt=""
+            />
           </div>
         </div>
       </div>
