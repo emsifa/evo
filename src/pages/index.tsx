@@ -10,7 +10,7 @@ function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
   return (
     <header className={clsx(styles.heroBanner)}>
-      <div className="container py-6 max-w-screen-lg ">
+      <div className="mx-auto py-6 max-w-screen-lg ">
         <div className="flex items-center leading-10 flex-wrap">
           <div className="text-center md:text-left flex-1">
             <h1 className="text-3xl md:text-6xl font-bold">
@@ -18,7 +18,7 @@ function HomepageHeader() {
             </h1>
             <p className="text-xl md:text-3xl mb-10">{siteConfig.tagline}</p>
             <Link
-              className="bg-gray-200 text-lg px-3 py-2 rounded md:px-4 md:py-3md:text-xl md:rounded-lg hover:no-underline text-gray-600"
+              className="bg-gray-600 text-white text-lg px-3 py-2 rounded md:px-4 md:py-3 md:text-xl md:rounded-lg hover:no-underline hover:text-white hover:shadow-xl"
               href="/docs/getting-started/intro"
             >
               Get Started
