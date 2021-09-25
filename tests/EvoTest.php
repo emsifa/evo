@@ -14,9 +14,6 @@ use ReflectionMethod;
 
 class EvoTest extends TestCase
 {
-    /**
-     * @test
-     */
     public function testGetRoutesFromController()
     {
         $container = new Container;
@@ -108,6 +105,30 @@ class EvoTest extends TestCase
         ], function () use ($evo) {
             $evo->routes(SampleController::class);
         });
+
+        $routes = $router->getRoutes()->getRoutes();
+
+        $this->assertEquals("/foo/sample", $routes[0]->uri());
+        $this->assertEquals(["GET", "HEAD"], $routes[0]->methods());
+        $this->assertEquals(["auth"], $routes[0]->middleware());
+
+        $this->assertEquals("/foo/sample/stuff", $routes[1]->uri());
+        $this->assertEquals(["GET", "HEAD"], $routes[1]->methods());
+        $this->assertEquals(["auth"], $routes[1]->middleware());
+
+        $this->assertEquals("/foo/sample/stuff", $routes[2]->uri());
+        $this->assertEquals(["POST"], $routes[2]->methods());
+        $this->assertEquals(["auth"], $routes[2]->middleware());
+    }
+
+    public function testRegisterRoutesWithPrefixAndMiddleware()
+    {
+        /**
+         * @var Router
+         */
+        $router = $this->app->make(Router::class);
+        $evo = new Evo($router, $this->app);
+        $evo->routes(SampleController::class, prefix: '/foo', middleware: 'auth');
 
         $routes = $router->getRoutes()->getRoutes();
 

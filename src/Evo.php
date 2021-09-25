@@ -52,11 +52,14 @@ class Evo
      * @param  string $controller
      * @return void
      */
-    public function routes(string $controller)
-    {
+    public function routes(
+        string $controller,
+        string $prefix = '',
+        string|array|null $middleware = null,
+    ) {
         $this->controllers[] = $controller;
 
-        $routes = $this->getRoutesFromController($controller);
+        $routes = $this->getRoutesFromController($controller, $prefix, $middleware);
         $hasGroupStack = $this->router->hasGroupStack();
         $lastGroupPrefix = $this->router->getLastGroupPrefix();
 
@@ -91,8 +94,11 @@ class Evo
      * @param  string $controller
      * @return Route[]
      */
-    protected function getRoutesFromController(string $controller): array
-    {
+    protected function getRoutesFromController(
+        string $controller,
+        string $prefix = '',
+        array|string|null $middleware = null,
+    ): array {
         $routes = [];
         $reflection = new ReflectionClass($controller);
         $classRouteModifiers = ReflectionHelper::getAttributesInstances($reflection, RouteModifier::class, ReflectionAttribute::IS_INSTANCEOF);
@@ -112,9 +118,18 @@ class Evo
              * @var \Emsifa\Evo\Route\Route $route
              */
             foreach ($methodRoutes as $route) {
+                if ($middleware) {
+                    $route->middleware($middleware);
+                }
+
                 $route->setUses($controller.'@'.$method->getName());
                 $route->setContainer($this->container);
                 $routes[] = $this->applyRouteModifiers($route, $routeModifiers);
+
+                if ($prefix) {
+                    $uri = rtrim($prefix, "/") . "/" . ltrim($route->uri(), "/");
+                    $route->setUri($uri);
+                }
             }
         }
 
