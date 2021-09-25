@@ -98,8 +98,7 @@ class Evo
         string $controller,
         string $prefix = '',
         array|string|null $middleware = null,
-    ): array
-    {
+    ): array {
         $routes = [];
         $reflection = new ReflectionClass($controller);
         $classRouteModifiers = ReflectionHelper::getAttributesInstances($reflection, RouteModifier::class, ReflectionAttribute::IS_INSTANCEOF);
