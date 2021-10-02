@@ -2,15 +2,10 @@
 
 namespace Emsifa\Evo\Tests\Commands;
 
-use Emsifa\Evo\Commands\MakeResponseCommand;
 use Emsifa\Evo\Http\Response\JsonResponse;
 use Emsifa\Evo\Http\Response\UseJsonTemplate;
 use Emsifa\Evo\Http\Response\ViewResponse;
 use Emsifa\Evo\Tests\TestCase;
-use Illuminate\Container\Container;
-use Illuminate\Filesystem\Filesystem;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\BufferedOutput;
 
 class MakeResponseCommandTest extends TestCase
 {
