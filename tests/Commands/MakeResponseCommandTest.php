@@ -40,6 +40,36 @@ class MakeResponseCommandTest extends TestCase
         unlink($outputPath."/Http/Responses/User/RoleData.php");
     }
 
+    public function testMakeJsonResponseFileTwiceShouldBeRejected()
+    {
+        $outputPath = __DIR__."/output";
+        app()->useAppPath($outputPath);
+
+        $this->artisan('evo:make-response', [
+            'file' => 'Test/SampleResponse',
+            'properties' => [
+                'id:int',
+                'name:string',
+                'email:string',
+                'activatedBy:?int',
+            ],
+        ]);
+
+        $this->assertFileExists($outputPath."/Http/Responses/Test/SampleResponse.php");
+        $this->assertFileContains($outputPath."/Http/Responses/Test/SampleResponse.php", "use ".JsonResponse::class.";");
+
+        $this->artisan('evo:make-response', [
+            'file' => 'Test/SampleResponse',
+            'properties' => [
+                'id:int',
+                'name:string',
+                'email:string',
+            ],
+        ])->expectsOutput("Response 'Test/SampleResponse' already exists.");
+
+        unlink($outputPath."/Http/Responses/Test/SampleResponse.php");
+    }
+
     public function testMakeViewResponseFile()
     {
         $outputPath = __DIR__."/output";
