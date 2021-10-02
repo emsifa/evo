@@ -13,24 +13,19 @@ class MakeDtoCommandTest extends TestCase
 {
     public function testMakeDtoFile()
     {
-        $command = new MakeDtoCommand(new Filesystem);
-        $command->setLaravel(new Container);
-
-        $input = new ArgvInput([
-            'evo:make-dto',
-            'MyDto/UserDto',
-            'id:int',
-            'name:string',
-            'email:string',
-            'roles:MyDto/RoleDto[]',
-            'activatedBy:?int',
-        ]);
-        $output = new BufferedOutput();
-
         $outputPath = __DIR__."/output";
         app()->useAppPath($outputPath);
 
-        $command->run($input, $output);
+        $this->artisan('evo:make-dto', [
+            'file' => 'MyDto/UserDto',
+            'properties' => [
+                'id:int',
+                'name:string',
+                'email:string',
+                'roles:MyDto/RoleDto[]',
+                'activatedBy:?int',
+            ],
+        ]);
 
         $this->assertFileExists($outputPath."/Dtos/MyDto/UserDto.php");
         $this->assertFileExists($outputPath."/Dtos/MyDto/RoleDto.php");
