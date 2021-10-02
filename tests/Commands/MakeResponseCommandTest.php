@@ -27,6 +27,7 @@ class MakeResponseCommandTest extends TestCase
                 'email:string',
                 'roles:User/RoleData[]',
                 'activatedBy:?int',
+                'date:DateTime',
                 'mixedProp',
             ],
         ]);
