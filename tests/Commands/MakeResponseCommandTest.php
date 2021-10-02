@@ -20,7 +20,7 @@ class MakeResponseCommandTest extends TestCase
         $command->setLaravel(new Container);
 
         $input = new ArgvInput([
-            'evo:make-dto',
+            'evo:make-response',
             'User/CreateUserResponse',
             'id:int',
             'name:string',
@@ -51,7 +51,7 @@ class MakeResponseCommandTest extends TestCase
         $command->setLaravel(new Container);
 
         $input = new ArgvInput([
-            'evo:make-dto',
+            'evo:make-response',
             'Todo/TodosViewResponse',
             'id:int',
             'title:string',
@@ -82,7 +82,7 @@ class MakeResponseCommandTest extends TestCase
         $command->setLaravel(new Container);
 
         $input = new ArgvInput([
-            'evo:make-dto',
+            'evo:make-response',
             'Post/CreatePostResponse',
             'id:int',
             'title:string',
