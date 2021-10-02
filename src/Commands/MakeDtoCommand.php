@@ -128,9 +128,11 @@ class MakeDtoCommand extends Command
                 $bodyLines[] = "public {$nullableSign}{$prop['type']} \${$prop['name']};";
             }
         }
+        // @codeCoverageIgnoreStart
         if (count($bodyLines) && $bodyLines[count($bodyLines) - 1] === "") {
             array_pop($bodyLines);
         }
+        // @codeCoverageIgnoreEnd
 
         return $bodyLines;
     }
