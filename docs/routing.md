@@ -158,7 +158,7 @@ use Emsifa\Evo\Route\RouteName;
 use Emsifa\Evo\Route\Get;
 
 #[RoutePrefix('users')]
-#[RouteName('users.')]
+#[RouteName('users')]
 class UserController extends Controller
 {
     #[Get(name: 'index')]
@@ -174,6 +174,13 @@ class UserController extends Controller
     }
 }
 ```
+
+By default `RouteName` attribute will add "." separator, so example above will add route with names:
+
+* `"users.index"`
+* `"users.show"`
+
+If you want to use different separator, you can set second parameter. For example if you change example above with `RouteName('users', ':')`, you will have "users:index" and "users:show" route names instead.
 
 ## Applying Middleware
 
