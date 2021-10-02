@@ -254,7 +254,7 @@ class MakeResponseCommand extends Command
     {
         $splitProp = explode(":", $prop);
         if (count($splitProp) === 1) {
-            return [$prop, null, false, false];
+            return [$prop, 'mixed', false, false];
         }
 
         [$name, $type] = $splitProp;
