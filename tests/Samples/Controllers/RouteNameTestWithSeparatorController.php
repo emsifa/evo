@@ -23,7 +23,6 @@ class RouteNameTestWithSeparatorController extends Controller
     #[Post(name: 'store')]
     public function store()
     {
-
     }
 
     #[Post('ignored')]

@@ -15,7 +15,8 @@ class RouteName implements RouteModifier
     public function __construct(
         protected string $name,
         protected string $separator = '.',
-    ) {}
+    ) {
+    }
 
     public function modifyRoute(Route $route)
     {

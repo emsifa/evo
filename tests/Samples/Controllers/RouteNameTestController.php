@@ -23,7 +23,6 @@ class RouteNameTestController extends Controller
     #[Post(name: 'store')]
     public function store()
     {
-
     }
 
     #[Post('ignored')]
