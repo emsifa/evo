@@ -128,9 +128,11 @@ class MakeDtoCommand extends Command
                 $bodyLines[] = "public {$nullableSign}{$prop['type']} \${$prop['name']};";
             }
         }
+        // @codeCoverageIgnoreStart
         if (count($bodyLines) && $bodyLines[count($bodyLines) - 1] === "") {
             array_pop($bodyLines);
         }
+        // @codeCoverageIgnoreEnd
 
         return $bodyLines;
     }
@@ -212,7 +214,7 @@ class MakeDtoCommand extends Command
     {
         $splitProp = explode(":", $prop);
         if (count($splitProp) === 1) {
-            return [$prop, null, false, false];
+            return [$prop, 'mixed', false, false];
         }
 
         [$name, $type] = $splitProp;
