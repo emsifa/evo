@@ -2,38 +2,31 @@
 
 namespace Emsifa\Evo\Tests\Commands;
 
-use Emsifa\Evo\Commands\MakeResponseCommand;
 use Emsifa\Evo\Http\Response\JsonResponse;
 use Emsifa\Evo\Http\Response\UseJsonTemplate;
 use Emsifa\Evo\Http\Response\ViewResponse;
 use Emsifa\Evo\Tests\TestCase;
-use Illuminate\Container\Container;
-use Illuminate\Filesystem\Filesystem;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\BufferedOutput;
 
 class MakeResponseCommandTest extends TestCase
 {
     public function testMakeJsonResponseFile()
     {
-        $command = new MakeResponseCommand(new Filesystem);
-        $command->setLaravel(new Container);
-
-        $input = new ArgvInput([
-            'evo:make-dto',
-            'User/CreateUserResponse',
-            'id:int',
-            'name:string',
-            'email:string',
-            'roles:User/RoleData[]',
-            'activatedBy:?int',
-        ]);
-        $output = new BufferedOutput();
-
         $outputPath = __DIR__."/output";
         app()->useAppPath($outputPath);
 
-        $command->run($input, $output);
+        $this->artisan('evo:make-response', [
+            'file' => 'User/CreateUserResponse',
+            'properties' => [
+                'id:int',
+                'name:string',
+                'email:string',
+                'roles:User/RoleData[]',
+                'activatedBy:?int',
+                'date:DateTime',
+                'numbers:int[]',
+                'mixedProp',
+            ],
+        ]);
 
         $this->assertFileExists($outputPath."/Http/Responses/User/CreateUserResponse.php");
         $this->assertFileExists($outputPath."/Http/Responses/User/RoleData.php");
@@ -45,26 +38,51 @@ class MakeResponseCommandTest extends TestCase
         unlink($outputPath."/Http/Responses/User/RoleData.php");
     }
 
-    public function testMakeViewResponseFile()
+    public function testMakeJsonResponseFileTwiceShouldBeRejected()
     {
-        $command = new MakeResponseCommand(new Filesystem);
-        $command->setLaravel(new Container);
-
-        $input = new ArgvInput([
-            'evo:make-dto',
-            'Todo/TodosViewResponse',
-            'id:int',
-            'title:string',
-            'completed:bool',
-            'user:Todo/UserData',
-            '--view',
-        ]);
-        $output = new BufferedOutput();
-
         $outputPath = __DIR__."/output";
         app()->useAppPath($outputPath);
 
-        $command->run($input, $output);
+        $this->artisan('evo:make-response', [
+            'file' => 'Test/SampleResponse',
+            'properties' => [
+                'id:int',
+                'name:string',
+                'email:string',
+                'activatedBy:?int',
+            ],
+        ]);
+
+        $this->assertFileExists($outputPath."/Http/Responses/Test/SampleResponse.php");
+        $this->assertFileContains($outputPath."/Http/Responses/Test/SampleResponse.php", "use ".JsonResponse::class.";");
+
+        $this->artisan('evo:make-response', [
+            'file' => 'Test/SampleResponse',
+            'properties' => [
+                'id:int',
+                'name:string',
+                'email:string',
+            ],
+        ])->expectsOutput("Response 'Test/SampleResponse' already exists.");
+
+        unlink($outputPath."/Http/Responses/Test/SampleResponse.php");
+    }
+
+    public function testMakeViewResponseFile()
+    {
+        $outputPath = __DIR__."/output";
+        app()->useAppPath($outputPath);
+
+        $this->artisan('evo:make-response', [
+            'file' => 'Todo/TodosViewResponse',
+            'properties' => [
+                'id:int',
+                'title:string',
+                'completed:bool',
+                'user:Todo/UserData',
+            ],
+            '--view' => true,
+        ]);
 
         $this->assertFileExists($outputPath."/Http/Responses/Todo/TodosViewResponse.php");
         $this->assertFileExists($outputPath."/Http/Responses/Todo/UserData.php");
@@ -78,24 +96,19 @@ class MakeResponseCommandTest extends TestCase
 
     public function testMakeJsonResponseWithTemplate()
     {
-        $command = new MakeResponseCommand(new Filesystem);
-        $command->setLaravel(new Container);
-
-        $input = new ArgvInput([
-            'evo:make-dto',
-            'Post/CreatePostResponse',
-            'id:int',
-            'title:string',
-            'body:string',
-            'categories:Post/CategoryData[]',
-            '--json-template=MyTemplate',
-        ]);
-        $output = new BufferedOutput();
-
         $outputPath = __DIR__."/output";
         app()->useAppPath($outputPath);
 
-        $command->run($input, $output);
+        $this->artisan('evo:make-response', [
+            'file' => 'Post/CreatePostResponse',
+            'properties' => [
+                'id:int',
+                'title:string',
+                'body:string',
+                'categories:Post/CategoryData[]',
+            ],
+            '--json-template' => 'MyTemplate',
+        ]);
 
         $this->assertFileExists($outputPath."/Http/Responses/Post/CreatePostResponse.php");
         $this->assertFileExists($outputPath."/Http/Responses/Post/CategoryData.php");
