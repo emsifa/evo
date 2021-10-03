@@ -208,9 +208,10 @@ class ControllerDispatcherTest extends TestCase
         $route = new Route('POST', '/', SampleDispatchedController::class.'@methodWithSpecificErrorResponse');
         $result = $dispatcher->dispatch($route, $controller, 'methodWithSpecificErrorResponse');
 
-        $this->assertInstanceOf(SampleCustomErrorResponse::class, $result);
-        $this->assertEquals($result->code, "E102");
-        $this->assertEquals($result->message, "Whops! something went wrong");
+        $json = json_decode($result->getContent());
+
+        $this->assertEquals("E102",$json->code);
+        $this->assertEquals("Whops! something went wrong", $json->message);
     }
 
     public function testValidationExceptionShouldBeResolved()
@@ -224,7 +225,9 @@ class ControllerDispatcherTest extends TestCase
         $route = new Route('POST', '/', SampleDispatchedController::class.'@methodThrownValidationException');
         $result = $dispatcher->dispatch($route, $controller, 'methodThrownValidationException');
 
-        $this->assertInstanceOf(SampleInvalidResponse::class, $result);
+        $json = json_decode($result->getContent());
+
+        $this->assertEquals("The given data was invalid.", $json->message);
     }
 
     public function testGetParameterValueFromObject()
@@ -266,26 +269,31 @@ class ControllerDispatcherTest extends TestCase
     public function testMakeExceptionResponseFromEmptyResponses()
     {
         $dispatcher = new ControllerDispatcher($this->app);
-        $this->assertNull($dispatcher->makeExceptionResponse(new RuntimeException(), []));
+        $this->assertNull($dispatcher->makeExceptionResponse(new RuntimeException(), [], new Request()));
     }
 
     public function testMakeExceptionResponseFromUnregisteredExceptionResponse()
     {
         $dispatcher = new ControllerDispatcher($this->app);
-        $this->assertNull($dispatcher->makeExceptionResponse(new Exception(), [
-            RuntimeException::class => SampleErrorResponse::class,
-        ]));
+        $this->assertNull($dispatcher->makeExceptionResponse(
+            new Exception(),
+            [RuntimeException::class => SampleErrorResponse::class],
+            new Request(),
+        ));
     }
 
     public function testMakeExceptionResponseFromNonExceptionResponse()
     {
         $dispatcher = new ControllerDispatcher($this->app);
-        $result = $dispatcher->makeExceptionResponse(new InvalidArgumentException("Lorem ipsum"), [
-            InvalidArgumentException::class => SampleErrorResponse::class,
-        ]);
+        $result = $dispatcher->makeExceptionResponse(
+            new InvalidArgumentException("Lorem ipsum"),
+            [InvalidArgumentException::class => SampleErrorResponse::class],
+            new Request(),
+        );
 
-        $this->assertTrue($result instanceof SampleErrorResponse);
-        $this->assertEquals("Lorem ipsum", $result->message);
+        $json = json_decode($result->getContent());
+
+        $this->assertEquals("Lorem ipsum", $json->message);
     }
 
     public function testDispatchErrorUnregisteredException()

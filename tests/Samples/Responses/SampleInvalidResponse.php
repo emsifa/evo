@@ -19,6 +19,8 @@ class SampleInvalidResponse extends JsonResponse implements ExceptionResponse
 
     public function forException(Exception $exception): static
     {
+        $this->message = $exception->getMessage();
+
         if ($exception instanceof ValidationException) {
             $this->errors = $exception->validator->errors()->all();
         }
