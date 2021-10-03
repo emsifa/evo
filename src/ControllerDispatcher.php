@@ -8,16 +8,20 @@ use Emsifa\Evo\Contracts\RequestValidator;
 use Emsifa\Evo\Error\DontReport;
 use Emsifa\Evo\Helpers\ReflectionHelper;
 use Emsifa\Evo\Http\Response\Mock;
+use Emsifa\Evo\Http\Response\ResponseStatus;
 use Emsifa\Evo\Http\Response\UseErrorResponse;
 use Exception;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\ControllerDispatcher as BaseControllerDispatcher;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Arr;
 use ReflectionAttribute;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 use ReflectionParameter;
+use Symfony\Component\HttpFoundation\Response;
 
 class ControllerDispatcher extends BaseControllerDispatcher
 {
@@ -48,7 +52,7 @@ class ControllerDispatcher extends BaseControllerDispatcher
             return call_user_func_array([$controller, $method], $parameters);
         } catch (Exception $exception) {
             $mapErrorResponses = $this->getErrorResponsesMap($methodReflection);
-            $exceptionResponse = $this->makeExceptionResponse($exception, $mapErrorResponses);
+            $exceptionResponse = $this->makeExceptionResponse($exception, $mapErrorResponses, $request);
 
             if (! $exceptionResponse) {
                 throw $exception;
@@ -92,7 +96,7 @@ class ControllerDispatcher extends BaseControllerDispatcher
         return $map;
     }
 
-    public function makeExceptionResponse(Exception $exception, array $mapExceptionResponses)
+    public function makeExceptionResponse(Exception $exception, array $mapExceptionResponses, Request $request): ?Response
     {
         if (empty($mapExceptionResponses)) {
             return null;
@@ -115,7 +119,46 @@ class ControllerDispatcher extends BaseControllerDispatcher
             ]);
         }
 
+        if ($response instanceof Responsable) {
+            $response = $response->toResponse($request);
+        }
+
+        /**
+         * @var Response $response
+         */
+        $status = $this->getErrorResponseStatusCode($exception, $responseClassName);
+        $response->setStatusCode($status);
+
         return $response;
+    }
+
+    public function getErrorResponseStatusCode(Exception $exception, string $responseClassName): int
+    {
+        /**
+         * @var ResponseStatus|null $exceptionStatus
+         */
+        $exceptionStatus = ReflectionHelper::getFirstAttributeInstance(
+            new ReflectionClass($exception),
+            ResponseStatus::class,
+            ReflectionAttribute::IS_INSTANCEOF,
+        );
+        if ($exceptionStatus) {
+            return $exceptionStatus->getStatus();
+        }
+
+        /**
+         * @var ResponseStatus|null $responseStatus
+         */
+        $responseStatus = ReflectionHelper::getFirstAttributeInstance(
+            new ReflectionClass($responseClassName),
+            ResponseStatus::class,
+            ReflectionAttribute::IS_INSTANCEOF,
+        );
+        if ($responseStatus) {
+            return $responseStatus->getStatus();
+        }
+
+        return 500;
     }
 
     public function findBestMatchErrorResponse(Exception $exception, array $mapExceptionResponses): ?string
