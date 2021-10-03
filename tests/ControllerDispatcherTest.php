@@ -4,6 +4,7 @@ namespace Emsifa\Evo\Tests;
 
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Emsifa\Evo\ControllerDispatcher;
+use Emsifa\Evo\Tests\Samples\Controllers\ControllerDispatcherTestController;
 use Emsifa\Evo\Tests\Samples\Controllers\SampleController;
 use Emsifa\Evo\Tests\Samples\Controllers\SampleDispatchedController;
 use Emsifa\Evo\Tests\Samples\Controllers\SampleDispatchedControllerWithNoExceptionResponse;
@@ -24,6 +25,7 @@ use Illuminate\Validation\Validator;
 use InvalidArgumentException;
 use ReflectionMethod;
 use RuntimeException;
+use Symfony\Component\HttpFoundation\Response;
 use UnexpectedValueException;
 
 class ControllerDispatcherTest extends TestCase
@@ -305,5 +307,50 @@ class ControllerDispatcherTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $dispatcher->dispatch($route, $controller, 'methodThrowException');
+    }
+
+    public function testDispatchMethodThrownCustomExceptionWithResponseStatus()
+    {
+        $dispatcher = new ControllerDispatcher($this->app);
+
+        $route = new Route('GET', '/foobar', ControllerDispatcherTestController::class.'@throwCustomExceptionWithResponseStatus');
+        $controller = new ControllerDispatcherTestController();
+
+        /**
+         * @var Response
+         */
+        $result = $dispatcher->dispatch($route, $controller, 'throwCustomExceptionWithResponseStatus');
+
+        $this->assertEquals(402, $result->getStatusCode());
+    }
+
+    public function testDispatchMethodThrownCustomExceptionWithNoResponseStatus()
+    {
+        $dispatcher = new ControllerDispatcher($this->app);
+
+        $route = new Route('GET', '/foobar', ControllerDispatcherTestController::class.'@throwExceptionWithNoResponseStatus');
+        $controller = new ControllerDispatcherTestController();
+
+        /**
+         * @var Response
+         */
+        $result = $dispatcher->dispatch($route, $controller, 'throwExceptionWithNoResponseStatus');
+
+        $this->assertEquals(510, $result->getStatusCode());
+    }
+
+    public function testDispatchMethodThrownCustomExceptionResponseWithNoResponseStatus()
+    {
+        $dispatcher = new ControllerDispatcher($this->app);
+
+        $route = new Route('GET', '/foobar', ControllerDispatcherTestController::class.'@throwExceptionWithResponseNoResponseStatus');
+        $controller = new ControllerDispatcherTestController();
+
+        /**
+         * @var Response
+         */
+        $result = $dispatcher->dispatch($route, $controller, 'throwExceptionWithResponseNoResponseStatus');
+
+        $this->assertEquals(500, $result->getStatusCode());
     }
 }
