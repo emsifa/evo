@@ -212,7 +212,7 @@ class ControllerDispatcherTest extends TestCase
 
         $json = json_decode($result->getContent());
 
-        $this->assertEquals("E102",$json->code);
+        $this->assertEquals("E102", $json->code);
         $this->assertEquals("Whops! something went wrong", $json->message);
     }
 
