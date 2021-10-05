@@ -49,6 +49,7 @@ class Operation extends BaseSchema
             }
         }
         if (is_array($this->security)) {
+            $array['security'] = [];
             foreach ((array) $this->security as $key => $security) {
                 $array['security'][] = $security->toArray();
             }
