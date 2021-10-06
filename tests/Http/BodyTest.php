@@ -4,6 +4,7 @@ namespace Emsifa\Evo\Tests\Http;
 
 use Emsifa\Evo\Http\Body;
 use Emsifa\Evo\Tests\Samples\Controllers\BodyTestController;
+use Emsifa\Evo\Tests\Samples\MockPresenceVerifier;
 use Emsifa\Evo\Tests\Samples\SampleBodySchema;
 use Emsifa\Evo\Tests\TestCase;
 use Illuminate\Http\Request;
@@ -76,6 +77,34 @@ class BodyTest extends TestCase
         $request = new Request(request: $data, server: ['REQUEST_METHOD' => 'POST']);
         $parameter = (new ReflectionClass(BodyTestController::class))
             ->getMethod("methodWithMixedParam")
+            ->getParameters()[0];
+
+        $this->assertNull($body->validateRequest($request, $parameter));
+    }
+
+    public function testValidateRequestToDtoThatHasPresenceVerifierInItsChildObjects()
+    {
+        $body = new Body();
+        $body->setPresenceVerifier(new MockPresenceVerifier(collect([
+            'users' => collect([
+                ['id' => 1, 'name' => 'Foo'],
+                ['id' => 2, 'name' => 'Bar'],
+                ['id' => 3, 'name' => 'Baz'],
+            ]),
+        ])));
+
+        $data = [
+            'user' => [
+                'user_id' => 1,
+            ],
+            'users' => [
+                ['user_id' => 2],
+                ['user_id' => 3],
+            ],
+        ];
+        $request = new Request(request: $data, server: ['REQUEST_METHOD' => 'POST']);
+        $parameter = (new ReflectionClass(BodyTestController::class))
+            ->getMethod("methodWithPresenceVerifierInChildObjects")
             ->getParameters()[0];
 
         $this->assertNull($body->validateRequest($request, $parameter));
