@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\DatabasePresenceVerifier;
+use Illuminate\Validation\PresenceVerifierInterface;
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionProperty;
@@ -28,6 +29,8 @@ class Body implements RequestGetter, RequestValidator, OpenApiRequestBody
      * @var string|array
      */
     protected $rules;
+
+    protected ?PresenceVerifierInterface $presenceVerifier = null;
 
     public function __construct(
         protected ?string $caster = null,
@@ -84,7 +87,7 @@ class Body implements RequestGetter, RequestValidator, OpenApiRequestBody
         }
 
         $data = $this->getMergedInputsAndFiles($request);
-        $presenceVerifier = app()->make(DatabasePresenceVerifier::class);
+        $presenceVerifier = $this->getOrMakePresenceVerifier();
 
         $rules = ValidatorHelper::getRulesFromClass(
             new ReflectionClass($typeName),
@@ -95,5 +98,15 @@ class Body implements RequestGetter, RequestValidator, OpenApiRequestBody
         if (! empty($rules)) {
             Validator::make($data, $rules)->validate();
         }
+    }
+
+    public function setPresenceVerifier(?PresenceVerifierInterface $presenceVerifier)
+    {
+        $this->presenceVerifier = $presenceVerifier;
+    }
+
+    public function getOrMakePresenceVerifier(): PresenceVerifierInterface
+    {
+        return $this->presenceVerifier ?? app()->make(DatabasePresenceVerifier::class);
     }
 }

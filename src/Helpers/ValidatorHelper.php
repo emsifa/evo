@@ -24,7 +24,7 @@ class ValidatorHelper
         ?PresenceVerifierInterface $presenceVerifier = null,
     ): array {
         if ($reflection instanceof ReflectionClass) {
-            return static::getRulesFromClass($reflection, $data);
+            return static::getRulesFromClass($reflection, $data, $presenceVerifier);
         }
 
         return static::getRulesFromParameterOrProperty($reflection, $keyAlias, $data, $presenceVerifier);
@@ -41,9 +41,9 @@ class ValidatorHelper
 
         $type = $reflection->getType();
         if ($type) {
-            $rules = array_merge($rules, static::getRulesFromTypeName($type->getName()));
+            $rules = array_merge($rules, static::getRulesFromTypeName($type->getName(), $presenceVerifier));
             if ($type->getName() === "array" || is_a($type->getName(), Collection::class, true)) {
-                $rules = array_merge($rules, static::getArrayItemRules($reflection));
+                $rules = array_merge($rules, static::getArrayItemRules($reflection, $presenceVerifier));
             }
         }
 
@@ -82,7 +82,7 @@ class ValidatorHelper
         return $rules;
     }
 
-    public static function getRulesFromTypeName(string $typeName): array
+    public static function getRulesFromTypeName(string $typeName, ?PresenceVerifierInterface $presenceVerifier = null): array
     {
         switch ($typeName) {
             case "int": return ["numeric"];
@@ -96,13 +96,13 @@ class ValidatorHelper
         if (class_exists($typeName)) {
             $classReflection = new ReflectionClass($typeName);
 
-            return static::getRulesFromReflection($classReflection);
+            return static::getRulesFromReflection($classReflection, presenceVerifier: $presenceVerifier);
         }
 
         return [];
     }
 
-    public static function getArrayItemRules(ReflectionProperty | ReflectionParameter $reflection): array
+    public static function getArrayItemRules(ReflectionProperty | ReflectionParameter $reflection, ?PresenceVerifierInterface $presenceVerifier): array
     {
         /**
          * @var ArrayOf $arrayOf
@@ -114,7 +114,7 @@ class ValidatorHelper
 
         $itemTypeName = $arrayOf->getType();
 
-        return static::resolveRules(static::getRulesFromTypeName($itemTypeName), "*");
+        return static::resolveRules(static::getRulesFromTypeName($itemTypeName, $presenceVerifier), "*");
     }
 
     protected static function resolveRules(array $otherRules, string $keyName): array
