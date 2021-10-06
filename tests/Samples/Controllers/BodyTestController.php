@@ -18,6 +18,5 @@ class BodyTestController extends Controller
 
     public function methodWithPresenceVerifierInChildObjects(SampleBodySchemaWithChildNeedPresenceVerifier $data)
     {
-
     }
 }
