@@ -14,73 +14,73 @@ use ReflectionMethod;
 
 class BodyTest extends TestCase
 {
-    // public function testGetDescription()
-    // {
-    //     $body = new Body(description: "Lorem Ipsum");
-    //     $this->assertEquals("Lorem Ipsum", $body->getDescription());
-    // }
+    public function testGetDescription()
+    {
+        $body = new Body(description: "Lorem Ipsum");
+        $this->assertEquals("Lorem Ipsum", $body->getDescription());
+    }
 
-    // public function testGetRequestValueFromMixedTypeShouldReturnAllData()
-    // {
-    //     $body = new Body();
-    //     $data = ['a' => 1, 'b' => 2, 'c' => 'xyz'];
-    //     $request = new Request(request: $data, server: ['REQUEST_METHOD' => 'POST']);
-    //     $parameter = (new ReflectionClass(BodyTestController::class))
-    //         ->getMethod("methodWithMixedParam")
-    //         ->getParameters()[0];
-    //     $value = $body->getRequestValue($request, $parameter);
+    public function testGetRequestValueFromMixedTypeShouldReturnAllData()
+    {
+        $body = new Body();
+        $data = ['a' => 1, 'b' => 2, 'c' => 'xyz'];
+        $request = new Request(request: $data, server: ['REQUEST_METHOD' => 'POST']);
+        $parameter = (new ReflectionClass(BodyTestController::class))
+            ->getMethod("methodWithMixedParam")
+            ->getParameters()[0];
+        $value = $body->getRequestValue($request, $parameter);
 
-    //     $this->assertEquals($data, $value);
-    // }
+        $this->assertEquals($data, $value);
+    }
 
-    // public function testGetRequestValueFromNonDtoTypeShouldAlsoFillObject()
-    // {
-    //     $body = new Body();
-    //     $data = ['name' => 'Lorem', 'email' => 'lorem@ipsum.com'];
-    //     $request = new Request(request: $data, server: ['REQUEST_METHOD' => 'POST']);
-    //     $parameter = (new ReflectionClass(BodyTestController::class))
-    //         ->getMethod("methodWithNonDtoParam")
-    //         ->getParameters()[0];
-    //     $value = $body->getRequestValue($request, $parameter);
+    public function testGetRequestValueFromNonDtoTypeShouldAlsoFillObject()
+    {
+        $body = new Body();
+        $data = ['name' => 'Lorem', 'email' => 'lorem@ipsum.com'];
+        $request = new Request(request: $data, server: ['REQUEST_METHOD' => 'POST']);
+        $parameter = (new ReflectionClass(BodyTestController::class))
+            ->getMethod("methodWithNonDtoParam")
+            ->getParameters()[0];
+        $value = $body->getRequestValue($request, $parameter);
 
-    //     $this->assertInstanceOf(SampleBodySchema::class, $value);
-    //     $this->assertEquals("Lorem", $value->name);
-    //     $this->assertEquals("lorem@ipsum.com", $value->email);
-    // }
+        $this->assertInstanceOf(SampleBodySchema::class, $value);
+        $this->assertEquals("Lorem", $value->name);
+        $this->assertEquals("lorem@ipsum.com", $value->email);
+    }
 
-    // public function testGetMergedInputsAndFiles()
-    // {
-    //     $body = new Body();
-    //     $data = ['name' => 'Lorem', 'email' => 'lorem@ipsum.com'];
-    //     $request = new Request(
-    //         request: $data,
-    //         files: [
-    //             'file' => UploadedFile::fake()->image('test.jpg'),
-    //         ],
-    //         server: ['REQUEST_METHOD' => 'POST']
-    //     );
+    public function testGetMergedInputsAndFiles()
+    {
+        $body = new Body();
+        $data = ['name' => 'Lorem', 'email' => 'lorem@ipsum.com'];
+        $request = new Request(
+            request: $data,
+            files: [
+                'file' => UploadedFile::fake()->image('test.jpg'),
+            ],
+            server: ['REQUEST_METHOD' => 'POST']
+        );
 
-    //     $getMergedInputsAndFiles = new ReflectionMethod($body, "getMergedInputsAndFiles");
-    //     $getMergedInputsAndFiles->setAccessible(true);
+        $getMergedInputsAndFiles = new ReflectionMethod($body, "getMergedInputsAndFiles");
+        $getMergedInputsAndFiles->setAccessible(true);
 
-    //     $result = $getMergedInputsAndFiles->invoke($body, $request);
+        $result = $getMergedInputsAndFiles->invoke($body, $request);
 
-    //     $this->assertEquals("Lorem", $result['name']);
-    //     $this->assertEquals("lorem@ipsum.com", $result['email']);
-    //     $this->assertEquals("test.jpg", $result["file"]->getClientOriginalName());
-    // }
+        $this->assertEquals("Lorem", $result['name']);
+        $this->assertEquals("lorem@ipsum.com", $result['email']);
+        $this->assertEquals("test.jpg", $result["file"]->getClientOriginalName());
+    }
 
-    // public function testValidateRequestFromMixedTypeShouldNotValidateAnything()
-    // {
-    //     $body = new Body();
-    //     $data = ['a' => 1, 'b' => 2, 'c' => 'xyz'];
-    //     $request = new Request(request: $data, server: ['REQUEST_METHOD' => 'POST']);
-    //     $parameter = (new ReflectionClass(BodyTestController::class))
-    //         ->getMethod("methodWithMixedParam")
-    //         ->getParameters()[0];
+    public function testValidateRequestFromMixedTypeShouldNotValidateAnything()
+    {
+        $body = new Body();
+        $data = ['a' => 1, 'b' => 2, 'c' => 'xyz'];
+        $request = new Request(request: $data, server: ['REQUEST_METHOD' => 'POST']);
+        $parameter = (new ReflectionClass(BodyTestController::class))
+            ->getMethod("methodWithMixedParam")
+            ->getParameters()[0];
 
-    //     $this->assertNull($body->validateRequest($request, $parameter));
-    // }
+        $this->assertNull($body->validateRequest($request, $parameter));
+    }
 
     public function testValidateRequestToDtoThatHasPresenceVerifierInItsChildObjects()
     {
