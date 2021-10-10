@@ -15,7 +15,6 @@ use Emsifa\Evo\Http\Response\JsonResponse;
 use Emsifa\Evo\Http\Response\ResponseStatus;
 use Emsifa\Evo\Http\Response\ResponseType;
 use Emsifa\Evo\Http\Response\UseErrorResponse;
-use Emsifa\Evo\Route\Route;
 use Emsifa\Evo\Swagger\OpenApi\Concerns\ComponentsResolver;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Contact;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Info;
@@ -29,6 +28,7 @@ use Emsifa\Evo\Swagger\OpenApi\Schemas\Response;
 use Emsifa\Evo\Swagger\OpenApi\Schemas\Server;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Routing\Route as LaravelRoute;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -132,10 +132,10 @@ class Generator
 
     protected function isJsonRoute($route): bool
     {
-        return $route instanceof Route && $this->hasJsonResponse($route);
+        return $this->hasJsonResponse($route);
     }
 
-    protected function hasJsonResponse(Route $route): bool
+    protected function hasJsonResponse(LaravelRoute $route): bool
     {
         $controller = $route->getAction('controller');
         if (! $controller) {
@@ -157,7 +157,7 @@ class Generator
         return is_subclass_of($returnType->getName(), JsonResponse::class);
     }
 
-    protected function getPathFromRoute(Route $route): array
+    protected function getPathFromRoute(LaravelRoute $route): array
     {
         $uri = $route->uri();
         $methods = $route->methods();
@@ -166,7 +166,7 @@ class Generator
         return ["/".ltrim($uri, "/"), $methods, $operation];
     }
 
-    protected function getOperation(Route $route): Operation
+    protected function getOperation(LaravelRoute $route): Operation
     {
         $controller = $route->getAction('controller');
         [$className, $methodName] = explode("@", $controller);
