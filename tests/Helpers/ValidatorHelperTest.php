@@ -23,11 +23,13 @@ class ValidatorHelperTest extends TestCase
         $myFloat = $reflection->getProperty('myFloat');
         $myBool = $reflection->getProperty('myBool');
         $myString = $reflection->getProperty('myString');
+        $nullableString = $reflection->getProperty('nullableString');
 
         $this->assertEquals(['myInt' => ['numeric']], ValidatorHelper::getRulesFromParameterOrProperty($myInt));
         $this->assertEquals(['myFloat' => ['numeric']], ValidatorHelper::getRulesFromParameterOrProperty($myFloat));
         $this->assertEquals(['myString' => ['string']], ValidatorHelper::getRulesFromParameterOrProperty($myString));
         $this->assertEquals(['myBool' => ['boolean']], ValidatorHelper::getRulesFromParameterOrProperty($myBool));
+        $this->assertEquals(['nullableString' => ['nullable', 'string']], ValidatorHelper::getRulesFromParameterOrProperty($nullableString));
 
         // test with alias
         $this->assertEquals(['x' => ['numeric']], ValidatorHelper::getRulesFromParameterOrProperty($myInt, 'x'));
