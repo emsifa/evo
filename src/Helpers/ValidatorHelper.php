@@ -39,6 +39,14 @@ class ValidatorHelper
         $keyName = $keyAlias ?: $reflection->getName();
         $rules = [];
 
+        $isNullable = $reflection instanceof ReflectionParameter
+            ? $reflection->allowsNull()
+            : (optional($reflection->getType())->allowsNull() ?? true);
+
+        if ($isNullable) {
+            $rules = ['nullable'];
+        }
+
         $type = $reflection->getType();
         if ($type) {
             $rules = array_merge($rules, static::getRulesFromTypeName($type->getName(), $presenceVerifier));

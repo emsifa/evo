@@ -20,6 +20,7 @@ class ObjectToValidate
     public bool $myBool;
     public string $myString;
     public array $myMixedArray;
+    public ?string $nullableString;
 
     #[ArrayOf('int')]
     public array $myArrayOfInt;
