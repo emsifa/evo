@@ -142,7 +142,14 @@ class Generator
             return false;
         }
 
-        [$className, $methodName] = explode("@", $controller);
+        $explode = explode("@", $controller);
+        // @codeCoverageIgnoreStart
+        if (count($explode) < 2) {
+            return false;
+        }
+        // @codeCoverageIgnoreEnd
+
+        [$className, $methodName] = $explode;
         $method = new ReflectionMethod($className, $methodName);
         $returnType = $method->getReturnType();
 
